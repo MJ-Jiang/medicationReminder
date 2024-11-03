@@ -1,0 +1,1 @@
+{/**New page for detailed view of a specific reminder. when click 'edit' button, go to CreateReminderPage */}

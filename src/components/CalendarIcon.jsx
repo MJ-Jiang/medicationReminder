@@ -1,0 +1,1 @@
+{/**Icon for opening the calendar view, can be used on creating reminder or choose certain day's reminders */}

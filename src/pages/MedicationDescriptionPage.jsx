@@ -1,0 +1,1 @@
+{/**Page displaying details about a selected medication */}

@@ -1,0 +1,1 @@
+{/**Displays individual reminders, show as lists on the TodayRemindersPage */}
