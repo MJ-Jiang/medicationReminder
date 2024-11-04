@@ -1,1 +1,0 @@
-{/**Calendar for selecting dates */}
