@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReminderForm from '../components/ReminderForm';
-import { useNavigate } from 'react-router-dom';
+import ReminderDetails from '../components/ReminderDetails';
 
 const CreateReminderPage = ({ onAddReminder }) => {
-    const navigate = useNavigate();
+    const [showDetails, setShowDetails] = useState(false);
+    const [reminder, setReminder] = useState(null);
 
-    const handleAddReminder = (reminder) => {
-        onAddReminder(reminder);
-        navigate(`/reminder/${reminder.name}`); // Navigate to the details page using the name as an identifier
+    const handleAddReminder = (newReminder) => {
+        onAddReminder(newReminder);
+        setReminder(newReminder); // 设置新创建的提醒
+        setShowDetails(true); // 显示弹窗
+    };
+
+    const handleClose = () => {
+        setShowDetails(false);
+        setReminder(null); // 关闭时清空提醒
     };
 
     return (
         <div>
             <h1>Create Reminder</h1>
             <ReminderForm onAddReminder={handleAddReminder} />
+            {showDetails && <ReminderDetails reminder={reminder} onClose={handleClose} />}
         </div>
     );
 };

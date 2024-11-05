@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import ReminderItem from '../components/ReminderItem';
+import ReminderDetails from '../components/ReminderDetails';
 import { useNavigate } from 'react-router-dom';
 
 const TodayRemindersPage = ({ reminders }) => {
     const navigate = useNavigate();
+    const [showDetails, setShowDetails] = useState(false);
+    const [selectedReminder, setSelectedReminder] = useState(null);
     
     // 维护每个提醒的完成状态
     const [completedReminders, setCompletedReminders] = useState(
@@ -25,6 +28,16 @@ const TodayRemindersPage = ({ reminders }) => {
         });
     };
 
+    const handleItemClick = (reminder) => {
+        setSelectedReminder(reminder);
+        setShowDetails(true); // 显示弹窗
+    };
+
+    const handleClose = () => {
+        setShowDetails(false);
+        setSelectedReminder(null); // 清空选择的提醒
+    };
+
     return (
         <div>
             <h1>Today's Reminders</h1>
@@ -37,12 +50,13 @@ const TodayRemindersPage = ({ reminders }) => {
                             key={`${reminder.name}-${timeIndex}`}
                             reminder={{ ...reminder, time, completed: completedReminders[reminder.name]?.[timeIndex] }}
                             onToggleComplete={() => handleToggleComplete(reminder.name, timeIndex)} // 切换复选框状态
-                            onItemClick={() => navigate(`/reminder/${reminder.name}`)} // 点击其他地方时导航到详细信息页面
+                            onItemClick={() => handleItemClick(reminder)} // 点击项时显示弹窗
                         />
                     ))
                 )
             )}
             <button onClick={() => navigate('/create-reminder')}>+ New Reminder</button>
+            {showDetails && <ReminderDetails reminder={selectedReminder} onClose={handleClose} />}
         </div>
     );
 };

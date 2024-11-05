@@ -24,6 +24,15 @@ const ReminderForm = ({ onAddReminder }) => {
         e.preventDefault();
         const newReminder = { name, description, dosage, startDate, frequency, endDate, times };
         onAddReminder(newReminder); // Pass the new reminder to the parent
+
+        // 清空表单字段
+        setName('');
+        setDescription('');
+        setDosage('');
+        setStartDate('');
+        setFrequency('');
+        setEndDate('');
+        setTimes(['']); // Reset to one empty time input
     };
 
     return (
