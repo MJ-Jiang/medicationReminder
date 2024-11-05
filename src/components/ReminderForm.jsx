@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TimeInputComponent from './TimeInputComponent'; // 引入 TimeInputComponent
 
 const ReminderForm = ({ onAddReminder }) => {
     const [name, setName] = useState('');
@@ -58,14 +59,11 @@ const ReminderForm = ({ onAddReminder }) => {
                 <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
             </div>
             <div>
-                <label>Times:</label>
                 {times.map((time, index) => (
                     <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                        <input
-                            type="time"
-                            value={time}
-                            onChange={(e) => handleTimeChange(index, e.target.value)}
-                            required
+                        <TimeInputComponent 
+                            selectedTime={time} 
+                            setSelectedTime={(newTime) => handleTimeChange(index, newTime)} 
                         />
                         {index === times.length - 1 && (
                             <button type="button" onClick={handleAddTime}>+</button>
