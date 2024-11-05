@@ -11,7 +11,7 @@ const MedicationDescriptionPage = () => {
     useEffect(() => {
         if (query) {
             // Fetch medication info from OpenFDA
-            fetch(`https://api.fda.gov/drug/label.json?search=${query}`)
+            fetch(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${query}"`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');

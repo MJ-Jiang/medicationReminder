@@ -10,6 +10,8 @@ const CreateReminderPage = ({ onAddReminder }) => {
     const [reminder, setReminder] = useState(null);
     const [query, setQuery] = useState(''); 
 
+   
+
     const handleAddReminder = (newReminder) => {
         onAddReminder(newReminder);
         setReminder(newReminder); // 设置新创建的提醒
