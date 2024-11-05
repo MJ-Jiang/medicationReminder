@@ -2,12 +2,20 @@ import React, { useState } from 'react';
 import ReminderItem from '../components/ReminderItem';
 import ReminderDetails from '../components/ReminderDetails';
 import { useNavigate } from 'react-router-dom';
+import SearchBar from '../components/SearchBar';
+
 
 const TodayRemindersPage = ({ reminders }) => {
     const navigate = useNavigate();
     const [showDetails, setShowDetails] = useState(false);
     const [selectedReminder, setSelectedReminder] = useState(null);
-    
+    const [query, setQuery] = useState(''); // 使用 query 和 setQuery
+
+    // 根据搜索查询过滤提醒
+    const filteredReminders = reminders.filter(reminder =>
+        reminder.name.toLowerCase().includes(query.toLowerCase())
+    );
+
     // 维护每个提醒的完成状态
     const [completedReminders, setCompletedReminders] = useState(
         reminders.reduce((acc, reminder) => {
@@ -41,10 +49,11 @@ const TodayRemindersPage = ({ reminders }) => {
     return (
         <div>
             <h1>Today's Reminders</h1>
-            {reminders.length === 0 ? (
+            <SearchBar onSearch={setQuery} /> {/* 保持传入 setQuery */}
+            {filteredReminders.length === 0 ? (
                 <p>No reminders for today.</p>
             ) : (
-                reminders.map((reminder) =>
+                filteredReminders.map((reminder) =>
                     reminder.times.map((time, timeIndex) => (
                         <ReminderItem
                             key={`${reminder.name}-${timeIndex}`}
