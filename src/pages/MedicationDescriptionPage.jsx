@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import BackButton from '../components/BackButton';
 
 const MedicationDescriptionPage = () => {
     const [medicationInfo, setMedicationInfo] = useState(null);
@@ -46,6 +47,7 @@ const MedicationDescriptionPage = () => {
     // When there is medication information to display
     return (
         <div>
+            <BackButton/>
             <h2>Medication Information</h2>
             <p><strong>Name:</strong> {medicationInfo?.results?.[0]?.openfda?.brand_name?.[0] || 'N/A'}</p>
             <p><strong>Purpose:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}</p>

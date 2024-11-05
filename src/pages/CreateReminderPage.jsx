@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReminderForm from '../components/ReminderForm';
 import ReminderDetails from '../components/ReminderDetails';
 import SearchBar from '../components/SearchBar';
+import BackButton from '../components/BackButton';
 
 
 const CreateReminderPage = ({ onAddReminder }) => {
@@ -22,6 +23,7 @@ const CreateReminderPage = ({ onAddReminder }) => {
 
     return (
         <div>
+            <BackButton/>
             <h1>Create Reminder</h1>
             <SearchBar onSearch={setQuery} /> {/* 传递 setQuery 给 SearchBar */}
             
