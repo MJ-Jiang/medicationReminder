@@ -10,6 +10,20 @@ const ReminderForm = ({ onAddReminder }) => {
     const [endDate, setEndDate] = useState(new Date()); // 默认今天
     const [frequency, setFrequency] = useState('');
     const [times, setTimes] = useState(['']); // 初始只有一个时间输入框
+    const [error, setError] = useState('');  // 存储错误信息
+
+    // 更新结束日期并检查是否晚于开始日期
+    const handleEndDateChange = (date) => {
+        const endDateObj = new Date(date);
+        if (endDateObj <= startDate) {
+            // 如果结束日期早于或等于开始日期，设置错误消息
+            setError('结束日期必须晚于开始日期');
+        } else {
+            // 如果结束日期有效，更新结束日期并清除错误消息
+            setError('');
+            setEndDate(date);
+        }
+    };
 
     const handleAddTime = () => {
         setTimes([...times, '']);
@@ -70,8 +84,9 @@ const ReminderForm = ({ onAddReminder }) => {
                 <label>End Date:</label>
                 <DatePicker 
                     selectedDate={endDate} 
-                    onDateChange={(date) => setEndDate(date)} 
+                    onDateChange={handleEndDateChange} 
                 />
+                {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}  {/* 错误消息显示 */}
             </div>
             <div>
                 {times.map((time, index) => (
@@ -92,7 +107,7 @@ const ReminderForm = ({ onAddReminder }) => {
                     </div>
                 ))}
             </div>
-            <button type="submit">Add Reminder</button>
+            <button type="submit" disabled={!!error}>Add Reminder</button>  {/* 禁用提交按钮直到没有错误 */}
         </form>
     );
 };
