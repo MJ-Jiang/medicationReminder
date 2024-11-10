@@ -28,7 +28,8 @@ const CreateReminderPage = ({ onAddReminder }) => {
                     startDate: currentDate.toISOString().slice(0, 10), // 这里是单日的startDate
                     endDate: currentDate.toISOString().slice(0, 10),
                     times: times,
-                    
+                    originalStartDate, // 添加原始开始日期
+                    originalEndDate, 
                 });
                 currentDate.setDate(currentDate.getDate() + 1); // 每日增加
             }
@@ -42,6 +43,8 @@ const CreateReminderPage = ({ onAddReminder }) => {
                     startDate: currentDate.toISOString().slice(0, 10),
                     endDate: currentDate.toISOString().slice(0, 10),
                     times: times,
+                    originalStartDate, // 添加原始开始日期
+                    originalEndDate, 
                 });
                 currentDate.setDate(currentDate.getDate() + 7); // 每周增加7天
             }

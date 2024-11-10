@@ -45,10 +45,15 @@ const TodayRemindersPage = ({ reminders }) => {
     };
 
     const handleItemClick = (reminder) => {
-        setSelectedReminder(reminder);
+        // 设置选中的提醒，同时传递 originalStartDate 和 originalEndDate
+        setSelectedReminder({
+            ...reminder,
+            startDate: reminder.originalStartDate || reminder.startDate,
+            endDate: reminder.originalEndDate || reminder.endDate,
+        });
         setShowDetails(true); // 显示弹窗
     };
-
+    
     const handleClose = () => {
         setShowDetails(false);
         setSelectedReminder(null); // 清空选择的提醒
