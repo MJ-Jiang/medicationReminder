@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TimeInputComponent from './TimeInputComponent'; // 引入 TimeInputComponent
+import TimeInputComponent from './TimeInputComponent'; 
 
 const ReminderForm = ({ onAddReminder }) => {
     const [name, setName] = useState('');
@@ -25,7 +25,7 @@ const ReminderForm = ({ onAddReminder }) => {
         const newReminder = { name, description, dosage, startDate, frequency, endDate, times };
         onAddReminder(newReminder); // Pass the new reminder to the parent
 
-        // 清空表单字段
+        // clear form
         setName('');
         setDescription('');
         setDosage('');

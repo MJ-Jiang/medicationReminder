@@ -1,6 +1,5 @@
 {/**Time picker for selecting times */}
 
-// TimeInputComponent.jsx
 import React from 'react';
 
 const TimeInputComponent = ({ selectedTime, setSelectedTime }) => {
@@ -12,7 +11,7 @@ const TimeInputComponent = ({ selectedTime, setSelectedTime }) => {
                 type="time"
                 value={selectedTime}
                 onChange={(e) => setSelectedTime(e.target.value)}
-                required
+                required //Make this <input> field required.
             />
         </div>
     );
