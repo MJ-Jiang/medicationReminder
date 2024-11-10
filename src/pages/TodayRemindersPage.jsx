@@ -3,6 +3,7 @@ import ReminderItem from '../components/ReminderItem';
 import ReminderDetails from '../components/ReminderDetails';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
+import DatePicker from '../components/DatePicker';
 
 
 const TodayRemindersPage = ({ reminders }) => {
@@ -10,11 +11,18 @@ const TodayRemindersPage = ({ reminders }) => {
     const [showDetails, setShowDetails] = useState(false);
     const [selectedReminder, setSelectedReminder] = useState(null);
     const [query, setQuery] = useState(''); // 使用 query 和 setQuery
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10)); 
 
     // 根据搜索查询过滤提醒
-    const filteredReminders = reminders.filter(reminder =>
-        reminder.name.toLowerCase().includes(query.toLowerCase())
-    );
+    const filteredReminders = reminders.filter((reminder) => {
+        const currentDate = new Date(selectedDate);
+        const reminderStartDate = new Date(reminder.startDate);
+        const reminderEndDate = new Date(reminder.endDate);
+    
+        return reminderStartDate <= currentDate && reminderEndDate >= currentDate;
+    });
+    
+    
 
     // 维护每个提醒的完成状态
     const [completedReminders, setCompletedReminders] = useState(
@@ -46,12 +54,18 @@ const TodayRemindersPage = ({ reminders }) => {
         setSelectedReminder(null); // 清空选择的提醒
     };
 
+    const handleDateChange = (newDate) => {
+        setSelectedDate(newDate);
+    };
     return (
         <div>
             <h1>Today's Reminders</h1>
+            <div style={{ position: 'absolute', top: 20, right: 20 }}>
+                <DatePicker onDateChange={handleDateChange} initialDate={selectedDate} /> {/* 日期选择器 */}
+            </div>
             <SearchBar onSearch={setQuery} /> {/* 保持传入 setQuery */}
             {filteredReminders.length === 0 ? (
-                <p>No reminders for today.</p>
+                <p>No reminders for {selectedDate}.</p>  
             ) : (
                 filteredReminders.map((reminder) =>
                     reminder.times.map((time, timeIndex) => (

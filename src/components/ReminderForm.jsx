@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import TimeInputComponent from './TimeInputComponent'; 
+import TimeInputComponent from './TimeInputComponent';
+import DatePicker from './DatePicker';  // 你自定义的 DatePicker 组件
 
 const ReminderForm = ({ onAddReminder }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [dosage, setDosage] = useState('');
-    const [startDate, setStartDate] = useState('');
+    const [startDate, setStartDate] = useState(new Date()); // 默认今天
+    const [endDate, setEndDate] = useState(new Date()); // 默认今天
     const [frequency, setFrequency] = useState('');
-    const [endDate, setEndDate] = useState('');
-    const [times, setTimes] = useState(['']); // Start with one time input
+    const [times, setTimes] = useState(['']); // 初始只有一个时间输入框
 
     const handleAddTime = () => {
         setTimes([...times, '']);
@@ -22,17 +23,18 @@ const ReminderForm = ({ onAddReminder }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
         const newReminder = { name, description, dosage, startDate, frequency, endDate, times };
-        onAddReminder(newReminder); // Pass the new reminder to the parent
+        onAddReminder(newReminder);
 
-        // clear form
+        // 重置表单
         setName('');
         setDescription('');
         setDosage('');
-        setStartDate('');
+        setStartDate(new Date()); 
         setFrequency('');
-        setEndDate('');
-        setTimes(['']); // Reset to one empty time input
+        setEndDate(new Date()); 
+        setTimes(['']); 
     };
 
     return (
@@ -51,7 +53,10 @@ const ReminderForm = ({ onAddReminder }) => {
             </div>
             <div>
                 <label>Start Date:</label>
-                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+                <DatePicker 
+                    selectedDate={startDate} 
+                    onDateChange={(date) => setStartDate(date)} 
+                />
             </div>
             <div>
                 <label>Frequency:</label>
@@ -59,13 +64,14 @@ const ReminderForm = ({ onAddReminder }) => {
                     <option value="">Select Frequency</option>
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
-                    <option value="weekdays">Every Weekday</option>
-                    <option value="weekends">Every Weekend</option>
                 </select>
             </div>
             <div>
                 <label>End Date:</label>
-                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
+                <DatePicker 
+                    selectedDate={endDate} 
+                    onDateChange={(date) => setEndDate(date)} 
+                />
             </div>
             <div>
                 {times.map((time, index) => (

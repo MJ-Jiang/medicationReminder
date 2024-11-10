@@ -1,10 +1,19 @@
 import React from 'react';
 
 const ReminderDetails = ({ reminder, onClose }) => {
+    console.log(reminder); 
     if (!reminder) {
         return null; // 如果没有提醒数据，返回 null
     }
 
+    const formattedStartDate = reminder.originalStartDate 
+    ? new Date(reminder.originalStartDate).toLocaleDateString() 
+    : new Date(reminder.startDate).toLocaleDateString();
+
+const formattedEndDate = reminder.originalEndDate 
+    ? new Date(reminder.originalEndDate).toLocaleDateString() 
+    : new Date(reminder.endDate).toLocaleDateString();
+    
     return (
         <div style={overlayStyle}>
             <div style={modalStyle}>
@@ -12,9 +21,9 @@ const ReminderDetails = ({ reminder, onClose }) => {
                 <h1>{reminder.name}</h1>
                 <p>Description: {reminder.description}</p>
                 <p>Dosage: {reminder.dosage}</p>
-                <p>Start Date: {reminder.startDate}</p>
+                <p>Start Date: {formattedStartDate}</p>
                 <p>Frequency: {reminder.frequency}</p>
-                <p>End Date: {reminder.endDate}</p>
+                <p>End Date: {formattedEndDate}</p>
                 <p>Times: {reminder.times.join(', ')}</p>
             </div>
         </div>
