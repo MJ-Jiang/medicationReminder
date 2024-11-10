@@ -25,10 +25,11 @@ const CreateReminderPage = ({ onAddReminder }) => {
             while (currentDate <= endDateObj) {
                 remindersToAdd.push({
                     ...newReminder,
-                    startDate: currentDate.toISOString().slice(0, 10), // 这里是单日的startDate
+                    id: `${newReminder.name}-${currentDate.toISOString().slice(0, 10)}-${times.join('-')}`,  // 生成唯一 id
+                    startDate: currentDate.toISOString().slice(0, 10),
                     endDate: currentDate.toISOString().slice(0, 10),
                     times: times,
-                    originalStartDate, // 添加原始开始日期
+                    originalStartDate, 
                     originalEndDate, 
                 });
                 currentDate.setDate(currentDate.getDate() + 1); // 每日增加
@@ -40,17 +41,17 @@ const CreateReminderPage = ({ onAddReminder }) => {
             while (currentDate <= endDateObj) {
                 remindersToAdd.push({
                     ...newReminder,
+                    id: `${newReminder.name}-${currentDate.toISOString().slice(0, 10)}-${times.join('-')}`,  // 生成唯一 id
                     startDate: currentDate.toISOString().slice(0, 10),
                     endDate: currentDate.toISOString().slice(0, 10),
                     times: times,
-                    originalStartDate, // 添加原始开始日期
+                    originalStartDate, 
                     originalEndDate, 
                 });
                 currentDate.setDate(currentDate.getDate() + 7); // 每周增加7天
             }
         }
-    
-    
+
         // 添加所有提醒到主应用状态
         if (remindersToAdd.length > 0) {
             remindersToAdd.forEach((reminder) => onAddReminder(reminder));
@@ -66,7 +67,6 @@ const CreateReminderPage = ({ onAddReminder }) => {
             console.log("No reminders were created.");
         }
     };
-    
 
     const handleClose = () => {
         setShowDetails(false);
@@ -77,7 +77,7 @@ const CreateReminderPage = ({ onAddReminder }) => {
         <div>
             <BackButton />
             <h1>Create Reminder</h1>
-            <SearchBar onSearch={setQuery} /> {/* 传递 setQuery 给 SearchBar */}
+            <SearchBar onSearch={setQuery} />
             
             <ReminderForm onAddReminder={handleAddReminder} />
             {showDetails && <ReminderDetails reminder={reminder} onClose={handleClose} />}

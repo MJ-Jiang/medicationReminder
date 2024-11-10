@@ -27,7 +27,7 @@ const ReminderItem = ({ reminder, onToggleComplete, onItemClick }) => {
             <input
                 type="checkbox"
                 checked={reminder.completed || false} // 如果未定义则默认为 false
-                onChange={onToggleComplete} // 切换复选框
+                onChange={() => onToggleComplete(reminder.id)} // 切换复选框
                 style={{ marginLeft: '10px' }}
             />
         </div>

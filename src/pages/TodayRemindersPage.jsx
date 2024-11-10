@@ -9,7 +9,7 @@ const TodayRemindersPage = ({ reminders }) => {
     const navigate = useNavigate();
     const [showDetails, setShowDetails] = useState(false);
     const [selectedReminder, setSelectedReminder] = useState(null);
-    const [query, setQuery] = useState(''); // 使用 query 和 setQuery
+    const [query, setQuery] = useState('');
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10)); 
 
     // 根据搜索查询过滤提醒
@@ -24,36 +24,36 @@ const TodayRemindersPage = ({ reminders }) => {
     // 维护每个提醒的完成状态
     const [completedReminders, setCompletedReminders] = useState(
         reminders.reduce((acc, reminder) => {
-            reminder.times.forEach(() => {
-                acc[reminder.name] = acc[reminder.name] || [];
-                acc[reminder.name].push(false); // 默认未完成
+            reminder.times.forEach((time, timeIndex) => {
+                // 为每个提醒项生成唯一的 id
+                const reminderId = `${reminder.name}-${reminder.startDate}-${time}-${timeIndex}`;
+                acc[reminderId] = false; // 默认未完成
             });
             return acc;
         }, {})
     );
 
     // 切换完成状态的函数
-    const handleToggleComplete = (reminderName, index) => {
+    const handleToggleComplete = (reminderId) => {
         setCompletedReminders((prev) => {
             const newCompleted = { ...prev };
-            newCompleted[reminderName][index] = !newCompleted[reminderName][index];
+            newCompleted[reminderId] = !newCompleted[reminderId]; // 根据唯一 id 更新状态
             return newCompleted;
         });
     };
 
     const handleItemClick = (reminder) => {
-        // 设置选中的提醒，同时传递 originalStartDate 和 originalEndDate
         setSelectedReminder({
             ...reminder,
             startDate: reminder.originalStartDate || reminder.startDate,
             endDate: reminder.originalEndDate || reminder.endDate,
         });
-        setShowDetails(true); // 显示弹窗
+        setShowDetails(true); 
     };
-    
+
     const handleClose = () => {
         setShowDetails(false);
-        setSelectedReminder(null); // 清空选择的提醒
+        setSelectedReminder(null); 
     };
 
     const handleDateChange = (newDate) => {
@@ -62,36 +62,40 @@ const TodayRemindersPage = ({ reminders }) => {
 
     // 提取所有提醒项，并按时间排序
     const allReminderItems = filteredReminders.flatMap((reminder) => 
-        reminder.times.map((time, timeIndex) => ({
-            ...reminder, 
-            time, 
-            completed: completedReminders[reminder.name]?.[timeIndex]
-        }))
+        reminder.times.map((time, timeIndex) => {
+            const reminderId = `${reminder.name}-${reminder.startDate}-${time}-${timeIndex}`;
+            return {
+                ...reminder, 
+                time, 
+                completed: completedReminders[reminderId], // 使用唯一 id 获取状态
+                reminderId, // 为每个提醒项添加唯一的 id
+            };
+        })
     );
 
     // 按时间排序
     const sortedReminderItems = allReminderItems.sort((a, b) => {
         const timeA = new Date(`${selectedDate}T${a.time}:00`);
         const timeB = new Date(`${selectedDate}T${b.time}:00`);
-        return timeA - timeB; // 按时间升序排序
+        return timeA - timeB; 
     });
 
     return (
         <div>
             <h1>Today's Reminders</h1>
             <div style={{ position: 'absolute', top: 20, right: 20 }}>
-                <DatePicker onDateChange={handleDateChange} initialDate={selectedDate} /> {/* 日期选择器 */}
+                <DatePicker onDateChange={handleDateChange} initialDate={selectedDate} />
             </div>
-            <SearchBar onSearch={setQuery} /> {/* 保持传入 setQuery */}
+            <SearchBar onSearch={setQuery} />
             {sortedReminderItems.length === 0 ? (
                 <p>No reminders for {selectedDate}.</p>  
             ) : (
                 sortedReminderItems.map((reminder, index) => (
                     <ReminderItem
-                        key={`${reminder.name}-${reminder.time}-${index}`}
+                        key={reminder.reminderId}  // 使用唯一的 reminderId 作为 key
                         reminder={reminder}
-                        onToggleComplete={() => handleToggleComplete(reminder.name, index)} // 切换复选框状态
-                        onItemClick={() => handleItemClick(reminder)} // 点击项时显示弹窗
+                        onToggleComplete={() => handleToggleComplete(reminder.reminderId)} // 传递唯一 id 给事件
+                        onItemClick={() => handleItemClick(reminder)} 
                     />
                 ))
             )}
