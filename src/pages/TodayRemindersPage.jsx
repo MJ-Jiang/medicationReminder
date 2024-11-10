@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import DatePicker from '../components/DatePicker';
 
-
 const TodayRemindersPage = ({ reminders }) => {
     const navigate = useNavigate();
     const [showDetails, setShowDetails] = useState(false);
@@ -21,8 +20,6 @@ const TodayRemindersPage = ({ reminders }) => {
     
         return reminderStartDate <= currentDate && reminderEndDate >= currentDate;
     });
-    
-    
 
     // 维护每个提醒的完成状态
     const [completedReminders, setCompletedReminders] = useState(
@@ -62,6 +59,23 @@ const TodayRemindersPage = ({ reminders }) => {
     const handleDateChange = (newDate) => {
         setSelectedDate(newDate);
     };
+
+    // 提取所有提醒项，并按时间排序
+    const allReminderItems = filteredReminders.flatMap((reminder) => 
+        reminder.times.map((time, timeIndex) => ({
+            ...reminder, 
+            time, 
+            completed: completedReminders[reminder.name]?.[timeIndex]
+        }))
+    );
+
+    // 按时间排序
+    const sortedReminderItems = allReminderItems.sort((a, b) => {
+        const timeA = new Date(`${selectedDate}T${a.time}:00`);
+        const timeB = new Date(`${selectedDate}T${b.time}:00`);
+        return timeA - timeB; // 按时间升序排序
+    });
+
     return (
         <div>
             <h1>Today's Reminders</h1>
@@ -69,19 +83,17 @@ const TodayRemindersPage = ({ reminders }) => {
                 <DatePicker onDateChange={handleDateChange} initialDate={selectedDate} /> {/* 日期选择器 */}
             </div>
             <SearchBar onSearch={setQuery} /> {/* 保持传入 setQuery */}
-            {filteredReminders.length === 0 ? (
+            {sortedReminderItems.length === 0 ? (
                 <p>No reminders for {selectedDate}.</p>  
             ) : (
-                filteredReminders.map((reminder) =>
-                    reminder.times.map((time, timeIndex) => (
-                        <ReminderItem
-                            key={`${reminder.name}-${timeIndex}`}
-                            reminder={{ ...reminder, time, completed: completedReminders[reminder.name]?.[timeIndex] }}
-                            onToggleComplete={() => handleToggleComplete(reminder.name, timeIndex)} // 切换复选框状态
-                            onItemClick={() => handleItemClick(reminder)} // 点击项时显示弹窗
-                        />
-                    ))
-                )
+                sortedReminderItems.map((reminder, index) => (
+                    <ReminderItem
+                        key={`${reminder.name}-${reminder.time}-${index}`}
+                        reminder={reminder}
+                        onToggleComplete={() => handleToggleComplete(reminder.name, index)} // 切换复选框状态
+                        onItemClick={() => handleItemClick(reminder)} // 点击项时显示弹窗
+                    />
+                ))
             )}
             <button onClick={() => navigate('/create-reminder')}>+ New Reminder</button>
             {showDetails && <ReminderDetails reminder={selectedReminder} onClose={handleClose} />}
