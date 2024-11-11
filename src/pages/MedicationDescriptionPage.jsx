@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import BackButton from '../components/BackButton';
+import { useTranslation } from 'react-i18next';
 
 const MedicationDescriptionPage = () => {
     const [medicationInfo, setMedicationInfo] = useState(null);
     const [error, setError] = useState(null);
     const location = useLocation();
     const query = new URLSearchParams(location.search).get('query');
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         if (query) {
@@ -49,9 +51,9 @@ const MedicationDescriptionPage = () => {
         <div>
             <BackButton/>
             <h2>Medication Information</h2>
-            <p><strong>Name:</strong> {medicationInfo?.results?.[0]?.openfda?.brand_name?.[0] || 'N/A'}</p>
-            <p><strong>Purpose:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}</p>
-            <p><strong>Description:</strong> {medicationInfo?.results?.[0]?.description?.[0] || 'N/A'}</p>
+            <p><strong>{t('Name')}:</strong> {medicationInfo?.results?.[0]?.openfda?.brand_name?.[0] || 'N/A'}</p>
+            <p><strong>{t('Name')}:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}</p>
+            <p><strong>{t('Description')}:</strong> {medicationInfo?.results?.[0]?.description?.[0] || 'N/A'}</p>
         </div>
     );
 };

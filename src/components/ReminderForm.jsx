@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import TimeInputComponent from './TimeInputComponent';
 import DatePicker from './DatePicker';  // 你自定义的 DatePicker 组件
+import { useTranslation } from 'react-i18next';
 
 const ReminderForm = ({ onAddReminder }) => {
     const [name, setName] = useState('');
@@ -11,6 +12,7 @@ const ReminderForm = ({ onAddReminder }) => {
     const [frequency, setFrequency] = useState('');
     const [times, setTimes] = useState(['']); // 初始只有一个时间输入框
     const [error, setError] = useState('');  // 存储错误信息
+    const { t, i18n } = useTranslation();
 
     // 更新结束日期并检查是否晚于开始日期
     const handleEndDateChange = (date) => {
@@ -54,34 +56,34 @@ const ReminderForm = ({ onAddReminder }) => {
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <label>Name:</label>
+                <label>{t('Name')}:</label>
                 <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div>
-                <label>Description:</label>
+                <label>{t('Description')}:</label>
                 <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
             <div>
-                <label>Dosage:</label>
+                <label>{t('Dosage')}:</label>
                 <input type="text" value={dosage} onChange={(e) => setDosage(e.target.value)} />
             </div>
             <div>
-                <label>Start Date:</label>
+                <label>{t('Start Date')}:</label>
                 <DatePicker 
                     selectedDate={startDate} 
                     onDateChange={(date) => setStartDate(date)} 
                 />
             </div>
             <div>
-                <label>Frequency:</label>
+                <label>{t('Frequency')}:</label>
                 <select value={frequency} onChange={(e) => setFrequency(e.target.value)} required>
-                    <option value="">Select Frequency</option>
+                    <option value="">{t('Select Frequency')}</option>
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
                 </select>
             </div>
             <div>
-                <label>End Date:</label>
+                <label>{t('End Date')}:</label>
                 <DatePicker 
                     selectedDate={endDate} 
                     onDateChange={handleEndDateChange} 
@@ -107,7 +109,7 @@ const ReminderForm = ({ onAddReminder }) => {
                     </div>
                 ))}
             </div>
-            <button type="submit" disabled={!!error}>Add Reminder</button>  {/* 禁用提交按钮直到没有错误 */}
+            <button type="submit" disabled={!!error}>{t('Add Reminder')}</button>  {/* 禁用提交按钮直到没有错误 */}
         </form>
     );
 };

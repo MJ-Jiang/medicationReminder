@@ -3,11 +3,13 @@ import ReminderForm from '../components/ReminderForm';
 import ReminderDetails from '../components/ReminderDetails';
 import SearchBar from '../components/SearchBar';
 import BackButton from '../components/BackButton';
+import { useTranslation } from 'react-i18next';
 
 const CreateReminderPage = ({ onAddReminder }) => {
     const [showDetails, setShowDetails] = useState(false);
     const [reminder, setReminder] = useState(null);
     const [query, setQuery] = useState('');
+    const { t, i18n } = useTranslation();
 
     const handleAddReminder = (newReminder) => {
         const { startDate, endDate, frequency, times } = newReminder;

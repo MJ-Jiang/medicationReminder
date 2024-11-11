@@ -1,11 +1,14 @@
 {/**Time picker for selecting times */}
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 
 const TimeInputComponent = ({ selectedTime, setSelectedTime }) => {
+    const { t, i18n } = useTranslation();
     return (
         <div>
-            <label htmlFor="time">Reminder Time:</label> {/** Creates a text label that describes what the input is for */}
+            <label htmlFor="time">{t('Reminder Time')}:</label> {/** Creates a text label that describes what the input is for */}
             <input
                 id="time"
                 type="time"

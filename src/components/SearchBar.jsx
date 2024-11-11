@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const SearchBar = ({ onSearch }) => {
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
     const handleSearch = () => {
         if (query) {
@@ -18,7 +20,7 @@ const SearchBar = ({ onSearch }) => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
-            <button onClick={handleSearch}>Search</button>
+            <button onClick={handleSearch}>{t('Search')}</button>
         </div>
     );
 };

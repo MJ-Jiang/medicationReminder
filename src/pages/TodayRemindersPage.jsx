@@ -4,6 +4,7 @@ import ReminderDetails from '../components/ReminderDetails';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import DatePicker from '../components/DatePicker';
+import { useTranslation } from 'react-i18next';
 
 const TodayRemindersPage = ({ reminders }) => {
     const navigate = useNavigate();
@@ -11,6 +12,7 @@ const TodayRemindersPage = ({ reminders }) => {
     const [selectedReminder, setSelectedReminder] = useState(null);
     const [query, setQuery] = useState('');
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10)); 
+    const { t, i18n } = useTranslation();
 
     // 根据搜索查询过滤提醒
     const filteredReminders = reminders.filter((reminder) => {
@@ -99,7 +101,7 @@ const TodayRemindersPage = ({ reminders }) => {
                     />
                 ))
             )}
-            <button onClick={() => navigate('/create-reminder')}>+ New Reminder</button>
+            <button onClick={() => navigate('/create-reminder')}>{t('+ New Reminder')}</button>
             {showDetails && <ReminderDetails reminder={selectedReminder} onClose={handleClose} />}
         </div>
     );
