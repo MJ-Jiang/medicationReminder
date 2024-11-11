@@ -3,17 +3,24 @@ import React from 'react';
 const ReminderDetails = ({ reminder, onClose }) => {
     console.log(reminder); 
     if (!reminder) {
-        return null; // 如果没有提醒数据，返回 null
+        return null; // Return null if there's no reminder data
     }
 
     const formattedStartDate = reminder.originalStartDate 
-    ? new Date(reminder.originalStartDate).toLocaleDateString() 
-    : new Date(reminder.startDate).toLocaleDateString();
+        ? new Date(reminder.originalStartDate).toLocaleDateString() 
+        : new Date(reminder.startDate).toLocaleDateString();
 
-const formattedEndDate = reminder.originalEndDate 
-    ? new Date(reminder.originalEndDate).toLocaleDateString() 
-    : new Date(reminder.endDate).toLocaleDateString();
-    
+    const formattedEndDate = reminder.originalEndDate 
+        ? new Date(reminder.originalEndDate).toLocaleDateString() 
+        : new Date(reminder.endDate).toLocaleDateString();
+
+    // Sort times before displaying
+    const sortedTimes = reminder.times.slice().sort((a, b) => {
+        const [aHour, aMinute] = a.split(':').map(Number);
+        const [bHour, bMinute] = b.split(':').map(Number);
+        return aHour - bHour || aMinute - bMinute;
+    });
+
     return (
         <div style={overlayStyle}>
             <div style={modalStyle}>
@@ -24,12 +31,13 @@ const formattedEndDate = reminder.originalEndDate
                 <p>Start Date: {formattedStartDate}</p>
                 <p>Frequency: {reminder.frequency}</p>
                 <p>End Date: {formattedEndDate}</p>
-                <p>Times: {reminder.times.join(', ')}</p>
+                <p>Times: {sortedTimes.join(', ')}</p> {/* Display sorted times */}
             </div>
         </div>
     );
 };
 
+// Styles
 const overlayStyle = {
     position: 'fixed',
     top: 0,
