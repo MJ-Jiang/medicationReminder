@@ -21,7 +21,7 @@ const BackButton = () => {
                 alignItems: 'center',
             }}
         >
-            ←
+            <img src="/src/assets/return.png" alt="Back" width="24" height="24" />
         </button>
     );
 };
