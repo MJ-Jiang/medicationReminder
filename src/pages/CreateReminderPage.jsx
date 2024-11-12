@@ -4,6 +4,7 @@ import ReminderDetails from '../components/ReminderDetails';
 import SearchBar from '../components/SearchBar';
 import BackButton from '../components/BackButton';
 import { useTranslation } from 'react-i18next';
+import { Container, Row, Col } from 'react-bootstrap';
 
 const CreateReminderPage = ({ onAddReminder }) => {
     const [showDetails, setShowDetails] = useState(false);
@@ -78,7 +79,7 @@ const CreateReminderPage = ({ onAddReminder }) => {
     return (
         <div>
             <BackButton />
-            <h1>Create Reminder</h1>
+            <h1>New Pill Reminder</h1>
             <SearchBar onSearch={setQuery} />
             
             <ReminderForm onAddReminder={handleAddReminder} />

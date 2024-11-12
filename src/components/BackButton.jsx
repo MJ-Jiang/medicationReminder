@@ -5,7 +5,7 @@ const BackButton = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(-1); // 返回上一页
+        navigate(-1); // return to last page
     };
 
     return (

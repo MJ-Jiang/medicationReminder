@@ -8,7 +8,7 @@ const resources = {
   en: {
     translation: {
       "Welcome to React": "Welcome to React and react-i18next",
-      "Search":"Search",
+      "Search for medication":"Search for medication",
       "+ New Reminder":"+ New reminder",
       "Name":"Name",
       "Description":"Description",
@@ -19,7 +19,9 @@ const resources = {
       "Reminder Time":"Reminder Time",
       "ADD Reminder":"Add Rminder",
       "Purpose":"Purpose",
-      "Select Frequency":"Select Frequency"
+      "Select Frequency":"Select Frequency",
+      "Pill Reminders":"Pill Reminders",
+      "New Pill Reminder":"New Pill Reminder"
       
       /**待补充 */
     }
@@ -27,7 +29,7 @@ const resources = {
   fi: {
     translation: {
       "Welcome to React": "Bienvenue à React et react-i18next",
-      "Search":"Hae",
+      "Search for medication":"Etsi lääkkeitä",
       "+ New Reminder":"+ Uusi Muistutus",
       "Name":"Nimi",
       "Description":"Kuvaus",
@@ -38,7 +40,9 @@ const resources = {
       "Reminder Time":"Muistutusaika",
       "ADD Reminder":"Lisää muistutus",
       "Purpose":"Purpose",
-      "Select Frequency":"Taajuus"
+      "Select Frequency":"Taajuus",
+      "Pill Reminders":"Pillereiden muistutukset",
+      "New Pill Reminder":"Uusi pilleri muistutus"
       /**待补充 */
     }
   }

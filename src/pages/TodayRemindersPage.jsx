@@ -84,7 +84,7 @@ const TodayRemindersPage = ({ reminders }) => {
 
     return (
         <div>
-            <h1>Today's Reminders</h1>
+            <h1>Pill Reminders</h1>
             <div style={{ position: 'absolute', top: 20, right: 20 }}>
                 <DatePicker onDateChange={handleDateChange} initialDate={selectedDate} />
             </div>

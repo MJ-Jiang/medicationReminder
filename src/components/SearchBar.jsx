@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { InputGroup, FormControl } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SearchBar = ({ onSearch }) => {
     const [query, setQuery] = useState('');
@@ -12,21 +14,39 @@ const SearchBar = ({ onSearch }) => {
             navigate(`/medication-description?query=${encodeURIComponent(query)}`);
         }
     };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    const clearSearch = () => {
+        setQuery('');
+    };
+
     return (
-        <div>
-            <input
+        <InputGroup className="mb-3">
+            {/* Left icon for search */}
+            <InputGroup.Text>
+                <img src="/src/assets/search.png" alt="Search" width="16" height="16" />
+            </InputGroup.Text>
+
+            {/* Search input field */}
+            <FormControl
                 type="text"
-                placeholder="Search for medication..."
+                placeholder={t('Search for medication')}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
             />
-            <button onClick={handleSearch}>{t('Search')}</button>
-        </div>
+
+            {/* Right icon for clear, always visible */}
+            <InputGroup.Text onClick={clearSearch} style={{ cursor: 'pointer' }}>
+                <img src="/src/assets/delete.png" alt="Clear" width="16" height="16" />
+            </InputGroup.Text>
+        </InputGroup>
     );
 };
 
 export default SearchBar;
-{/**encodeURIComponent(query) is used to encode the user's input to ensure that special characters (such as space, &, ?, etc.) do not cause problems in the URL.
-    onChange calls the (e) => setQuery(e.target.value) function every time the user types or deletes a character. 
-    This function updates the value of query and keeps the content of the input box synchronized with the query state.
-    onClick={handleSearch} means that when the user clicks the "Search" button, the handleSearch function will be called to perform the search operation. */}
