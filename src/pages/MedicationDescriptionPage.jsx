@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import BackButton from '../components/BackButton';
 import { useTranslation } from 'react-i18next';
+import Spinner from 'react-bootstrap/Spinner';
+import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 
 const MedicationDescriptionPage = () => {
     const [medicationInfo, setMedicationInfo] = useState(null);
@@ -44,19 +49,44 @@ const MedicationDescriptionPage = () => {
     if (error) return <p>{error}</p>; // Show error message if any
 
     // If there is no medication info and a query was entered, prompt the user
-    if (!medicationInfo && query) return <p>Please enter a medication name to see details.</p>;
-
+    if (!medicationInfo && query) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        );
+    }
     // When there is medication information to display
     return (
-        <div className="centered-container">
-            <BackButton />
-            <h2>Medication Information</h2>
-            <p><strong>{t('Name')}:</strong> {medicationInfo?.results?.[0]?.openfda?.brand_name?.[0] || 'N/A'}</p>
-            <p><strong>{t('Purpose')}:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}</p>
-            <p><strong>{t('Description')}:</strong> {medicationInfo?.results?.[0]?.description?.[0] || 'N/A'}</p>
-        </div>
+        <Card className="centered-container" style={{ maxWidth: '500px', margin: '20px auto', padding: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+            <Card.Body>
+                {/* BackButton 和标题在同一行 */}
+                <Row className="align-items-center mb-3">
+                    <Col xs="auto">
+                        <BackButton /> {/* 保持原有样式的 BackButton */}
+                    </Col>
+                    <Col>
+                        <h3 style={{ margin: 0, textAlign: 'center' }}>{t('Medication Details')}</h3>
+                    </Col>
+                </Row>
+
+                {/* 药物信息内容居中显示 */}
+                <div style={{ textAlign: 'center' }}>
+                    <Card.Text>
+                        <strong>{t('Name')}:</strong> {medicationInfo?.results?.[0]?.openfda?.brand_name?.[0] || 'N/A'}
+                    </Card.Text>
+                    <Card.Text>
+                        <strong>{t('Purpose')}:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}
+                    </Card.Text>
+                    <Card.Text>
+                        <strong>{t('Description')}:</strong> {medicationInfo?.results?.[0]?.description?.[0] || 'N/A'}
+                    </Card.Text>
+                </div>
+            </Card.Body>
+        </Card>
     );
-    
 };
 
 export default MedicationDescriptionPage;
