@@ -60,7 +60,7 @@ const MedicationDescriptionPage = () => {
     }
     // When there is medication information to display
     return (
-        <Card className="centered-container" style={{ maxWidth: '500px', margin: '20px auto', padding: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+        <Card className="centered-container">
             <Card.Body>
                 {/* BackButton 和标题在同一行 */}
                 <Row className="align-items-center mb-3">

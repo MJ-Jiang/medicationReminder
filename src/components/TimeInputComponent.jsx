@@ -10,8 +10,8 @@ const TimeInputComponent = ({ selectedTime, setSelectedTime }) => {
 
     return (
         <div style={{ margin: '10px 0' }}>
-            <label htmlFor="time" style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px' }}>
-                {t('Reminder Time')}:
+            <label htmlFor="time" style={{ display: 'block',  marginBottom: '8px' }}>
+                {t('Reminder Time')}
             </label>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimePicker

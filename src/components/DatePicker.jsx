@@ -10,11 +10,23 @@ const DatePicker = ({ onDateChange, initialDate }) => {
     };
 
     return (
-        <input 
-            type="date" 
-            value={selectedDate} 
-            onChange={handleChange} 
-            
+        <input
+            type="date"
+            value={selectedDate}
+            onChange={handleChange}
+            style={{
+                fontSize: '1rem',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                border: '1px solid #ccc',
+                backgroundColor: '#fff',
+                width: '100%',
+                boxSizing: 'border-box',
+                appearance: 'none', // 取消原生样式
+                WebkitAppearance: 'none', // 兼容Safari
+                MozAppearance: 'none', // 兼容Firefox
+                transition: 'all 0.2s ease',
+            }}
         />
     );
 };
