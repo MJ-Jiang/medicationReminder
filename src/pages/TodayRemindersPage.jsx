@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import DatePicker from '../components/DatePicker';
 import { useTranslation } from 'react-i18next';
+import Button from 'react-bootstrap/Button';
 
 const TodayRemindersPage = ({ reminders }) => {
     const navigate = useNavigate();
@@ -101,7 +102,7 @@ const TodayRemindersPage = ({ reminders }) => {
                     />
                 ))
             )}
-            <button onClick={() => navigate('/create-reminder')}>{t('+ New Reminder')}</button>
+            <Button variant="danger" onClick={() => navigate('/create-reminder')}>{t('+ New Reminder')}</Button>
             {showDetails && <ReminderDetails reminder={selectedReminder} onClose={handleClose} />}
         </div>
     );

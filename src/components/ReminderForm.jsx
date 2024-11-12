@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import TimeInputComponent from './TimeInputComponent';
 import DatePicker from './DatePicker';  // 你自定义的 DatePicker 组件
 import { useTranslation } from 'react-i18next';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 const ReminderForm = ({ onAddReminder }) => {
     const [name, setName] = useState('');
@@ -54,63 +56,118 @@ const ReminderForm = ({ onAddReminder }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>{t('Name')}:</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-            </div>
-            <div>
-                <label>{t('Description')}:</label>
-                <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
-            </div>
-            <div>
-                <label>{t('Dosage')}:</label>
-                <input type="text" value={dosage} onChange={(e) => setDosage(e.target.value)} />
-            </div>
-            <div>
-                <label>{t('Start Date')}:</label>
-                <DatePicker 
-                    selectedDate={startDate} 
-                    onDateChange={(date) => setStartDate(date)} 
-                />
-            </div>
-            <div>
-                <label>{t('Frequency')}:</label>
-                <select value={frequency} onChange={(e) => setFrequency(e.target.value)} required>
-                    <option value="">{t('Select Frequency')}</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                </select>
-            </div>
-            <div>
-                <label>{t('End Date')}:</label>
-                <DatePicker 
-                    selectedDate={endDate} 
-                    onDateChange={handleEndDateChange} 
-                />
-                {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}  {/* 错误消息显示 */}
-            </div>
-            <div>
-                {times.map((time, index) => (
-                    <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                        <TimeInputComponent 
-                            selectedTime={time} 
-                            setSelectedTime={(newTime) => handleTimeChange(index, newTime)} 
-                        />
-                        {index === times.length - 1 && (
-                            <button type="button" onClick={handleAddTime}>+</button>
-                        )}
-                        {times.length > 1 && (
-                            <button type="button" onClick={() => {
+        <Form onSubmit={handleSubmit}>
+        {/* Name Field */}
+        <Form.Group className="mb-3" controlId="formName">
+            <Form.Label>{t('Name')}</Form.Label>
+            <Form.Control
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+            />
+        </Form.Group>
+
+        {/* Description Field */}
+        <Form.Group className="mb-3" controlId="formDescription">
+            <Form.Label>{t('Description')}</Form.Label>
+            <Form.Control
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+            />
+        </Form.Group>
+
+        {/* Dosage Field */}
+        <Form.Group className="mb-3" controlId="formDosage">
+            <Form.Label>{t('Dosage')}</Form.Label>
+            <Form.Control
+                type="text"
+                value={dosage}
+                onChange={(e) => setDosage(e.target.value)}
+            />
+        </Form.Group>
+
+        {/* Start Date Field */}
+        <Form.Group className="mb-3" controlId="formStartDate">
+            <Form.Label>{t('Start Date')}</Form.Label>
+            <DatePicker
+                selectedDate={startDate}
+                onDateChange={(date) => setStartDate(date)}
+            />
+        </Form.Group>
+
+        {/* Frequency Field */}
+        <Form.Group className="mb-3" controlId="formFrequency">
+            <Form.Label>{t('Frequency')}</Form.Label>
+            <Form.Select
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value)}
+                required
+            >
+                <option value="">{t('Select Frequency')}</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+            </Form.Select>
+        </Form.Group>
+
+        {/* End Date Field */}
+        <Form.Group className="mb-3" controlId="formEndDate">
+            <Form.Label>{t('End Date')}</Form.Label>
+            <DatePicker
+                selectedDate={endDate}
+                onDateChange={handleEndDateChange}
+            />
+            {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
+        </Form.Group>
+
+        {/* Times Field */}
+        <Form.Group className="mb-3" controlId="formTimes">
+            
+            {times.map((time, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                    <TimeInputComponent
+                        selectedTime={time}
+                        setSelectedTime={(newTime) => handleTimeChange(index, newTime)}
+                    />
+                    {index === times.length - 1 && (
+                        <button
+                            type="button"
+                            onClick={handleAddTime}
+                            style={{
+                                background: 'none',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                padding: '2px 8px',
+                                marginLeft: '10px',
+                                cursor: 'pointer'
+                            }}
+                        >+</button>
+                    )}
+                    {times.length > 1 && (
+                        <button
+                            type="button"
+                            onClick={() => {
                                 const updatedTimes = times.filter((_, i) => i !== index);
                                 setTimes(updatedTimes);
-                            }}>-</button>
-                        )}
-                    </div>
-                ))}
-            </div>
-            <button type="submit" disabled={!!error}>{t('Add Reminder')}</button>  {/* 禁用提交按钮直到没有错误 */}
-        </form>
+                            }}
+                            style={{
+                                background: 'none',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                padding: '2px 8px',
+                                marginLeft: '5px',
+                                cursor: 'pointer'
+                            }}
+                        >-</button>
+                    )}
+                </div>
+            ))}
+        </Form.Group>
+
+        {/* Submit Button */}
+        <Button variant="danger" type="submit" disabled={!!error}>{t('Add Reminder')}</Button>
+    </Form>
     );
 };
 
