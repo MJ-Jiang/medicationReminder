@@ -83,7 +83,7 @@ const TodayRemindersPage = ({ reminders }) => {
     });
 
     return (
-        <div>
+        <div className="centered-container">
             <h1>Pill Reminders</h1>
             <div style={{ position: 'absolute', top: 20, right: 20 }}>
                 <DatePicker onDateChange={handleDateChange} initialDate={selectedDate} />
@@ -105,6 +105,7 @@ const TodayRemindersPage = ({ reminders }) => {
             {showDetails && <ReminderDetails reminder={selectedReminder} onClose={handleClose} />}
         </div>
     );
+    
 };
 
 export default TodayRemindersPage;

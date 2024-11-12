@@ -5,6 +5,7 @@ import SearchBar from '../components/SearchBar';
 import BackButton from '../components/BackButton';
 import { useTranslation } from 'react-i18next';
 import { Container, Row, Col } from 'react-bootstrap';
+import '../App.css';
 
 const CreateReminderPage = ({ onAddReminder }) => {
     const [showDetails, setShowDetails] = useState(false);
@@ -77,11 +78,10 @@ const CreateReminderPage = ({ onAddReminder }) => {
     };
 
     return (
-        <div>
+        <div className="centered-container">
             <BackButton />
             <h1>New Pill Reminder</h1>
             <SearchBar onSearch={setQuery} />
-            
             <ReminderForm onAddReminder={handleAddReminder} />
             {showDetails && <ReminderDetails reminder={reminder} onClose={handleClose} />}
         </div>

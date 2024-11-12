@@ -48,14 +48,15 @@ const MedicationDescriptionPage = () => {
 
     // When there is medication information to display
     return (
-        <div>
-            <BackButton/>
+        <div className="centered-container">
+            <BackButton />
             <h2>Medication Information</h2>
             <p><strong>{t('Name')}:</strong> {medicationInfo?.results?.[0]?.openfda?.brand_name?.[0] || 'N/A'}</p>
-            <p><strong>{t('Name')}:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}</p>
+            <p><strong>{t('Purpose')}:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}</p>
             <p><strong>{t('Description')}:</strong> {medicationInfo?.results?.[0]?.description?.[0] || 'N/A'}</p>
         </div>
     );
+    
 };
 
 export default MedicationDescriptionPage;
