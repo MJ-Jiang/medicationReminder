@@ -1,17 +1,18 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 const ReminderDetails = ({ reminder, onClose }) => {
-    console.log(reminder); 
     if (!reminder) {
-        return null; // Return null if there's no reminder data
+        return null;
     }
 
-    const formattedStartDate = reminder.originalStartDate 
-        ? new Date(reminder.originalStartDate).toLocaleDateString() 
+    const formattedStartDate = reminder.originalStartDate
+        ? new Date(reminder.originalStartDate).toLocaleDateString()
         : new Date(reminder.startDate).toLocaleDateString();
 
-    const formattedEndDate = reminder.originalEndDate 
-        ? new Date(reminder.originalEndDate).toLocaleDateString() 
+    const formattedEndDate = reminder.originalEndDate
+        ? new Date(reminder.originalEndDate).toLocaleDateString()
         : new Date(reminder.endDate).toLocaleDateString();
 
     // Sort times before displaying
@@ -22,51 +23,23 @@ const ReminderDetails = ({ reminder, onClose }) => {
     });
 
     return (
-        <div style={overlayStyle}>
-            <div style={modalStyle}>
-                <button onClick={onClose} style={closeButtonStyle}>x</button>
-                <h1>{reminder.name}</h1>
-                <p>Description: {reminder.description}</p>
-                <p>Dosage: {reminder.dosage}</p>
-                <p>Start Date: {formattedStartDate}</p>
-                <p>Frequency: {reminder.frequency}</p>
-                <p>End Date: {formattedEndDate}</p>
-                <p>Times: {sortedTimes.join(', ')}</p> {/* Display sorted times */}
-            </div>
-        </div>
+        <Modal show={!!reminder} onHide={onClose} backdrop="static" keyboard={false}>
+            <Modal.Header closeButton>
+                <Modal.Title>{reminder.name}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p><strong>Description:</strong> {reminder.description}</p>
+                <p><strong>Dosage:</strong> {reminder.dosage}</p>
+                <p><strong>Start Date:</strong> {formattedStartDate}</p>
+                <p><strong>Frequency:</strong> {reminder.frequency}</p>
+                <p><strong>End Date:</strong> {formattedEndDate}</p>
+                <p><strong>Times:</strong> {sortedTimes.join(', ')}</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onClose}>Close</Button>
+            </Modal.Footer>
+        </Modal>
     );
-};
-
-// Styles
-const overlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000
-};
-
-const modalStyle = {
-    backgroundColor: 'white',
-    padding: '20px',
-    borderRadius: '8px',
-    position: 'relative',
-    minWidth: '300px'
-};
-
-const closeButtonStyle = {
-    position: 'absolute',
-    top: '10px',
-    right: '10px',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '20px',
 };
 
 export default ReminderDetails;
