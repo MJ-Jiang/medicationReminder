@@ -123,47 +123,57 @@ const ReminderForm = ({ onAddReminder }) => {
 
         {/* Times Field */}
         <Form.Group className="mb-3" controlId="formTimes">
-            
-            {times.map((time, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                    <TimeInputComponent
-                        selectedTime={time}
-                        setSelectedTime={(newTime) => handleTimeChange(index, newTime)}
-                    />
-                    {index === times.length - 1 && (
-                        <button
-                            type="button"
-                            onClick={handleAddTime}
-                            style={{
-                                background: 'none',
-                                border: '1px solid #ccc',
-                                borderRadius: '4px',
-                                padding: '2px 8px',
-                                marginLeft: '10px',
-                                cursor: 'pointer'
-                            }}
-                        >+</button>
-                    )}
-                    {times.length > 1 && (
-                        <button
-                            type="button"
-                            onClick={() => {
-                                const updatedTimes = times.filter((_, i) => i !== index);
-                                setTimes(updatedTimes);
-                            }}
-                            style={{
-                                background: 'none',
-                                border: '1px solid #ccc',
-                                borderRadius: '4px',
-                                padding: '2px 8px',
-                                marginLeft: '5px',
-                                cursor: 'pointer'
-                            }}
-                        >-</button>
-                    )}
-                </div>
-            ))}
-        </Form.Group>
+    {times.map((time, index) => (
+        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                {/* Label and TimePicker inside the column */}
+                <TimeInputComponent
+                    selectedTime={time}
+                    setSelectedTime={(newTime) => handleTimeChange(index, newTime)}
+                />
+            </div>
+            {index === times.length - 1 && (
+                <button
+                    type="button"
+                    onClick={handleAddTime}
+                    style={{
+                        background: 'none',     // No background
+                        border: 'none',         // No border
+                        padding: '0',           // Remove padding
+                        marginLeft: '20px',     // Space between the TimeInput and the button
+                        cursor: 'pointer',     // Pointer cursor on hover
+                        marginTop: '25px',       // Only adjust this to move the button vertically
+                    }}
+                >
+                    <img src="src/assets/add.png" alt="Add" style={{ width: '20px', height: '20px' }} />
+                </button>
+            )}
+            {times.length > 1 && (
+                <button
+                    type="button"
+                    onClick={() => {
+                        const updatedTimes = times.filter((_, i) => i !== index);
+                        setTimes(updatedTimes);
+                    }}
+                    style={{
+                        background: 'none',  // No background
+                        border: 'none',      // No border
+                        padding: '0',        // Remove padding
+                        marginLeft: '20px',  // Space between the buttons
+                        cursor: 'pointer',  // Pointer cursor on hover
+                        marginTop: '25px',    // Adjust this to control vertical space between the button and TimeInput
+                    }}
+                >
+                    <img src="src/assets/minus.png" alt="minus" style={{ width: '20px', height: '20px' }} />
+                </button>
+            )}
+        </div>
+    ))}
+</Form.Group>
+
+
+
+
 
         {/* Submit Button */}
         <Button variant="danger" type="submit" disabled={!!error}>{t('Add Reminder')}</Button>

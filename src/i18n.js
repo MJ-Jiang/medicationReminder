@@ -9,7 +9,7 @@ const resources = {
     translation: {
       "Welcome to React": "Welcome to React and react-i18next",
       "Search for medication":"Search for medication",
-      "+ New Reminder":"+ New reminder",
+      "+ New Reminder":"+ New Reminder",
       "Name":"Name",
       "Description":"Description",
       "Dosage":"Dosage",

@@ -6,9 +6,9 @@
 .centered-container {
   max-width: 400px; /* 默认最大宽度 */
   width: 100%; /* 确保在小屏幕时容器能够自适应宽度 */
-  margin: 40px auto 0; /* 将内容居中对齐 */
+  margin: 40px auto 40px; /* 将内容居中对齐 */
   padding: 20px; /* 添加内边距，保证左右空白 */
-  padding-top: 40px;
+  padding-top: 20px;
   background-color: #fff; /* 可选：背景颜色 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 可选：增加阴影效果 */
   border-radius: 8px; /* 可选：圆角 */

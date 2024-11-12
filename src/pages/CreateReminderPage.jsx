@@ -79,8 +79,16 @@ const CreateReminderPage = ({ onAddReminder }) => {
 
     return (
         <div className="centered-container">
-            <BackButton />
-            <h1>New Pill Reminder</h1>
+            <Row className="align-items-center mb-3">
+                <Col xs="auto">
+                    <BackButton />
+                </Col>
+                <Col className="text-center">
+                    <h3 style={{ margin: 0 }}>New Pill Reminder</h3>
+                </Col>
+                <Col xs="auto">{/* 右侧留空，保证标题居中对齐 */}</Col>
+            </Row>
+            
             <SearchBar onSearch={setQuery} />
             <ReminderForm onAddReminder={handleAddReminder} />
             {showDetails && <ReminderDetails reminder={reminder} onClose={handleClose} />}
