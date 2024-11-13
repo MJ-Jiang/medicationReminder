@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom'; // 导入 useNavigate
 import BackButton from '../components/BackButton';
 import { useTranslation } from 'react-i18next';
 import Spinner from 'react-bootstrap/Spinner';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import { toast } from 'react-toastify'; // 导入 toast
 
 const MedicationDescriptionPage = () => {
     const [medicationInfo, setMedicationInfo] = useState(null);
@@ -14,6 +14,7 @@ const MedicationDescriptionPage = () => {
     const location = useLocation();
     const query = new URLSearchParams(location.search).get('query');
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate(); // 获取 navigate 方法用于页面跳转
 
     useEffect(() => {
         if (query) {
@@ -45,10 +46,18 @@ const MedicationDescriptionPage = () => {
         }
     }, [query]);
 
-    // Only show the loading message if a search has been made
-    if (error) return <p>{error}</p>; // Show error message if any
+    useEffect(() => {
+        if (error) {
+            toast.error(error, {
+                onClose: () => {
+                    // 自动返回上一页
+                    navigate(-1);  // 使用 react-router 的 navigate 方法返回上一页
+                }
+            }); // Show error notification and handle onClose
+        }
+    }, [error, navigate]); // 监听错误和 navigate 变化
 
-    // If there is no medication info and a query was entered, prompt the user
+    // Only show the loading message if a search has been made
     if (!medicationInfo && query) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
@@ -58,7 +67,7 @@ const MedicationDescriptionPage = () => {
             </div>
         );
     }
-    // When there is medication information to display
+
     return (
         <Card className="centered-container">
             <Card.Body>

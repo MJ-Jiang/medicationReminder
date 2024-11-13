@@ -119,11 +119,11 @@ const TodayRemindersPage = ({ reminders }) => {
                 </Dropdown>
             </div>
     
-            {/* 2. 保持SearchBar并确保日历只占1/3宽度 */}
+           
             <SearchBar onSearch={setQuery} style={{ marginBottom: '20px' }} />
     
             <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
-                {/* 设置 DatePicker 宽度为父容器的1/3 */}
+              
                 <DatePicker 
                     onDateChange={handleDateChange} 
                     initialDate={selectedDate} 
@@ -133,7 +133,7 @@ const TodayRemindersPage = ({ reminders }) => {
     
             {/* 显示提醒条目 */}
             {sortedReminderItems.length === 0 ? (
-                <p>No reminders for {selectedDate}.</p>  
+                <p>{t('No reminders for')} {selectedDate}.</p>  
             ) : (
                 sortedReminderItems.map((reminder, index) => (
                     <ReminderItem

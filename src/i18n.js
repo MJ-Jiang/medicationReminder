@@ -23,7 +23,8 @@ const resources = {
       "Pill Reminders":"Pill Reminders",
       "New Pill Reminder":"New Pill Reminder",
       "Medication Details":"Medication Details",
-      "Times": "Times"
+      "Times": "Times",
+      "No reminders for":"No reminders for"
       /**待补充 */
     }
   },
@@ -45,7 +46,8 @@ const resources = {
       "Pill Reminders":"Pillereiden muistutukset",
       "New Pill Reminder":"Uusi pilleri muistutus",
       "Medication Details":"Lääkkeen tiedot",
-      "Times":"Kertaa"
+      "Times":"Kertaa",
+      "No reminders for":"Ei muistutuksia kohteelle"
       /**待补充 */
     }
   }

@@ -176,7 +176,7 @@ const ReminderForm = ({ onAddReminder }) => {
 
 
         {/* Submit Button */}
-        <Button variant="danger" type="submit" disabled={!!error}>{t('Add Reminder')}</Button>
+        <Button variant="danger" style={{ width: '100%' }}  type="submit" disabled={!!error}>{t('Add Reminder')}</Button>
     </Form>
     );
 };
