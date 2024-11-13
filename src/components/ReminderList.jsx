@@ -1,9 +1,10 @@
-// ReminderList.jsx
 import React, { useEffect, useState } from 'react';
 import ReminderItem from './ReminderItem';
+import '../App.css'; // 确保 App.css 文件被正确导入
 
 const ReminderList = ({ reminders, selectedDate, completedReminders, handleToggleComplete, onItemClick }) => {
     const [sortedReminderItems, setSortedReminderItems] = useState([]);
+    const [isDateChanged, setIsDateChanged] = useState(false);
 
     useEffect(() => {
         // 过滤当天的提醒
@@ -33,10 +34,16 @@ const ReminderList = ({ reminders, selectedDate, completedReminders, handleToggl
             const timeB = new Date(`${selectedDate}T${b.time}:00`);
             return timeA - timeB;
         }));
+
+        // 设置日期更改状态以触发闪烁效果
+        setIsDateChanged(true);
+        const timer = setTimeout(() => setIsDateChanged(false), 200); // 闪烁效果持续200ms
+
+        return () => clearTimeout(timer); // 清除定时器
     }, [reminders, selectedDate, completedReminders]);
 
     return (
-        <div>
+        <div className={isDateChanged ? 'flash' : ''}> {/* 只有在日期更改时，应用闪烁效果 */}
             {/* 显示提醒条目 */}
             {sortedReminderItems.length === 0 ? (
                 <p>No reminders for {selectedDate}.</p>

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TodayRemindersPage from './pages/TodayRemindersPage';
 import CreateReminderPage from './pages/CreateReminderPage';
 import MedicationDescriptionPage from './pages/MedicationDescriptionPage';
-
+import './App.css';
 const App = () => {
     const [reminders, setReminders] = useState([]);
 

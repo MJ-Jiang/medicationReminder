@@ -25,3 +25,21 @@
     max-width: 90%; /* 小屏幕下的宽度接近全屏，但留出10%的边距 */
   }
 }
+/* 闪烁效果 */
+/* 淡入淡出效果 */
+.flash {
+  animation: fadeInOut 0.5s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
