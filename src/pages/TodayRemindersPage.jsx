@@ -127,7 +127,7 @@ const TodayRemindersPage = ({ reminders }) => {
                 <DatePicker 
                     onDateChange={handleDateChange} 
                     initialDate={selectedDate} 
-                    className="custom-date-picker"
+                   
                 />
             </div>
     
