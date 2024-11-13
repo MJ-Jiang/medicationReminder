@@ -1,54 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // 导入 useNavigate
-import BackButton from '../components/BackButton';
+import { useLocation } from 'react-router-dom'; 
 import { useTranslation } from 'react-i18next';
-import Spinner from 'react-bootstrap/Spinner';
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Card, Row, Col, Spinner } from 'react-bootstrap';  // 引入 Spinner
+import BackButton from '../components/BackButton';  // 引入 BackButton
+import MedicationCard from '../components/MedicationCard'; // 引入 MedicationCard 组件
 
 const MedicationDescriptionPage = () => {
-    const [medicationInfo, setMedicationInfo] = useState([]);  // 将状态改为数组，用于存储多个药物信息
-    const [isLoading, setIsLoading] = useState(false);  // 控制 loading 状态
+    const [medicationInfo, setMedicationInfo] = useState([]);  
+    const [isLoading, setIsLoading] = useState(false);  
     const location = useLocation();
     const query = new URLSearchParams(location.search).get('query');
-    const { t, i18n } = useTranslation();
-    const navigate = useNavigate(); // 获取 navigate 方法用于页面跳转
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!query) {
             return;
         }
 
-        // 设置加载状态为 true
         setIsLoading(true);
 
-        // 请求数据
         fetch(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${query}"&limit=10`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // 请求成功且返回数据
                 if (data.results && data.results.length > 0) {
-                    setMedicationInfo(data.results);  // 保存多个药物信息
+                    setMedicationInfo(data.results); 
                 } else {
-                    setMedicationInfo([]);  // 没有数据时清空数组
+                    setMedicationInfo([]); 
                 }
             })
-            .catch(error => {
-                console.error("Error fetching medication info:", error);
-            })
-            .finally(() => {
-                setIsLoading(false); // 请求结束，更新 loading 状态
-            });
+            .catch(error => console.error("Error fetching medication info:", error))
+            .finally(() => setIsLoading(false));
 
-    }, [query, navigate]);
+    }, [query]);
 
-    // 查询过程中显示 loading 动画
     if (isLoading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
@@ -56,10 +40,9 @@ const MedicationDescriptionPage = () => {
                     <span className="visually-hidden">Loading...</span>
                 </Spinner>
             </div>
-        );
+        ); // 显示加载状态
     }
 
-    // 查询完成后，根据数据展示结果
     return (
         <Card className="centered-container">
             <Card.Body>
@@ -77,26 +60,17 @@ const MedicationDescriptionPage = () => {
                 {medicationInfo.length > 0 ? (
                     <div>
                         {medicationInfo.map((medication, index) => (
-                            <div key={index} style={{ textAlign: 'center', marginBottom: '20px' }}>
-                                <Card.Text>
-                                    <strong>{t('Name')}:</strong> {medication.openfda?.brand_name?.[0] || 'N/A'}
-                                </Card.Text>
-                                <Card.Text>
-                                    <strong>{t('Purpose')}:</strong> {medication.purpose?.[0] || 'N/A'}
-                                </Card.Text>
-                                <Card.Text>
-                                    <strong>{t('Description')}:</strong> {medication.description?.[0] || 'N/A'}
-                                </Card.Text>
-                            </div>
+                            <Row key={index} className="mb-4">
+                                <Col xs={12}> {/* 每行只显示一个 card */}
+                                    <MedicationCard medication={medication} /> {/* 渲染每个卡片 */}
+                                </Col>
+                            </Row>
                         ))}
                     </div>
                 ) : (
-                    // 如果没有药物信息，显示没有找到的提示
-                    query && (
-                        <div style={{ textAlign: 'center' }}>
-                            <p>{t('No medication information found for your query.')}</p>
-                        </div>
-                    )
+                    <div style={{ textAlign: 'center' }}>
+                        <p>{t('No medication information found for your query.')}</p>
+                    </div>
                 )}
             </Card.Body>
         </Card>
