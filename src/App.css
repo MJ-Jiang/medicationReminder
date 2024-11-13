@@ -45,9 +45,9 @@
 }
 /* ReminderItem 样式 */
 .reminder-item {
-  display: flex;
-  flex-direction: column; /* 垂直布局 */
-  align-items: flex-start; /* 左对齐 */
+  display: grid; /* 使用 grid 布局 */
+  grid-template-columns: 1fr auto; /* 定义两列：第一列占剩余空间，第二列为复选框 */
+  gap: 10px; /* 列之间的间距 */
   padding: 12px;
   border-radius: 8px; /* 圆角 */
   border: 1px solid #ddd; /* 边框颜色更柔和 */
@@ -56,6 +56,7 @@
   transition: all 0.3s ease; /* 平滑过渡 */
   position: relative; /* 使复选框能够固定在右侧 */
   margin-bottom: 10px; /* 每个条目之间有间距 */
+  width: 100%; /* 确保项占满父容器 */
 }
 
 .reminder-item.completed {
@@ -68,6 +69,8 @@
   align-items: flex-start; /* 确保文本和图片垂直对齐 */
   cursor: pointer; /* 确保光标在悬停时变为指针 */
   padding-bottom: 5px; /* 为了让时间和剂量有点间距 */
+  grid-column: span 2; /* 使 reminder-content 跨越两列 */
+  width: 100%; /* 让 reminder-content 占满父容器的宽度 */
 }
 
 .reminder-item img {
@@ -79,6 +82,7 @@
 .reminder-item .text-content {
   display: flex;
   flex-direction: column;
+  flex-grow: 1; /* 确保 text-content 占据剩余的空间 */
 }
 
 .reminder-item .text-content .name {
@@ -117,4 +121,3 @@
 .reminder-item.completed input[type="checkbox"] {
   accent-color: #888; /* 打勾后的颜色为深灰色 */
 }
-
