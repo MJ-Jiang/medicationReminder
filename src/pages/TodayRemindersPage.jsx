@@ -1,3 +1,4 @@
+// TodayRemindersPage.jsx
 import React, { useRef, useState, useEffect } from 'react';
 import ReminderItem from '../components/ReminderItem';
 import ReminderDetails from '../components/ReminderDetails';
@@ -6,8 +7,7 @@ import SearchBar from '../components/SearchBar';
 import DatePicker from '../components/DatePicker';
 import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { changeLanguage } from 'i18next';
+import LanguageSelector from '../components/LanguageSelector';  // 导入新的语言选择组件
 import { toast, ToastContainer } from 'react-toastify';  // 导入 toast 和 ToastContainer
 import 'react-toastify/dist/ReactToastify.css';  // 引入样式
 import '../App.css';
@@ -125,31 +125,8 @@ const TodayRemindersPage = () => {
                 }}
             >
                 <h3 style={{ margin: 0 }}>{t('Pill Reminders')}</h3>
-                
-                <Dropdown align="end">
-                    <Dropdown.Toggle
-                        as="img"
-                        src="src/assets/lng.png"
-                        alt="Language Selector"
-                        style={{ width: '24px', height: '24px', cursor: 'pointer' }}
-                    />
-                    <Dropdown.Menu style={{ minWidth: 'auto', width: 'auto', padding: '0' }}>
-                        <Dropdown.Item
-                            eventKey="en"
-                            onClick={() => changeLanguage('en')}
-                            className="custom-dropdown-item"
-                        >
-                            EN
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                            eventKey="fi"
-                            onClick={() => changeLanguage('fi')}
-                            className="custom-dropdown-item"
-                        >
-                            FI
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+
+                <LanguageSelector />  {/* 引入新的 LanguageSelector 组件 */}
             </div>
 
             <SearchBar onSearch={setQuery} style={{ marginBottom: '20px' }} />
