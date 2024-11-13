@@ -17,6 +17,7 @@ const ReminderForm = ({ onAddReminder }) => {
     const [frequency, setFrequency] = useState('');
     const [times, setTimes] = useState(['']); // 初始只有一个时间输入框
 
+    
     // Toast helper function for displaying error
     const showToast = (message) => {
         toast.error(message, {
@@ -50,6 +51,14 @@ const ReminderForm = ({ onAddReminder }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const existingReminders = JSON.parse(localStorage.getItem('reminderData')) || [];
+        const isNameExist = existingReminders.some((reminder) => reminder.name === name);
+
+        if (isNameExist) {
+            showToast(t('Reminder name already exists! Please choose a different name.'));
+            return;  // 如果存在相同名字的提醒，阻止提交
+        }
+        
         const startDateObj = new Date(startDate);
         const endDateObj = new Date(endDate);
 

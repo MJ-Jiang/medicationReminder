@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { changeLanguage } from 'i18next';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';  // 导入 toast 和 ToastContainer
+import 'react-toastify/dist/ReactToastify.css';  // 引入样式
 import '../App.css';
 
 const TodayRemindersPage = () => {
@@ -16,16 +17,26 @@ const TodayRemindersPage = () => {
     const [showDetails, setShowDetails] = useState(false);
     const [selectedReminder, setSelectedReminder] = useState(null);
     const [query, setQuery] = useState('');
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10)); // 默认当天
     const { t, i18n } = useTranslation();
-    const [triggeredReminders, setTriggeredReminders] = useState(new Set());
-    const [reminders, setReminders] = useState([]);
-    const triggeredRemindersRef = useRef(new Set()); // 使用ref避免重新赋值
+    const [reminders, setReminders] = useState([]); // 所有提醒
+    const [completedReminders, setCompletedReminders] = useState({}); // 记录提醒是否完成
+    const triggeredRemindersRef = useRef(new Set()); // 使用ref来避免每次重新赋值
 
     // 从 localStorage 读取提醒数据
     useEffect(() => {
         const reminderData = JSON.parse(localStorage.getItem('reminderData')) || [];
         setReminders(reminderData);
+
+        // 初始化 completedReminders 状态
+        const initialCompleted = reminderData.reduce((acc, reminder) => {
+            reminder.times.forEach((time, timeIndex) => {
+                const reminderId = `${reminder.name}-${reminder.startDate}-${time}-${timeIndex}`;
+                acc[reminderId] = false; // 默认为未完成
+            });
+            return acc;
+        }, {});
+        setCompletedReminders(initialCompleted);
     }, []);
 
     // 监听 localStorage 变化，确保新提醒添加后页面更新
@@ -51,44 +62,6 @@ const TodayRemindersPage = () => {
         return reminderStartDate <= currentDate && reminderEndDate >= currentDate;
     });
 
-    // 维护每个提醒的完成状态
-    const [completedReminders, setCompletedReminders] = useState(
-        reminders.reduce((acc, reminder) => {
-            reminder.times.forEach((time, timeIndex) => {
-                const reminderId = `${reminder.name}-${reminder.startDate}-${time}-${timeIndex}`;
-                acc[reminderId] = false; // 默认未完成
-            });
-            return acc;
-        }, {})
-    );
-
-    // 切换完成状态的函数
-    const handleToggleComplete = (reminderId) => {
-        setCompletedReminders((prev) => {
-            const newCompleted = { ...prev };
-            newCompleted[reminderId] = !newCompleted[reminderId];
-            return newCompleted;
-        });
-    };
-
-    const handleItemClick = (reminder) => {
-        setSelectedReminder({
-            ...reminder,
-            startDate: reminder.originalStartDate || reminder.startDate,
-            endDate: reminder.originalEndDate || reminder.endDate,
-        });
-        setShowDetails(true);
-    };
-
-    const handleClose = () => {
-        setShowDetails(false);
-        setSelectedReminder(null);
-    };
-
-    const handleDateChange = (newDate) => {
-        setSelectedDate(newDate);
-    };
-
     // 提取所有提醒项，并按时间排序
     const allReminderItems = filteredReminders.flatMap((reminder) =>
         reminder.times.map((time, timeIndex) => {
@@ -96,8 +69,8 @@ const TodayRemindersPage = () => {
             return {
                 ...reminder,
                 time,
-                completed: completedReminders[reminderId],
                 reminderId,
+                completed: completedReminders[reminderId], // 添加completed状态
             };
         })
     );
@@ -109,27 +82,35 @@ const TodayRemindersPage = () => {
         return timeA - timeB;
     });
 
+    // 每秒检查提醒
     useEffect(() => {
         const interval = setInterval(() => {
             const currentTime = new Date();
-    
+            
             sortedReminderItems.forEach((reminder) => {
                 const reminderTime = new Date(`${selectedDate}T${reminder.time}:00`);
-    
-                // 检查是否已经触发过提醒
-                if (currentTime >= reminderTime && !triggeredRemindersRef.current.has(reminder.reminderId)) {
+
+                // 检查是否已经触发过提醒，并且提醒未被标记为已完成
+                if (currentTime >= reminderTime && !triggeredRemindersRef.current.has(reminder.reminderId) && !reminder.completed) {
                     triggeredRemindersRef.current.add(reminder.reminderId);  // 使用ref中的Set避免重新赋值
                     toast.info(`Time to take: ${reminder.name}`, {
-                        autoClose: false, // 不会自动消失
-                        closeButton: true, // 显示关闭按钮
+                        autoClose: false,  // 不自动关闭
                     });
                 }
             });
         }, 1000); // 每秒检查一次
-    
-        return () => clearInterval(interval);
-    }, [sortedReminderItems, selectedDate]);
-    
+
+        return () => clearInterval(interval); // 清除定时器
+    }, [sortedReminderItems, selectedDate, completedReminders]);
+
+    // 切换提醒的完成状态
+    const handleToggleComplete = (reminderId) => {
+        setCompletedReminders((prev) => {
+            const newCompleted = { ...prev };
+            newCompleted[reminderId] = !newCompleted[reminderId];
+            return newCompleted;
+        });
+    };
 
     return (
         <div className="centered-container">
@@ -175,7 +156,7 @@ const TodayRemindersPage = () => {
 
             <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
                 <DatePicker 
-                    onDateChange={handleDateChange} 
+                    onDateChange={(newDate) => setSelectedDate(newDate)} 
                     initialDate={selectedDate} 
                     style={{ width: '35%' }}  // 在这里传递了新的样式
                 />
@@ -190,7 +171,7 @@ const TodayRemindersPage = () => {
                         key={reminder.reminderId} // 使用唯一的 reminderId 作为 key
                         reminder={reminder}
                         onToggleComplete={() => handleToggleComplete(reminder.reminderId)} // 传递唯一 id 给事件
-                        onItemClick={() => handleItemClick(reminder)}
+                        onItemClick={() => setSelectedReminder(reminder)} // 显示提醒详情
                     />
                 ))
             )}
@@ -203,7 +184,10 @@ const TodayRemindersPage = () => {
             </div>
 
             {/* 显示提醒详情 */}
-            {showDetails && <ReminderDetails reminder={selectedReminder} onClose={handleClose} />}
+            {showDetails && <ReminderDetails reminder={selectedReminder} onClose={() => setShowDetails(false)} />}
+
+            {/* ToastContainer 显示 Toast */}
+            <ToastContainer />
         </div>
     );
 };
