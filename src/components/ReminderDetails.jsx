@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
+import { useTranslation } from 'react-i18next';
 const ReminderDetails = ({ reminder, onClose }) => {
     if (!reminder) {
         return null;
@@ -21,19 +21,19 @@ const ReminderDetails = ({ reminder, onClose }) => {
         const [bHour, bMinute] = b.split(':').map(Number);
         return aHour - bHour || aMinute - bMinute;
     });
-
+    const { t, i18n } = useTranslation();
     return (
         <Modal show={!!reminder} onHide={onClose} backdrop="static" keyboard={false}>
             <Modal.Header closeButton>
                 <Modal.Title>{reminder.name}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p><strong>Description:</strong> {reminder.description}</p>
-                <p><strong>Dosage:</strong> {reminder.dosage}</p>
-                <p><strong>Start Date:</strong> {formattedStartDate}</p>
-                <p><strong>Frequency:</strong> {reminder.frequency}</p>
-                <p><strong>End Date:</strong> {formattedEndDate}</p>
-                <p><strong>Times:</strong> {sortedTimes.join(', ')}</p>
+                <p><strong>{t('Description')}:</strong> {reminder.description}</p>
+                <p><strong>{t('Dosage')}:</strong> {reminder.dosage}</p>
+                <p><strong>{t('Start Date')}:</strong> {formattedStartDate}</p>
+                <p><strong>{t('Frequency')}:</strong> {reminder.frequency}</p>
+                <p><strong>{t('End Date')}:</strong> {formattedEndDate}</p>
+                <p><strong>{t('Times')}:</strong> {sortedTimes.join(', ')}</p>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onClose}>Close</Button>

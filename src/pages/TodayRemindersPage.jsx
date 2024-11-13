@@ -6,6 +6,10 @@ import SearchBar from '../components/SearchBar';
 import DatePicker from '../components/DatePicker';
 import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import { changeLanguage } from 'i18next';
+import '../App.css';
 
 const TodayRemindersPage = ({ reminders }) => {
     const navigate = useNavigate();
@@ -85,11 +89,49 @@ const TodayRemindersPage = ({ reminders }) => {
 
     return (
         <div className="centered-container">
-            <h1>Pill Reminders</h1>
-            <div style={{ position: 'absolute', top: 20, right: 20 }}>
-                <DatePicker onDateChange={handleDateChange} initialDate={selectedDate} />
+            {/* 1. 在Pill Reminders的行下方添加空白 */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '20px' }}>
+                <h3 style={{ margin: 0 }}>{t('Pill Reminders')}</h3>
+                
+                <Dropdown align="end">
+                    <Dropdown.Toggle
+                        as="img"
+                        src="src/assets/lng.png"
+                        alt="Language Selector"
+                        style={{ width: '24px', height: '24px', cursor: 'pointer' }}
+                    />
+                    <Dropdown.Menu style={{ minWidth: 'auto', width: 'auto', padding: '0' }}>
+                        <Dropdown.Item
+                            eventKey="en"
+                            onClick={() => changeLanguage('en')}
+                            className="custom-dropdown-item"
+                        >
+                            EN
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                            eventKey="fi"
+                            onClick={() => changeLanguage('fi')}
+                            className="custom-dropdown-item"
+                        >
+                            FI
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
-            <SearchBar onSearch={setQuery} />
+    
+            {/* 2. 保持SearchBar并确保日历只占1/3宽度 */}
+            <SearchBar onSearch={setQuery} style={{ marginBottom: '20px' }} />
+    
+            <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
+                {/* 设置 DatePicker 宽度为父容器的1/3 */}
+                <DatePicker 
+                    onDateChange={handleDateChange} 
+                    initialDate={selectedDate} 
+                    className="custom-date-picker"
+                />
+            </div>
+    
+            {/* 显示提醒条目 */}
             {sortedReminderItems.length === 0 ? (
                 <p>No reminders for {selectedDate}.</p>  
             ) : (
@@ -102,11 +144,18 @@ const TodayRemindersPage = ({ reminders }) => {
                     />
                 ))
             )}
-            <Button variant="danger" onClick={() => navigate('/create-reminder')}>{t('+ New Reminder')}</Button>
+    
+            {/* 3. 新提醒按钮上方添加空白，并使按钮占一行 */}
+            <div style={{ marginTop: '20px' }}>
+                <Button variant="danger" style={{ width: '100%' }} onClick={() => navigate('/create-reminder')}>
+                    {t('+ New Reminder')}
+                </Button>
+            </div>
+    
+            {/* 显示提醒详情 */}
             {showDetails && <ReminderDetails reminder={selectedReminder} onClose={handleClose} />}
         </div>
     );
-    
-};
+}    
 
 export default TodayRemindersPage;

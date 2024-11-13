@@ -14,12 +14,13 @@ const DatePicker = ({ onDateChange, initialDate }) => {
             type="date"
             value={selectedDate}
             onChange={handleChange}
+        
             style={{
                 fontSize: '1rem',
-                padding: '12px 16px',
+                padding: '5px 5px',
                 borderRadius: '8px',
-                border: '1px solid #ccc',
-                backgroundColor: '#fff',
+                border: '1px solid rgb(204, 204, 204)',
+                backgroundColor: 'rgb(255, 255, 255)',
                 width: '100%',
                 boxSizing: 'border-box',
                 appearance: 'none', // 取消原生样式

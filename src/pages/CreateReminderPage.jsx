@@ -84,7 +84,7 @@ const CreateReminderPage = ({ onAddReminder }) => {
                     <BackButton />
                 </Col>
                 <Col className="text-center">
-                    <h3 style={{ margin: 0 }}>New Pill Reminder</h3>
+                    <h3 style={{ margin: 0 }}>{t('New Pill Reminder')}</h3>
                 </Col>
                 <Col xs="auto">{/* 右侧留空，保证标题居中对齐 */}</Col>
             </Row>

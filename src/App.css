@@ -25,3 +25,6 @@
     max-width: 90%; /* 小屏幕下的宽度接近全屏，但留出10%的边距 */
   }
 }
+.custom-date-picker {
+  width: 33% !important; /* 强制设置为 33% */
+}

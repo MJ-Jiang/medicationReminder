@@ -21,8 +21,9 @@ const resources = {
       "Purpose":"Purpose",
       "Select Frequency":"Select Frequency",
       "Pill Reminders":"Pill Reminders",
-      "New Pill Reminder":"New Pill Reminder"
-      
+      "New Pill Reminder":"New Pill Reminder",
+      "Medication Details":"Medication Details",
+      "Times": "Times"
       /**待补充 */
     }
   },
@@ -42,7 +43,9 @@ const resources = {
       "Purpose":"Purpose",
       "Select Frequency":"Taajuus",
       "Pill Reminders":"Pillereiden muistutukset",
-      "New Pill Reminder":"Uusi pilleri muistutus"
+      "New Pill Reminder":"Uusi pilleri muistutus",
+      "Medication Details":"Lääkkeen tiedot",
+      "Times":"Kertaa"
       /**待补充 */
     }
   }
