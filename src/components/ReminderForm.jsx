@@ -143,6 +143,7 @@ const ReminderForm = ({ onAddReminder }) => {
                         marginLeft: '20px',     // Space between the TimeInput and the button
                         cursor: 'pointer',     // Pointer cursor on hover
                         marginTop: '25px',       // Only adjust this to move the button vertically
+                        paddingTop:'3px',
                     }}
                 >
                     <img src="src/assets/add.png" alt="Add" style={{ width: '20px', height: '20px' }} />
@@ -162,6 +163,7 @@ const ReminderForm = ({ onAddReminder }) => {
                         marginLeft: '20px',  // Space between the buttons
                         cursor: 'pointer',  // Pointer cursor on hover
                         marginTop: '25px',    // Adjust this to control vertical space between the button and TimeInput
+                        paddingTop:'3px',
                     }}
                 >
                     <img src="src/assets/minus.png" alt="minus" style={{ width: '20px', height: '20px' }} />

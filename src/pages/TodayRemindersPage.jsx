@@ -131,7 +131,7 @@ const TodayRemindersPage = ({ reminders }) => {
                 }}
             >
                 <h3 style={{ margin: 0 }}>{t('Pill Reminders')}</h3>
-
+                
                 <Dropdown align="end">
                     <Dropdown.Toggle
                         as="img"
@@ -161,7 +161,11 @@ const TodayRemindersPage = ({ reminders }) => {
             <SearchBar onSearch={setQuery} style={{ marginBottom: '20px' }} />
 
             <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
-                <DatePicker onDateChange={handleDateChange} initialDate={selectedDate} />
+                <DatePicker 
+                    onDateChange={handleDateChange} 
+                    initialDate={selectedDate} 
+                    style={{ width: '35%' }}  // 在这里传递了新的样式
+                />
             </div>
 
             {/* 显示提醒条目 */}
