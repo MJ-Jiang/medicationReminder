@@ -15,4 +15,4 @@ npm install react-toastify
 
 --search报错都以弹窗方式显示但是需要刷新
 --当创建很多日期时，会把未来的toast
---点击item显示detail的空白页太少
+
