@@ -17,6 +17,16 @@ const ReminderToastNotifier = ({ reminders, selectedDate, completedReminders }) 
 
       // 将 selectedDate 转为 Date 对象，便于只比较日期部分
       const selectedDateObj = new Date(selectedDate);
+      const currentDateObj = new Date(); // 当前日期对象，用于比较
+
+      // 比较日期部分，确保只比较年月日
+      const todayString = currentDateObj.toISOString().slice(0, 10); // 获取今天的日期字符串（YYYY-MM-DD）
+      const selectedDateString = selectedDateObj.toISOString().slice(0, 10); // 获取选定日期的字符串（YYYY-MM-DD）
+
+      // 如果 selectedDate 是过去的日期，直接跳过提醒
+      if (selectedDateString < todayString) {
+        return; // 如果选定日期是过去的日期，则不触发任何提醒
+      }
 
       reminders.forEach((reminder) => {
         reminder.times.forEach((time, timeIndex) => {
