@@ -18,7 +18,7 @@ const DatePicker = ({ onDateChange, initialDate, style = {} }) => {  // 给style
                 fontSize: '1rem',
                 padding: '5px 5px',
                 borderRadius: '8px',
-                border: '1px solid rgb(204, 204, 204)',
+                border: '1px solid #ced4da',
                 backgroundColor: 'rgb(255, 255, 255)',
                 boxSizing: 'border-box',
                 appearance: 'none', // 取消原生样式

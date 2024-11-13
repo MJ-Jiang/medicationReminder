@@ -92,31 +92,33 @@ const TodayRemindersPage = ({ reminders }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             const currentTime = new Date();
-
+    
             sortedReminderItems.forEach((reminder) => {
                 const reminderTime = new Date(`${selectedDate}T${reminder.time}:00`);
-
+    
                 // 如果当前时间等于提醒时间，且该提醒尚未完成，且尚未触发过
                 if (
                     currentTime >= reminderTime &&
                     !reminder.completed &&
-                    !triggeredReminders.has(reminder.reminderId)
+                    !triggeredReminders.has(reminder.reminderId) &&
+                    reminderTime > currentTime // 确保提醒时间在当前时间之后才触发
                 ) {
                     // 显示Toast并将提醒标记为已触发
                     toast.info(`${reminder.name} - Time: ${reminder.time} - Dosage: ${reminder.dosage}`, {
                         autoClose: false, // 禁止自动关闭
                         closeButton: true, // 允许用户手动关闭
                     });
-
+    
                     // 更新已触发的提醒状态
                     setTriggeredReminders((prev) => new Set(prev).add(reminder.reminderId));
                 }
             });
         }, 1000); // 每秒钟检查一次
-
+    
         // 清除定时器
         return () => clearInterval(interval);
     }, [selectedDate, sortedReminderItems, triggeredReminders]);
+    
 
     return (
         <div className="centered-container">
