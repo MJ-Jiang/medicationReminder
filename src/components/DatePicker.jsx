@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const DatePicker = ({ onDateChange, initialDate, style = {} }) => {  // 给style设置默认值为空对象
+const DatePicker = ({ onDateChange, initialDate, style = {} }) => {
     const [selectedDate, setSelectedDate] = useState(initialDate || new Date().toISOString().slice(0, 10));
+
+    // 使用 useEffect 监听 initialDate 的变化并同步更新 selectedDate
+    useEffect(() => {
+        if (initialDate) {
+            setSelectedDate(initialDate);
+        }
+    }, [initialDate]);
 
     const handleChange = (event) => {
         const newDate = event.target.value;
@@ -26,7 +33,7 @@ const DatePicker = ({ onDateChange, initialDate, style = {} }) => {  // 给style
                 MozAppearance: 'none', // 兼容Firefox
                 transition: 'all 0.2s ease',
                 width: '100%',
-                ...style, // 这里确保了传递给组件的style会覆盖默认的样式
+                ...style, // 传递的style会覆盖默认样式
             }}
         />
     );
