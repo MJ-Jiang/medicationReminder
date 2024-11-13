@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './i18n';
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-toastify/dist/ReactToastify.css'; // 导入 react-toastify 样式
-import { ToastContainer } from 'react-toastify'; // 导入 ToastContainer
+import { toast, ToastContainer } from 'react-toastify'; // 导入 ToastContainer
 
 // 渲染整个应用
 createRoot(document.getElementById('root')).render(
