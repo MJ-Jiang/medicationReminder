@@ -6,59 +6,50 @@ import Spinner from 'react-bootstrap/Spinner';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { toast } from 'react-toastify'; // 导入 toast
 
 const MedicationDescriptionPage = () => {
     const [medicationInfo, setMedicationInfo] = useState(null);
-    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);  // 控制 loading 状态
     const location = useLocation();
     const query = new URLSearchParams(location.search).get('query');
     const { t, i18n } = useTranslation();
     const navigate = useNavigate(); // 获取 navigate 方法用于页面跳转
 
     useEffect(() => {
-        if (query) {
-            // Fetch medication info from OpenFDA
-            fetch(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${query}"`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        setMedicationInfo(data);
-                        setError(null); // Reset any previous errors
-                    } else {
-                        setMedicationInfo(null); // No results found
-                        setError('No medication information found for your query.'); // Set no results error message
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching medication info:", error);
-                    setError('Error fetching medication information.'); // Handle network errors
-                });
-        } else {
-            // If no query is provided, reset states
-            setMedicationInfo(null);
-            setError(null);
+        if (!query) {
+            return;
         }
-    }, [query]);
 
-    useEffect(() => {
-        if (error) {
-            toast.error(error, {
-                onClose: () => {
-                    // 自动返回上一页
-                    navigate(-1);  // 使用 react-router 的 navigate 方法返回上一页
+        // 设置加载状态为 true
+        setIsLoading(true);
+
+        // 请求数据
+        fetch(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${query}"`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            }); // Show error notification and handle onClose
-        }
-    }, [error, navigate]); // 监听错误和 navigate 变化
+                return response.json();
+            })
+            .then(data => {
+                // 请求成功且返回数据
+                if (data.results && data.results.length > 0) {
+                    setMedicationInfo(data);
+                } else {
+                    setMedicationInfo(null); // 没有数据时处理
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching medication info:", error);
+            })
+            .finally(() => {
+                setIsLoading(false); // 请求结束，更新 loading 状态
+            });
 
-    // Only show the loading message if a search has been made
-    if (!medicationInfo && query) {
+    }, [query, navigate]);
+
+    // 查询过程中显示 loading 动画
+    if (isLoading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
                 <Spinner animation="border" role="status">
@@ -68,6 +59,7 @@ const MedicationDescriptionPage = () => {
         );
     }
 
+    // 查询完成后，根据数据展示结果
     return (
         <Card className="centered-container">
             <Card.Body>
@@ -82,17 +74,26 @@ const MedicationDescriptionPage = () => {
                 </Row>
 
                 {/* 药物信息内容居中显示 */}
-                <div style={{ textAlign: 'center' }}>
-                    <Card.Text>
-                        <strong>{t('Name')}:</strong> {medicationInfo?.results?.[0]?.openfda?.brand_name?.[0] || 'N/A'}
-                    </Card.Text>
-                    <Card.Text>
-                        <strong>{t('Purpose')}:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}
-                    </Card.Text>
-                    <Card.Text>
-                        <strong>{t('Description')}:</strong> {medicationInfo?.results?.[0]?.description?.[0] || 'N/A'}
-                    </Card.Text>
-                </div>
+                {medicationInfo ? (
+                    <div style={{ textAlign: 'center' }}>
+                        <Card.Text>
+                            <strong>{t('Name')}:</strong> {medicationInfo?.results?.[0]?.openfda?.brand_name?.[0] || 'N/A'}
+                        </Card.Text>
+                        <Card.Text>
+                            <strong>{t('Purpose')}:</strong> {medicationInfo?.results?.[0]?.purpose?.[0] || 'N/A'}
+                        </Card.Text>
+                        <Card.Text>
+                            <strong>{t('Description')}:</strong> {medicationInfo?.results?.[0]?.description?.[0] || 'N/A'}
+                        </Card.Text>
+                    </div>
+                ) : (
+                    // 如果没有药物信息，显示没有找到的提示
+                    query && (
+                        <div style={{ textAlign: 'center' }}>
+                            <p>{t('No medication information found for your query.')}</p>
+                        </div>
+                    )
+                )}
             </Card.Body>
         </Card>
     );
