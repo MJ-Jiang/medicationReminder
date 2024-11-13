@@ -21,6 +21,8 @@ const CreateReminderPage = ({ onAddReminder }) => {
         const originalStartDate = new Date(startDate).toISOString().slice(0, 10);
         const originalEndDate = new Date(endDate).toISOString().slice(0, 10);
     
+        const reminderData = JSON.parse(localStorage.getItem('reminderData')) || [];
+        
         // 根据频率生成提醒
         if (frequency === 'daily') {
             let currentDate = new Date(startDate);
@@ -58,6 +60,10 @@ const CreateReminderPage = ({ onAddReminder }) => {
 
         // 添加所有提醒到主应用状态
         if (remindersToAdd.length > 0) {
+            // 更新 localStorage 和父组件状态
+            const updatedReminderData = [...reminderData, ...remindersToAdd];
+            localStorage.setItem('reminderData', JSON.stringify(updatedReminderData));
+
             remindersToAdd.forEach((reminder) => onAddReminder(reminder));
     
             // 保留整个周期的提醒信息传递给详情
