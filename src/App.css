@@ -29,6 +29,7 @@
 /* 淡入淡出效果 */
 .flash {
   animation: fadeInOut 0.5s ease-in-out;
+
 }
 
 @keyframes fadeInOut {
@@ -41,5 +42,79 @@
   100% {
     opacity: 0;
   }
+}
+/* ReminderItem 样式 */
+.reminder-item {
+  display: flex;
+  flex-direction: column; /* 垂直布局 */
+  align-items: flex-start; /* 左对齐 */
+  padding: 12px;
+  border-radius: 8px; /* 圆角 */
+  border: 1px solid #ddd; /* 边框颜色更柔和 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+  background-color: #fff;
+  transition: all 0.3s ease; /* 平滑过渡 */
+  position: relative; /* 使复选框能够固定在右侧 */
+  margin-bottom: 10px; /* 每个条目之间有间距 */
+}
+
+.reminder-item.completed {
+  background-color: #f0f0f0; /* 更柔和的已完成背景色 */
+  text-decoration: line-through; /* 删除线样式 */
+}
+
+.reminder-item .reminder-content {
+  display: flex;
+  align-items: flex-start; /* 确保文本和图片垂直对齐 */
+  cursor: pointer; /* 确保光标在悬停时变为指针 */
+  padding-bottom: 5px; /* 为了让时间和剂量有点间距 */
+}
+
+.reminder-item img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px; /* 图片和文本之间有点间距 */
+}
+
+.reminder-item .text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.reminder-item .text-content .name {
+  font-size: 16px;
+  color: #333;
+}
+
+.reminder-item.completed .text-content .name {
+  color: #888;
+}
+
+.reminder-item .time-dosage {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 12px; /* 更小的字体 */
+  color: #888; /* 使用浅灰色 */
+}
+
+.reminder-item .time-dosage span {
+  margin-right: 15px;
+}
+
+.reminder-item input[type="checkbox"] {
+  position: absolute;
+  top: 50%; /* 使复选框垂直居中 */
+  right: 10px; /* 距离右侧有点间距 */
+  transform: translateY(-50%); /* 完全居中 */
+  width: 16px; /* 调整复选框大小 */
+  height: 16px; /* 调整复选框大小 */
+  cursor: pointer; /* 光标样式 */
+  accent-color: #007bff; /* 默认颜色 */
+  transition: all 0.3s ease; /* 平滑过渡 */
+}
+
+.reminder-item.completed input[type="checkbox"] {
+  accent-color: #888; /* 打勾后的颜色为深灰色 */
 }
 
