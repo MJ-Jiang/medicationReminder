@@ -1,4 +1,4 @@
-// LanguageSelector.jsx
+
 import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { changeLanguage } from 'i18next';

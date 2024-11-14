@@ -1,35 +1,63 @@
-#root {
+#root { 
   max-width: 1280px;
   margin: 0 auto;
 }
 
 .centered-container {
-  max-width: 400px; /* 默认最大宽度 */
-  width: 100%; /* 确保在小屏幕时容器能够自适应宽度 */
-  margin: 40px auto 40px; /* 将内容居中对齐 */
-  padding: 20px; /* 添加内边距，保证左右空白 */
+  max-width: 400px; /* Default maximum width */
+  width: 100%; /* Ensure container is responsive on small screens */
+  margin: 40px auto 40px; /* Center align the content */
+  padding: 20px; /* Add padding for whitespace on the sides */
   padding-top: 20px;
-  background-color: #fff; /* 可选：背景颜色 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 可选：增加阴影效果 */
-  border-radius: 8px; /* 可选：圆角 */
+  background-color: #fff; /*  background color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /*  add shadow effect */
+  border-radius: 8px; /* rounded corners */
 }
 
 @media (min-width: 1024px) {
   .centered-container {
-    max-width:50%; /* 大屏幕下的宽度为页面的1/3 */
+    max-width:50%; /* Width set to 1/2 of the page on large screens */
   }
 }
 
 @media (max-width: 767px) {
   .centered-container {
-    max-width: 90%; /* 小屏幕下的宽度接近全屏，但留出10%的边距 */
+    max-width: 90%; /* Width is close to full screen on small screens, with a 10% margin */
   }
 }
-/* 闪烁效果 */
-/* 淡入淡出效果 */
+
+/* ReminderForm time*/
+.form-group {
+  margin-bottom: 1rem;
+}
+
+
+.time-input-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+
+.button-add, .button-remove {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 20px;
+  cursor: pointer;
+  margin-top: 25px;
+  padding-top: 3px;
+}
+
+.button-add img, .button-remove img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Flashing effect */
+/* Fade-in and fade-out effect */
 .flash {
   animation: fadeInOut 0.5s ease-in-out;
-
 }
 
 @keyframes fadeInOut {
@@ -43,46 +71,46 @@
     opacity: 0;
   }
 }
-/* ReminderItem 样式 */
+/* ReminderItem style */
 .reminder-item {
-  display: grid; /* 使用 grid 布局 */
-  grid-template-columns: 1fr auto; /* 定义两列：第一列占剩余空间，第二列为复选框 */
-  gap: 10px; /* 列之间的间距 */
+  display: grid; /* Use grid layout */
+  grid-template-columns: 1fr auto; /* Define two columns: first column takes remaining space, second column for the checkbox */
+  gap: 10px; /* Spacing between columns */
   padding: 12px;
-  border-radius: 8px; /* 圆角 */
-  border: 1px solid #ddd; /* 边框颜色更柔和 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+  border-radius: 8px; /* Rounded corners */
+  border: 1px solid #ddd; /* Softer border color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
   background-color: #fff;
-  transition: all 0.3s ease; /* 平滑过渡 */
-  position: relative; /* 使复选框能够固定在右侧 */
-  margin-bottom: 10px; /* 每个条目之间有间距 */
-  width: 100%; /* 确保项占满父容器 */
+  transition: all 0.3s ease; /* Smooth transition */
+  position: relative; /* Position the checkbox fixed to the right */
+  margin-bottom: 10px; /* Spacing between each item */
+  width: 100%; /* Ensure item takes up full width of parent container */
 }
 
 .reminder-item.completed {
-  background-color: #f0f0f0; /* 更柔和的已完成背景色 */
-  text-decoration: line-through; /* 删除线样式 */
+  background-color: #f0f0f0; /* Softer background color for completed items */
+  text-decoration: line-through; /* Strikethrough style */
 }
 
 .reminder-item .reminder-content {
   display: flex;
-  align-items: flex-start; /* 确保文本和图片垂直对齐 */
-  cursor: pointer; /* 确保光标在悬停时变为指针 */
-  padding-bottom: 5px; /* 为了让时间和剂量有点间距 */
-  grid-column: span 2; /* 使 reminder-content 跨越两列 */
-  width: 100%; /* 让 reminder-content 占满父容器的宽度 */
+  align-items: flex-start; /* Ensure text and image are vertically aligned */
+  cursor: pointer; /* Cursor changes to pointer on hover */
+  padding-bottom: 5px; /* Add spacing between time and dosage */
+  grid-column: span 2; /* Make reminder-content span two columns */
+  width: 100%; /* Ensure reminder-content takes up full width of parent container */
 }
 
 .reminder-item img {
   width: 24px;
   height: 24px;
-  margin-right: 10px; /* 图片和文本之间有点间距 */
+  margin-right: 10px; /* Spacing between image and text */
 }
 
 .reminder-item .text-content {
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* 确保 text-content 占据剩余的空间 */
+  flex-grow: 1; /* Ensure text-content takes up remaining space */
 }
 
 .reminder-item .text-content .name {
@@ -98,8 +126,8 @@
   display: flex;
   align-items: center;
   margin-top: 5px;
-  font-size: 12px; /* 更小的字体 */
-  color: #888; /* 使用浅灰色 */
+  font-size: 12px; /* Smaller font size */
+  color: #888; /* Use light gray color */
 }
 
 .reminder-item .time-dosage span {
@@ -108,16 +136,16 @@
 
 .reminder-item input[type="checkbox"] {
   position: absolute;
-  top: 50%; /* 使复选框垂直居中 */
-  right: 10px; /* 距离右侧有点间距 */
-  transform: translateY(-50%); /* 完全居中 */
-  width: 16px; /* 调整复选框大小 */
-  height: 16px; /* 调整复选框大小 */
-  cursor: pointer; /* 光标样式 */
-  accent-color: #007bff; /* 默认颜色 */
-  transition: all 0.3s ease; /* 平滑过渡 */
+  top: 50%; /* Vertically center the checkbox */
+  right: 10px; /* Small margin from the right side */
+  transform: translateY(-50%); /* Full centering */
+  width: 16px; /* Adjust checkbox size */
+  height: 16px; /* Adjust checkbox size */
+  cursor: pointer; /* Pointer cursor */
+  accent-color: #007bff; /* Default color */
+  transition: all 0.3s ease; /* Smooth transition */
 }
 
 .reminder-item.completed input[type="checkbox"] {
-  accent-color: #888; /* 打勾后的颜色为深灰色 */
+  accent-color: #888; /* Dark gray color after being checked */
 }

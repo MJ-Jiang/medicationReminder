@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const DatePicker = ({ onDateChange, initialDate, style = {} }) => {
     const [selectedDate, setSelectedDate] = useState(initialDate || new Date().toISOString().slice(0, 10));
 
-    // 使用 useEffect 监听 initialDate 的变化并同步更新 selectedDate
+    // Use useEffect to monitor changes in initialDate and update selectedDate synchronously
     useEffect(() => {
         if (initialDate) {
             setSelectedDate(initialDate);
@@ -13,7 +13,7 @@ const DatePicker = ({ onDateChange, initialDate, style = {} }) => {
     const handleChange = (event) => {
         const newDate = event.target.value;
         setSelectedDate(newDate);
-        onDateChange(newDate); // 调用父组件的回调
+        onDateChange(newDate); // Calling the parent component's callback
     };
 
     return (
@@ -28,12 +28,13 @@ const DatePicker = ({ onDateChange, initialDate, style = {} }) => {
                 border: '1px solid #ced4da',
                 backgroundColor: 'rgb(255, 255, 255)',
                 boxSizing: 'border-box',
-                appearance: 'none', // 取消原生样式
-                WebkitAppearance: 'none', // 兼容Safari
-                MozAppearance: 'none', // 兼容Firefox
+                appearance: 'none', // Remove native styling
+                WebkitAppearance: 'none', // Compatibility for Safari
+                MozAppearance: 'none', // Compatibility for Firefox
                 transition: 'all 0.2s ease',
                 width: '100%',
-                ...style, // 传递的style会覆盖默认样式
+                ...style, // The passed-in style will override default styles
+
             }}
         />
     );

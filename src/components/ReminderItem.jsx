@@ -5,7 +5,7 @@ const ReminderItem = ({ reminder, onToggleComplete, onItemClick, isDateChanged }
     return (
         <div className={`reminder-item ${reminder.completed ? 'completed' : ''} ${isDateChanged ? 'flash' : ''}`}>
             <div
-                onClick={onItemClick} // 点击条目导航到详细信息
+                onClick={onItemClick} // Click on an entry to navigate to detailed information
                 className="reminder-content"
             >
                 <img 
@@ -27,8 +27,8 @@ const ReminderItem = ({ reminder, onToggleComplete, onItemClick, isDateChanged }
           
             <input
                 type="checkbox"
-                checked={reminder.completed || false} // 如果未定义则默认为 false
-                onChange={() => onToggleComplete(reminder.reminderId)} // 切换复选框
+                checked={reminder.completed || false} // If undefined, defaults to false
+                onChange={() => onToggleComplete(reminder.reminderId)} // Toggle Checkbox
             />
         </div>
     );

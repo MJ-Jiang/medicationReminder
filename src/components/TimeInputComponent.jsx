@@ -10,7 +10,7 @@ const TimeInputComponent = ({ selectedTime, setSelectedTime }) => {
 
     return (
         <div style={{ margin: '10px 0' }}>
-            <label htmlFor="time" style={{ display: 'block',  marginBottom: '8px' }}>
+            <label htmlFor="time" style={{ display: 'block', marginBottom: '8px' }}>
                 {t('Reminder Time')}
             </label>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -34,7 +34,11 @@ const TimeInputComponent = ({ selectedTime, setSelectedTime }) => {
                             verticalAlign: 'middle', // Ensures the text is vertically centered
                         },
                     }}
-                    renderInput={(params) => <input {...params} required />}
+                    slotProps={{
+                        textField: {
+                            required: true, // Ensure the input is required, just like the original
+                        },
+                    }}
                 />
             </LocalizationProvider>
         </div>

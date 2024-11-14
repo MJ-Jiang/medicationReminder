@@ -4,7 +4,7 @@ import ReminderDetails from '../components/ReminderDetails';
 import SearchBar from '../components/SearchBar';
 import BackButton from '../components/BackButton';
 import { useTranslation } from 'react-i18next';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import '../App.css';
 
 const CreateReminderPage = ({ onAddReminder }) => {
@@ -17,13 +17,13 @@ const CreateReminderPage = ({ onAddReminder }) => {
         const { startDate, endDate, frequency, times } = newReminder;
         const remindersToAdd = [];
         
-        // 保留原始的开始和结束日期
+        // Keep original start and end dates
         const originalStartDate = new Date(startDate).toISOString().slice(0, 10);
         const originalEndDate = new Date(endDate).toISOString().slice(0, 10);
     
         const reminderData = JSON.parse(localStorage.getItem('reminderData')) || [];
         
-        // 根据频率生成提醒
+        // Generate reminders based on frequency
         if (frequency === 'daily') {
             let currentDate = new Date(startDate);
             const endDateObj = new Date(endDate);
@@ -31,14 +31,14 @@ const CreateReminderPage = ({ onAddReminder }) => {
             while (currentDate <= endDateObj) {
                 remindersToAdd.push({
                     ...newReminder,
-                    id: `${newReminder.name}-${currentDate.toISOString().slice(0, 10)}-${times.join('-')}`,  // 生成唯一 id
+                    id: `${newReminder.name}-${currentDate.toISOString().slice(0, 10)}-${times.join('-')}`,  // Generate a unique id
                     startDate: currentDate.toISOString().slice(0, 10),
                     endDate: currentDate.toISOString().slice(0, 10),
                     times: times,
                     originalStartDate, 
                     originalEndDate, 
                 });
-                currentDate.setDate(currentDate.getDate() + 1); // 每日增加
+                currentDate.setDate(currentDate.getDate() + 1); // add everyday
             }
         } else if (frequency === 'weekly') {
             let currentDate = new Date(startDate);
@@ -54,19 +54,19 @@ const CreateReminderPage = ({ onAddReminder }) => {
                     originalStartDate, 
                     originalEndDate, 
                 });
-                currentDate.setDate(currentDate.getDate() + 7); // 每周增加7天
+                currentDate.setDate(currentDate.getDate() + 7); // add 7 days
             }
         }
 
-        // 添加所有提醒到主应用状态
+        // Add all reminders to the main app state
         if (remindersToAdd.length > 0) {
-            // 更新 localStorage 和父组件状态
+            // Update localStorage and parent component state
             const updatedReminderData = [...reminderData, ...remindersToAdd];
             localStorage.setItem('reminderData', JSON.stringify(updatedReminderData));
 
             remindersToAdd.forEach((reminder) => onAddReminder(reminder));
     
-            // 保留整个周期的提醒信息传递给详情
+            // Keep reminder information for the entire cycle and pass it to details
             setReminder({
                 ...newReminder,
                 startDate: originalStartDate,
@@ -79,8 +79,7 @@ const CreateReminderPage = ({ onAddReminder }) => {
     };
 
     const handleClose = () => {
-        setShowDetails(false);
-        setReminder(null); // 关闭时清空提醒
+        setShowDetails(false); setReminder(null); // Clear reminders when closed
     };
 
     return (
@@ -92,7 +91,7 @@ const CreateReminderPage = ({ onAddReminder }) => {
                 <Col className="text-center">
                     <h3 style={{ margin: 0 }}>{t('New Pill Reminder')}</h3>
                 </Col>
-                <Col xs="auto">{/* 右侧留空，保证标题居中对齐 */}</Col>
+                <Col xs="auto"></Col>
             </Row>
             
             <SearchBar onSearch={setQuery} />

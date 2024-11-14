@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ReminderItem from './ReminderItem';
 import '../App.css';
+import { useTranslation } from 'react-i18next';
 
 const ReminderList = ({ reminders, selectedDate, completedReminders, handleToggleComplete, onItemClick }) => {
   const [sortedReminderItems, setSortedReminderItems] = useState([]);
   const [isDateChanged, setIsDateChanged] = useState(false);
   
-  // 使用 useRef 保存之前的 selectedDate
+  // Use useRef to save the previous selectedDate
   const prevSelectedDateRef = useRef(selectedDate);
-
+  const { t } = useTranslation();
+  
   useEffect(() => {
-    // 过滤当天的提醒
+    // Filter reminders for the day
     const filteredReminders = reminders.filter((reminder) => {
       const currentDate = new Date(selectedDate);
       const reminderStartDate = new Date(reminder.startDate);
@@ -18,7 +20,7 @@ const ReminderList = ({ reminders, selectedDate, completedReminders, handleToggl
       return reminderStartDate <= currentDate && reminderEndDate >= currentDate;
     });
 
-    // 提取所有提醒项，并按时间排序
+    // Extract all reminders and sort them by time
     const allReminderItems = filteredReminders.flatMap((reminder) =>
       reminder.times.map((time, timeIndex) => {
         const reminderId = `${reminder.name}-${reminder.startDate}-${time}-${timeIndex}`;
@@ -26,12 +28,12 @@ const ReminderList = ({ reminders, selectedDate, completedReminders, handleToggl
           ...reminder,
           time,
           reminderId,
-          completed: completedReminders[reminderId], // 添加 completed 状态
+          completed: completedReminders[reminderId], // Add completed status
         };
       })
     );
 
-    // 按时间排序
+    // Sort by time
     setSortedReminderItems(
       allReminderItems.sort((a, b) => {
         const timeA = new Date(`${selectedDate}T${a.time}:00`);
@@ -40,23 +42,23 @@ const ReminderList = ({ reminders, selectedDate, completedReminders, handleToggl
       })
     );
 
-    // 检查日期是否发生变化
+    // Check if the date has changed
     const prevDate = new Date(prevSelectedDateRef.current);
     const currentDate = new Date(selectedDate);
     
     if (currentDate.getTime() !== prevDate.getTime()) {
       setIsDateChanged(true);
-      // 使用 setTimeout 清除闪烁效果
+      // Use setTimeout to clear the flickering effect
       const timer = setTimeout(() => setIsDateChanged(false), 200);
-      prevSelectedDateRef.current = selectedDate; // 更新 ref
+      prevSelectedDateRef.current = selectedDate; // update ref
       return () => clearTimeout(timer);
     }
   }, [reminders, selectedDate, completedReminders]);
 
   return (
-    <div key={selectedDate}> {/* 使用 key 强制重新渲染组件 */}
+    <div key={selectedDate}> {/* Use key to force re-rendering of component */}
       {sortedReminderItems.length === 0 ? (
-        <p>No reminders for {selectedDate}.</p>
+        <p>{t('No reminders for')} {selectedDate}.</p>
       ) : (
         sortedReminderItems.map((reminder) => (
           <ReminderItem

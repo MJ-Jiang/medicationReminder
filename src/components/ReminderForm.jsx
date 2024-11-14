@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';  // 修正：确保只导入一次
+import { ToastContainer, toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
 import TimeInputComponent from './TimeInputComponent';
-import DatePicker from './DatePicker';  // 自定义的 DatePicker 组件
+import DatePicker from './DatePicker';  
 import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import '../App.css'; 
 
 const ReminderForm = ({ onAddReminder }) => {
     const { t } = useTranslation();
@@ -15,18 +16,12 @@ const ReminderForm = ({ onAddReminder }) => {
     const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
     const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
     const [frequency, setFrequency] = useState('');
-    const [times, setTimes] = useState(['']); // 初始只有一个时间输入框
+    const [times, setTimes] = useState(['']); 
 
     
     // Toast helper function for displaying error
     const showToast = (message) => {
-        toast.error(message, {
-            position: "top-right",
-            autoClose: false,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
+        toast.error(message, {position: "top-right",autoClose: false,hideProgressBar: false,closeOnClick: true,pauseOnHover: true,draggable: true,
         });
     };
 
@@ -54,32 +49,33 @@ const ReminderForm = ({ onAddReminder }) => {
         const existingReminders = JSON.parse(localStorage.getItem('reminderData')) || [];
         const isNameExist = existingReminders.some((reminder) => reminder.name === name);
 
+        //Prevent submission if an alert with the same name already exists
         if (isNameExist) {
             showToast(t('Reminder name already exists! Please choose a different name.'));
-            return;  // 如果存在相同名字的提醒，阻止提交
+            return;  
         }
         
         const startDateObj = new Date(startDate);
         const endDateObj = new Date(endDate);
 
-        // 检查结束日期是否晚于开始日期
+        
         if (endDateObj < startDateObj) {
-            showToast(t('End date must be after start date'));  // Toast 提示
-            return;  // 不提交表单，避免创建 reminder
+            showToast(t('End date must be after start date'));  
+            return;  
         }
 
-        // 如果日期有效，创建新的提醒
+        // If the date is valid, create a new reminder
         const newReminder = { name, description, dosage, startDate, frequency, endDate, times };
         onAddReminder(newReminder);
 
-        // 重置表单
+        // reset form
         setName('');
         setDescription('');
         setDosage('');
         setFrequency('');
         setTimes(['']);
 
-        // 重置日期到今天
+        // reset date to today
         const today = new Date().toISOString().slice(0, 10);
         setStartDate(today);
         setEndDate(today);
@@ -91,51 +87,32 @@ const ReminderForm = ({ onAddReminder }) => {
                 {/* Name Field */}
                 <Form.Group className="mb-3" controlId="formName">
                     <Form.Label>{t('Name')}</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
+                    <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} required />
                 </Form.Group>
 
                 {/* Description Field */}
                 <Form.Group className="mb-3" controlId="formDescription">
                     <Form.Label>{t('Description')}</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
+                    <Form.Control type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
                 </Form.Group>
 
                 {/* Dosage Field */}
                 <Form.Group className="mb-3" controlId="formDosage">
                     <Form.Label>{t('Dosage')}</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={dosage}
-                        onChange={(e) => setDosage(e.target.value)}
+                    <Form.Control type="text" value={dosage} onChange={(e) => setDosage(e.target.value)}
                     />
                 </Form.Group>
 
                 {/* Start Date Field */}
                 <Form.Group className="mb-3" controlId="formStartDate">
                     <Form.Label>{t('Start Date')}</Form.Label>
-                    <DatePicker
-                        initialDate={startDate}
-                        onDateChange={handleStartDateChange}
-                    />
+                    <DatePicker initialDate={startDate} onDateChange={handleStartDateChange} />
                 </Form.Group>
 
                 {/* Frequency Field */}
                 <Form.Group className="mb-3" controlId="formFrequency">
                     <Form.Label>{t('Frequency')}</Form.Label>
-                    <Form.Select
-                        value={frequency}
-                        onChange={(e) => setFrequency(e.target.value)}
-                        required
-                    >
+                    <Form.Select value={frequency} onChange={(e) => setFrequency(e.target.value)} required >
                         <option value="">{t('Select Frequency')}</option>
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
@@ -145,68 +122,41 @@ const ReminderForm = ({ onAddReminder }) => {
                 {/* End Date Field */}
                 <Form.Group className="mb-3" controlId="formEndDate">
                     <Form.Label>{t('End Date')}</Form.Label>
-                    <DatePicker
-                        initialDate={endDate}
-                        onDateChange={handleEndDateChange}
-                    />
+                    <DatePicker initialDate={endDate} onDateChange={handleEndDateChange} />
                 </Form.Group>
 
                 {/* Times Field */}
-                <Form.Group className="mb-3" controlId="formTimes">
+                <Form.Group className="form-group" controlId="formTimes">
                     {times.map((time, index) => (
-                        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                        <div key={index} className="time-input-wrapper">
                             <TimeInputComponent
-                                selectedTime={time}
-                                setSelectedTime={(newTime) => handleTimeChange(index, newTime)}
+                                selectedTime={time} setSelectedTime={(newTime) => handleTimeChange(index, newTime)}
                             />
                             {index === times.length - 1 && (
-                                <button
-                                    type="button"
-                                    onClick={handleAddTime}
-                                    style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        padding: '0',
-                                        marginLeft: '20px',
-                                        cursor: 'pointer',
-                                        marginTop: '25px',
-                                        paddingTop: '3px',
-                                    }}
-                                >
-                                    <img src="src/assets/add.png" alt="Add" style={{ width: '20px', height: '20px' }} />
+                                <button type="button" onClick={handleAddTime} className="button-add" >
+                                <img src="src/assets/add.png" alt="Add" />
                                 </button>
                             )}
                             {times.length > 1 && (
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        const updatedTimes = times.filter((_, i) => i !== index);
-                                        setTimes(updatedTimes);
+                            <button type="button" onClick={() => {
+                                    const updatedTimes = times.filter((_, i) => i !== index);
+                                    setTimes(updatedTimes);
                                     }}
-                                    style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        padding: '0',
-                                        marginLeft: '20px',
-                                        cursor: 'pointer',
-                                        marginTop: '25px',
-                                        paddingTop: '3px',
-                                    }}
-                                >
-                                    <img src="src/assets/minus.png" alt="minus" style={{ width: '20px', height: '20px' }} />
-                                </button>
-                            )}
+                                    className="button-remove"
+                            >
+                                <img src="src/assets/minus.png" alt="minus" />
+                            </button>
+                        )}
                         </div>
                     ))}
                 </Form.Group>
-
                 {/* Submit Button */}
                 <Button variant="danger" style={{ width: '100%' }} type="submit">
                     {t('Add Reminder')}
                 </Button>
             </Form>
 
-            {/* Toast container for displaying notifications */}
+         
             <ToastContainer />
         </>
     );

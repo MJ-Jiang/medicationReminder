@@ -1,43 +1,43 @@
-// TodayRemindersPage.jsx
+
 import React, { useState, useEffect } from 'react';
-import ReminderList from '../components/ReminderList'; // 引入新的 ReminderList 组件
+import ReminderList from '../components/ReminderList'; 
 import ReminderDetails from '../components/ReminderDetails';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import DatePicker from '../components/DatePicker';
 import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
-import LanguageSelector from '../components/LanguageSelector'; // 引入新的语言选择组件
-import ReminderToastNotifier from '../components/ReminderToastNotifier'; // 引入 ReminderToastNotifier 组件
-import { ToastContainer } from 'react-toastify';  // 引入 ToastContainer 组件
+import LanguageSelector from '../components/LanguageSelector'; 
+import ReminderToastNotifier from '../components/ReminderToastNotifier'; 
+import { ToastContainer } from 'react-toastify';  
 import '../App.css';
 
 const TodayRemindersPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [reminders, setReminders] = useState([]); // 所有提醒
-  const [completedReminders, setCompletedReminders] = useState({}); // 记录提醒是否完成
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10)); // 默认当天
-  const [selectedReminder, setSelectedReminder] = useState(null); // 当前选中的提醒
+  const [reminders, setReminders] = useState([]); 
+  const [completedReminders, setCompletedReminders] = useState({}); 
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10)); 
+  const [selectedReminder, setSelectedReminder] = useState(null); 
   const [query, setQuery] = useState('');
 
-  // 从 localStorage 读取提醒数据
+  // Read reminder data from localStorage
   useEffect(() => {
     const reminderData = JSON.parse(localStorage.getItem('reminderData')) || [];
     setReminders(reminderData);
 
-    // 初始化 completedReminders 状态
+    // Initialize the completedReminders state
     const initialCompleted = reminderData.reduce((acc, reminder) => {
       reminder.times.forEach((time, timeIndex) => {
         const reminderId = `${reminder.name}-${reminder.startDate}-${time}-${timeIndex}`;
-        acc[reminderId] = false; // 默认为未完成
+        acc[reminderId] = false; // Default is unfinished
       });
       return acc;
     }, {});
     setCompletedReminders(initialCompleted);
   }, []);
 
-  // 切换提醒的完成状态
+  // Toggle the completion state of a reminder
   const handleToggleComplete = (reminderId) => {
     setCompletedReminders((prev) => {
       const newCompleted = { ...prev };
@@ -46,7 +46,7 @@ const TodayRemindersPage = () => {
     });
   };
 
-  // 显示选中的提醒详情
+  // Show selected reminder details
   const handleItemClick = (reminder) => {
     setSelectedReminder(reminder);
   };
@@ -63,7 +63,7 @@ const TodayRemindersPage = () => {
         }}
       >
         <h3 style={{ margin: 0 }}>{t('Pill Reminders')}</h3>
-        <LanguageSelector /> {/* 引入新的 LanguageSelector 组件 */}
+        <LanguageSelector /> 
       </div>
 
       <SearchBar onSearch={setQuery} style={{ marginBottom: '20px' }} />
@@ -72,17 +72,16 @@ const TodayRemindersPage = () => {
         <DatePicker
           onDateChange={(newDate) => setSelectedDate(newDate)}
           initialDate={selectedDate}
-          style={{ width: '35%' }} // 在这里传递了新的样式
+          style={{ width: '35%' }} 
         />
       </div>
 
-      {/* 使用 ReminderList 组件显示提醒条目 */}
       <ReminderList
         reminders={reminders}
         selectedDate={selectedDate}
         completedReminders={completedReminders}
         handleToggleComplete={handleToggleComplete}
-        onItemClick={handleItemClick} // 将 onItemClick 传递给 ReminderList
+        onItemClick={handleItemClick} // Pass onItemClick to ReminderList
       />
 
       <div style={{ marginTop: '20px' }}>
@@ -91,10 +90,10 @@ const TodayRemindersPage = () => {
         </Button>
       </div>
 
-      {/* 显示提醒详情 */}
+
       {selectedReminder && <ReminderDetails reminder={selectedReminder} onClose={() => setSelectedReminder(null)} />}
 
-      {/* 触发提醒的 toast 通知 */}
+
       <ReminderToastNotifier
         reminders={reminders}
         selectedDate={selectedDate}
