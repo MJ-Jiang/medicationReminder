@@ -1,25 +1,24 @@
 Medicine Reminder App - Design Document
 1. Overview
-The Medicine Reminder App is a mobile application developed using Android Studio with Java. It helps
-users manage their medication schedules efficiently by providing reminders, tracking progress, and
-allowing customization through user settings. The app utilizes Node.js, Express, and MySQL for
-backend services, ensuring persistent data storage and retrieval.
+The Medicine Reminder App is a mobile application developed using Android Studio with Java. It helps users manage their medication schedules efficiently by providing reminders, tracking progress, and allowing customization through user settings. The app utilizes Node.js, Express, and MySQL forbackend services, ensuring persistent data storage and retrieval.
+
 While completing the Medicine Reminder App, my main focus will be on mastering Android
 development with Java in the Android Studio for the frontend, as outlined in the course exercises. In
 addition to the course content, I plan to independently strengthen my backend development skills. I
-aim to learn how to use Node.js and Express for building a robust backend, as well as reviewing MySQL
-for managing databases. My goal is to integrate both frontend and backend skills, enabling me to
-independently develop the entire app, from user interface to data management and deployment.
+aim to learn how to use Node.js and Express for building a robust backend, as well as reviewing MySQL for managing databases. My goal is to integrate both frontend and backend skills, enabling me to independently develop the entire app, from user interface to data management and deployment.
+
 My timetable would be:
 24.2-2.3: UI design
 3.3-30.3 Frontend pages
 31.3-20.4 Backend and deployment
 21.4-30.4 Documentation
+
 2. Features
 2.1 User Authentication
 • Users can register and log in.
 • User authentication is managed via a backend service with secure password hashing.
 • Requires database storage for user credentials.
+
 2.2 Pill Reminders
 • Create New Reminder:
 o Users can set reminders with a start date and end date.
@@ -32,10 +31,12 @@ o Reminders are sorted in chronological order.
 o Users can mark a reminder as "done."
 • Notifications:
 o Timed alerts when a medication needs to be taken.
+
 2.3 Progress Tracking
 • Users can generate records of completed reminders.
 • Provides daily, weekly, and monthly completion rate tracking.
 • Displays visual representations of medication adherence.
+
 2.4 Settings Menu
 • Users can update their:
 o Nickname
