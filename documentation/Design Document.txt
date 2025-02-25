@@ -1,11 +1,16 @@
 Medicine Reminder App - Design Document
 1. Overview
-The Medicine Reminder App is a mobile application developed using Android Studio with Java. It helps users manage their medication schedules efficiently by providing reminders, tracking progress, and allowing customization through user settings. The app utilizes Node.js, Express, and MySQL forbackend services, ensuring persistent data storage and retrieval.
+The Medicine Reminder App is a mobile application developed using Android Studio with Java. It helps
+users manage their medication schedules efficiently by providing reminders, tracking progress, and
+allowing customization through user settings. The app utilizes Node.js, Express, and MySQL for
+backend services, ensuring persistent data storage and retrieval.
 
 While completing the Medicine Reminder App, my main focus will be on mastering Android
 development with Java in the Android Studio for the frontend, as outlined in the course exercises. In
 addition to the course content, I plan to independently strengthen my backend development skills. I
-aim to learn how to use Node.js and Express for building a robust backend, as well as reviewing MySQL for managing databases. My goal is to integrate both frontend and backend skills, enabling me to independently develop the entire app, from user interface to data management and deployment.
+aim to learn how to use Node.js and Express for building a robust backend, as well as reviewing MySQL
+for managing databases. My goal is to integrate both frontend and backend skills, enabling me to
+independently develop the entire app, from user interface to data management and deployment.
 
 My timetable would be:
 24.2-2.3: UI design
