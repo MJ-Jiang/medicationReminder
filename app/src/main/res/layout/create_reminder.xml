@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -150,15 +149,58 @@
             android:paddingBottom="8dp"
             android:textColor="#000000" />
 
-        <TextView
-            android:id="@+id/textViewTime"
+        <!-- Time Row Template (Initially hidden) -->
+        <LinearLayout
+            android:id="@+id/linearLayoutTimeRowTemplate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Time"
-            android:background="@drawable/edit_text_border"
-            android:padding="16dp"
-            android:clickable="true"
-            android:focusable="false" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/textViewTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Select Time"
+                android:background="@drawable/edit_text_border"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="false" />
+
+            <Button
+                android:id="@+id/buttonAddTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:textSize="24sp"
+                android:layout_marginStart="8dp"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFFFFF"
+                android:minWidth="48dp"
+                android:minHeight="48dp" />
+
+            <Button
+                android:id="@+id/buttonRemoveTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textSize="24sp"
+                android:layout_marginStart="8dp"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFFFFF"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:visibility="gone" /> <!-- Default to gone -->
+        </LinearLayout>
+
+        <!-- New time fields container -->
+        <LinearLayout
+            android:id="@+id/linearLayoutTimes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp" />
 
         <!-- Create Button -->
         <Button
@@ -174,3 +216,6 @@
 
     </LinearLayout>
 </ScrollView>
+
+    <!--android:fillViewport="true" 用于 ScrollView 或 NestedScrollView，它的作用是让 ScrollView 内部的内容填满可见区域（即填满视口）。
+    如果内容不足以填充整个视口，ScrollView 会自动拉伸内容，以确保填满屏幕。-->

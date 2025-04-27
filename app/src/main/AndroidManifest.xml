@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
-        <activity android:name=".CreateReminderActivity" />
+        <activity android:name=".CreateReminderActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -25,3 +26,6 @@
     </application>
 
 </manifest>
+<!--AndroidManifest.xml 是每个 Android 应用程序的核心配置文件，它包含了应用程序的基本信息，如包名、组件声明
+（Activity、Service、Receiver、Provider 等）、权限声明等。Android 操作系统在启动应用时会读取此文件，了解如何启动和管理应用程序。
+-->

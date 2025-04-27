@@ -49,6 +49,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create Reminder"
+        android:textColor="#FFFFFF"
         android:layout_marginTop="24dp"/>
 
 </LinearLayout>
+    <!-- LinearLayout 是一个线性布局，所有子视图默认是按顺序在一条直线上排列。通过设置 android:orientation="vertical"，它会沿着垂直方向（从上到下）排列子视图。
+    如果设置 android:orientation="horizontal"，则会沿着水平方向（从左到右）排列子视图。
+    android:gravity 用于控制控件内部内容（比如文本或图像）的对齐方式。center_vertical 意味着将控件的内容垂直居中。也就是说，在 LinearLayout 中，ImageButton 和 TextView 会垂直居中对齐。
+    -->

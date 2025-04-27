@@ -1,9 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
-    <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.MyApplication" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="android:statusBarColor">#f5f5f5</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="buttonStyle">@style/MyButtonStyle</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
     </style>
 
-    <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />
 </resources>
+<!-- 定义自定义主题 Theme.MyApplication 的开始标签，继承自 Theme.AppCompat.Light.DarkActionBar，这是一个带有暗色
+ActionBar 的主题。ActionBar 是 Android 中用于显示应用程序标题、图标等元素的区域。继承自 Theme.AppCompat.Light.DarkActionBar 提供了一种轻量且具有现代风格的 UI。
+Android:statusBarColor 控制 Android 设备上方显示电池、时间等信息的状态栏颜色。
+colorPrimary通常用于显示在 ActionBar 和工具栏等元素的背景上。
+colorPrimaryDark通常用于状态栏的背景色。
+colorAccent通常用于按钮、浮动操作按钮（FAB）等可以交互的 UI 元素
+@style/MyButtonStyle 引用自定义的按钮样式 MyButtonStyle
+android:backgroundTint 控制按钮的背景色调。-->
