@@ -5,5 +5,9 @@
     <color name="colorPrimary">#e61010</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#ff9999</color>
-
+    <color name="reminder_text">#212121</color>
+    <color name="reminder_subtext">#757575</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="gray_400">#BDBDBD</color>
+    <color name="checkbox_tint">#4CAF50</color>
 </resources>
