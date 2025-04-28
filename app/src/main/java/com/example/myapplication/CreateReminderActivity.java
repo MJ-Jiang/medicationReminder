@@ -1,7 +1,7 @@
 package com.example.myapplication;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +25,7 @@ public class CreateReminderActivity extends AppCompatActivity {
     private EditText editTextName, editTextDescription, editTextDosage;
     private TextView textViewStartDateValue, textViewEndDateValue;
     private Spinner spinnerFrequency;
-    private LinearLayout linearLayoutTimes; // 新增一个LinearLayout来存放时间列表
+    private LinearLayout linearLayoutTimes; // 存放时间列表
     private ReminderDatabaseHelper dbHelper; // Database helper to store reminders
 
     // 用于保存选择的所有时间
@@ -33,49 +33,58 @@ public class CreateReminderActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //保存之前 Activity 的数据。
-        super.onCreate(savedInstanceState);//不调用 super.onCreate，系统很多内建机制（比如 UI 加载、生命周期管理）就不会正确运作！
+        super.onCreate(savedInstanceState);//不调用 super.onCreate，系统很多内建机制（比如 UI 加载、生命周期管理）就不会正确运作
         setContentView(R.layout.create_reminder);// 把界面画面加载出来
 
-        // Initialize views
+        initViews();
+
+        dbHelper = new ReminderDatabaseHelper(this);//this 就是指当前界面的环境，让 ReminderDatabaseHelper 知道该怎么正确地打开数据库。
+        setupActionBar();
+        setupFrequencySpinner();
+        setupDatePickers();
+        initTimeRows();
+        setupCreateButton();
+    }
+    private void initViews(){
         editTextName = findViewById(R.id.editTextName);//在当前界面(layout)里，找到这个具体的小组件(view)
         editTextDescription = findViewById(R.id.editTextDescription);
         editTextDosage = findViewById(R.id.editTextDosage);
         textViewStartDateValue = findViewById(R.id.textViewStartDateValue);
         textViewEndDateValue = findViewById(R.id.textViewEndDateValue);
         spinnerFrequency = findViewById(R.id.spinnerFrequency);
-        Button buttonCreateReminder = findViewById(R.id.buttonCreateReminder);
-        Button buttonAddTime = findViewById(R.id.buttonAddTime);  // 添加按钮用于新增时间
         linearLayoutTimes = findViewById(R.id.linearLayoutTimes); // 用于放置所有选定的时间
-
-        // Initialize database helper
-        dbHelper = new ReminderDatabaseHelper(this);//this 就是指当前界面的环境，让 ReminderDatabaseHelper 知道该怎么正确地打开数据库。
-
-        buttonCreateReminder.setOnClickListener(v -> createReminder());
-        // 启用 ActionBar，并显示左上角的回退按钮
-        if (getSupportActionBar() != null) {//先检查一下，当前界面有没有 ActionBar（标题栏）
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);//在标题栏上，显示一个返回按钮（一般是左上角的 ← 小箭头）
-            getSupportActionBar().setTitle("Create Reminder");  // 设置标题
-        }
-
-        // Setup frequency Spinner选项
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.frequency_array, android.R.layout.simple_spinner_item);
-        //ArrayAdapter<CharSequence> 是一个适配器，把数组的数据（比如频率选项）放到 Spinner（下拉框）里。
-        //createFromResource() 是一个工厂方法，直接从 XML 文件中创建一个 ArrayAdapter。
-        //android.R.layout.simple_spinner_item：系统自带的简单布局样式，表示每一项的长相。
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);//设置下拉列表打开时每个选项的布局样式
-        spinnerFrequency.setAdapter(adapter);//把准备好的数据和 Spinner 连接起来。
-
-        // Set up Start Date Picker
-        textViewStartDateValue.setOnClickListener(v -> showDatePickerDialog(textViewStartDateValue));
-        // Set up End Date Picker
-        textViewEndDateValue.setOnClickListener(v -> showDatePickerDialog(textViewEndDateValue));
-
-        buttonAddTime.setOnClickListener(v -> addTimeRow());
-
-        // Handle Create Reminder button click
-        buttonCreateReminder.setOnClickListener(v -> createReminder());
     }
+        private void setupActionBar(){
+            // 启用 ActionBar，并显示左上角的回退按钮
+            if (getSupportActionBar() != null) {//先检查一下，当前界面有没有 ActionBar（标题栏）
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);//在标题栏上，显示一个返回按钮（一般是左上角的 ← 小箭头）
+                getSupportActionBar().setTitle("Create Reminder");  // 设置标题
+            }
+        }
+       private void setupFrequencySpinner(){
+           // Setup frequency Spinner选项
+           ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                   this, R.array.frequency_array, android.R.layout.simple_spinner_item);
+           //ArrayAdapter<CharSequence> 是一个适配器，把数组的数据（比如频率选项）放到 Spinner（下拉框）里。
+           //createFromResource() 是一个工厂方法，直接从 XML 文件中创建一个 ArrayAdapter。
+           //android.R.layout.simple_spinner_item：系统自带的简单布局样式，表示每一项的长相。
+           adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);//设置下拉列表打开时每个选项的布局样式
+           spinnerFrequency.setAdapter(adapter);//把准备好的数据和 Spinner 连接起来。
+       }
+       private void setupDatePickers(){
+           // Set up Start Date Picker
+           textViewStartDateValue.setOnClickListener(v -> showDatePickerDialog(textViewStartDateValue));
+           // Set up End Date Picker
+           textViewEndDateValue.setOnClickListener(v -> showDatePickerDialog(textViewEndDateValue));
+       }
+       private void initTimeRows(){
+        addTimeRow(true);
+       }
+       private void setupCreateButton(){
+           Button buttonCreateReminder = findViewById(R.id.buttonCreateReminder);
+          buttonCreateReminder.setOnClickListener(v->createReminder());
+
+       }
     private void showDatePickerDialog(TextView textView) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -91,33 +100,41 @@ public class CreateReminderActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void addTimeRow() {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View timeRow = inflater.inflate(R.layout.time_picker_item, linearLayoutTimes, false);
 
+    private void addTimeRow(boolean isFirstRow){
+        LayoutInflater inflater = LayoutInflater.from(this);//用当前 Activity 的上下文（this）来创建一个 LayoutInflater。
+        //LayoutInflater 是一个 Android 类，可以把 XML 布局文件变成 Java 中的 View 对象。
+        View timeRow = inflater.inflate(R.layout.time_picker_item, linearLayoutTimes, false);
+//timeRow 未来是要放到 linearLayoutTimes 里的（但现在还没加进去，因为第三个参数是 false）
         TextView timeTextView = timeRow.findViewById(R.id.textViewTime);
         Button buttonAdd = timeRow.findViewById(R.id.buttonAddTime);
         Button buttonRemove = timeRow.findViewById(R.id.buttonRemoveTime);
-
-        // 新增的行显示减号按钮
-        buttonRemove.setVisibility(View.VISIBLE);
-
-        // 设置时间选择点击事件
         timeTextView.setOnClickListener(v -> showTimePickerDialog(timeTextView));
 
         // 加号按钮点击事件（继续新增一行）
-        buttonAdd.setOnClickListener(v -> addTimeRow());
-
-        // 减号按钮点击事件
-        buttonRemove.setOnClickListener(v -> {
-            if (linearLayoutTimes.getChildCount() > 0) {
-                linearLayoutTimes.removeView(timeRow);
-            }
-        });
-
-        // 添加到布局
+        buttonAdd.setOnClickListener(v -> addTimeRow(false));
+        if(isFirstRow){
+            buttonRemove.setVisibility(View.INVISIBLE);
+        }else {
+            buttonRemove.setVisibility(View.VISIBLE);
+            buttonRemove.setOnClickListener(v -> {
+                if (linearLayoutTimes.getChildCount() > 1) {
+                    // 从时间列表中移除对应时间
+                    String timeToRemove = timeTextView.getText().toString();
+                    if (!timeToRemove.equals("Select Time")) {
+                        reminderTimes.remove(timeToRemove);
+                    }
+                    linearLayoutTimes.removeView(timeRow);
+                }
+            });
+        }
         linearLayoutTimes.addView(timeRow);
     }
+    private void addTimerow(){
+        addTimeRow(false);
+    }
+
+
 
     private void showTimePickerDialog(TextView newTimeTextView) {
         Calendar calendar = Calendar.getInstance();

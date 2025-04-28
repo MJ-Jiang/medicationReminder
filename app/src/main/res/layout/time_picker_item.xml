@@ -39,7 +39,8 @@
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
         android:minWidth="48dp"
-        android:minHeight="48dp"/>
+        android:minHeight="48dp"
+    android:visibility="invisible"/>
 
 
 </LinearLayout>
