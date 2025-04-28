@@ -17,8 +17,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class CreateReminderActivity extends AppCompatActivity {
 
@@ -130,11 +133,6 @@ public class CreateReminderActivity extends AppCompatActivity {
         }
         linearLayoutTimes.addView(timeRow);
     }
-    private void addTimerow(){
-        addTimeRow(false);
-    }
-
-
 
     private void showTimePickerDialog(TextView newTimeTextView) {
         Calendar calendar = Calendar.getInstance();
@@ -154,52 +152,132 @@ public class CreateReminderActivity extends AppCompatActivity {
     }
 
     private void createReminder() {
-        String reminderName = editTextName.getText().toString().trim();
-        String description = editTextDescription.getText().toString().trim();
-        String dosage = editTextDosage.getText().toString().trim();
-        String startDate = textViewStartDateValue.getText().toString().trim();
-        String endDate = textViewEndDateValue.getText().toString().trim();
-        String frequency = spinnerFrequency.getSelectedItem().toString().trim();
+        // 1. 验证输入
+        if (!validateInput()) return;
 
-        // 检查用户是否填写了必要信息
-        if (reminderName.isEmpty() || description.isEmpty() || dosage.isEmpty() ||
-                startDate.equals("Select start date") || endDate.equals("Select end date") ||
-                reminderTimes.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields and select at least one time.", Toast.LENGTH_SHORT).show();
-        } else {
-            // Store the reminder data in the database, including all times
-            dbHelper.addReminder(reminderName, description, dosage, startDate, endDate, frequency, reminderTimes);
+        // 2. 准备数据对象
+        Reminder reminder = prepareReminderData();
 
-            // Show success dialog
+        // 3. 存储到数据库
+        long result = dbHelper.addReminder(reminder);
+
+        // 4. 处理结果
+        if (result != -1) {
             showSuccessDialog();
-
-            // Clear fields after creating the reminder
             clearFields();
+        } else {
+            Toast.makeText(this, "Failed to save reminder", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean validateInput() {
+        // 检查基础字段
+        if (editTextName.getText().toString().trim().isEmpty() ||
+                editTextDescription.getText().toString().trim().isEmpty() ||
+                editTextDosage.getText().toString().trim().isEmpty()) {
+            showToast("Please fill in all fields");
+            return false;
+        }
+
+        // 检查日期
+        if (textViewStartDateValue.getText().toString().equals("Select start date") ||
+                textViewEndDateValue.getText().toString().equals("Select end date")) {
+            showToast("Please select start/end date");
+            return false;
+        }
+
+        // 检查至少有一个有效时间
+        if (!hasValidTimeSelected()) {
+            showToast("Please select at least one reminder time");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean hasValidTimeSelected() {
+        for (int i = 0; i < linearLayoutTimes.getChildCount(); i++) {
+            View row = linearLayoutTimes.getChildAt(i);
+            TextView timeText = row.findViewById(R.id.textViewTime);
+            if (!timeText.getText().toString().equals("Select Time")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Reminder prepareReminderData() {
+        Reminder reminder = new Reminder();
+
+        // 基础信息
+        reminder.setName(editTextName.getText().toString().trim());
+        reminder.setDescription(editTextDescription.getText().toString().trim());
+        reminder.setDosage(editTextDosage.getText().toString().trim());
+        reminder.setFrequency(spinnerFrequency.getSelectedItem().toString());
+
+        // 日期处理
+        String displayStart = textViewStartDateValue.getText().toString();
+        String displayEnd = textViewEndDateValue.getText().toString();
+        reminder.setDisplayStartDate(displayStart);
+        reminder.setDisplayEndDate(displayEnd);
+        reminder.setStartDate(convertToDatabaseDate(displayStart));
+        reminder.setEndDate(convertToDatabaseDate(displayEnd));
+
+        // 收集所有有效时间
+        ArrayList<String> times = new ArrayList<>();
+        for (int i = 0; i < linearLayoutTimes.getChildCount(); i++) {
+            View row = linearLayoutTimes.getChildAt(i);
+            TextView timeText = row.findViewById(R.id.textViewTime);
+            String time = timeText.getText().toString();
+            if (!time.equals("Select Time")) {
+                times.add(time);
+            }
+        }
+        reminder.setTimes(times);
+
+        return reminder;
+    }
+
+    private String convertToDatabaseDate(String displayDate) {
+        try {
+            SimpleDateFormat inFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            SimpleDateFormat outFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = inFormat.parse(displayDate);
+            return outFormat.format(date);
+        } catch (Exception e) {
+            return displayDate; // 转换失败返回原值
         }
     }
 
     private void clearFields() {
+        // 清空输入字段
         editTextName.setText("");
         editTextDescription.setText("");
         editTextDosage.setText("");
         textViewStartDateValue.setText("Select start date");
         textViewEndDateValue.setText("Select end date");
-        spinnerFrequency.setSelection(0); // Reset spinner to default
-        reminderTimes.clear();  // 清空时间列表
-        linearLayoutTimes.removeAllViews(); // 清空所有已添加的时间
+        spinnerFrequency.setSelection(0);
+
+        // 重置时间行（保留首行）
+        linearLayoutTimes.removeAllViews();
+        initTimeRows();
     }
 
     private void showSuccessDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Success")
-                .setMessage("You've created the reminder successfully.")
+        new AlertDialog.Builder(this)
+                .setTitle("Success")
+                .setMessage("Reminder created successfully")
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();  // Return to the previous page (reminder list page)
+        onBackPressed();
         return true;
     }
 }

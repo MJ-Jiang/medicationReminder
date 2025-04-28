@@ -1,31 +1,34 @@
 package com.example.myapplication;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.content.ContentValues;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReminderDatabaseHelper extends SQLiteOpenHelper {
+    private static final String DATABASE_NAME = "ReminderDB";
+    private static final int DATABASE_VERSION = 1;
 
-    private static final String DATABASE_NAME = "reminders.db";
-    private static final int DATABASE_VERSION = 2;  // 升级版本号，确保新的表创建
-
-    // Reminder 表字段
-    public static final String TABLE_NAME = "reminders";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_DESCRIPTION = "description";
-    public static final String COLUMN_DOSAGE = "dosage";
-    public static final String COLUMN_START_DATE = "start_date";
-    public static final String COLUMN_END_DATE = "end_date";
-    public static final String COLUMN_FREQUENCY = "frequency";
-
-    // Times 表字段
-    public static final String TABLE_TIMES = "times";
-    public static final String COLUMN_REMINDER_ID = "reminder_id";  // 外键，关联到 reminders 表
-    public static final String COLUMN_TIME = "time";
+    // 表结构
+    private static final String TABLE_REMINDERS = "reminders";
+    private static final String KEY_ID = "id";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_DOSAGE = "dosage";
+    private static final String KEY_FREQUENCY = "frequency";
+    private static final String KEY_START_DATE = "start_date";
+    private static final String KEY_END_DATE = "end_date";
+    private static final String KEY_DISPLAY_START = "display_start_date";
+    private static final String KEY_DISPLAY_END = "display_end_date";
+    private static final String KEY_TIMES = "times";
 
     public ReminderDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,72 +36,80 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // 创建 reminders 表
-        String createRemindersTable = "CREATE TABLE " + TABLE_NAME + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_NAME + " TEXT, " +
-                COLUMN_DESCRIPTION + " TEXT, " +
-                COLUMN_DOSAGE + " TEXT, " +
-                COLUMN_START_DATE + " TEXT, " +
-                COLUMN_END_DATE + " TEXT, " +
-                COLUMN_FREQUENCY + " TEXT)";
-        db.execSQL(createRemindersTable);
-
-        // 创建 times 表
-        String createTimesTable = "CREATE TABLE " + TABLE_TIMES + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_REMINDER_ID + " INTEGER, " +  // 外键，关联到 reminders 表
-                COLUMN_TIME + " TEXT, " +
-                "FOREIGN KEY(" + COLUMN_REMINDER_ID + ") REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + "))";
-        db.execSQL(createTimesTable);
+        String CREATE_TABLE = "CREATE TABLE " + TABLE_REMINDERS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + KEY_NAME + " TEXT,"
+                + KEY_DESCRIPTION + " TEXT,"
+                + KEY_DOSAGE + " TEXT,"
+                + KEY_FREQUENCY + " TEXT,"
+                + KEY_START_DATE + " TEXT,"
+                + KEY_END_DATE + " TEXT,"
+                + KEY_DISPLAY_START + " TEXT,"
+                + KEY_DISPLAY_END + " TEXT,"
+                + KEY_TIMES + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // 如果数据库版本升级，删除旧表并重新创建新表
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TIMES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDERS);
         onCreate(db);
     }
 
-    // Method to insert a new reminder and its times
-    public void addReminder(String name, String description, String dosage, String startDate, String endDate, String frequency, ArrayList<String> times) {
+    // 添加新提醒
+    public long addReminder(Reminder reminder) {
         SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
-        // Start transaction for atomicity
-        db.beginTransaction();
-        try {
-            // 插入提醒的基本数据（不包含时间）
-            ContentValues reminderValues = new ContentValues();
-            reminderValues.put(COLUMN_NAME, name);
-            reminderValues.put(COLUMN_DESCRIPTION, description);
-            reminderValues.put(COLUMN_DOSAGE, dosage);
-            reminderValues.put(COLUMN_START_DATE, startDate);
-            reminderValues.put(COLUMN_END_DATE, endDate);
-            reminderValues.put(COLUMN_FREQUENCY, frequency);
+        values.put(KEY_NAME, reminder.getName());
+        values.put(KEY_DESCRIPTION, reminder.getDescription());
+        values.put(KEY_DOSAGE, reminder.getDosage());
+        values.put(KEY_FREQUENCY, reminder.getFrequency());
+        values.put(KEY_START_DATE, reminder.getStartDate());
+        values.put(KEY_END_DATE, reminder.getEndDate());
+        values.put(KEY_DISPLAY_START, reminder.getDisplayStartDate());
+        values.put(KEY_DISPLAY_END, reminder.getDisplayEndDate());
 
-            // 插入新的提醒记录
-            long reminderId = db.insert(TABLE_NAME, null, reminderValues);
+        // 将时间列表转为JSON存储
+        Gson gson = new Gson();
+        values.put(KEY_TIMES, gson.toJson(reminder.getTimes()));
 
-            // 插入每个时间到 times 表
-            if (reminderId != -1) {  // 如果提醒插入成功
-                for (String time : times) {
-                    ContentValues timeValues = new ContentValues();
-                    timeValues.put(COLUMN_REMINDER_ID, reminderId);  // 外键，关联到提醒
-                    timeValues.put(COLUMN_TIME, time);
-                    db.insert(TABLE_TIMES, null, timeValues);  // 插入每个时间
-                }
-
-                // 提交事务
-                db.setTransactionSuccessful();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // 结束事务
-            db.endTransaction();
-        }
-
+        long id = db.insert(TABLE_REMINDERS, null, values);
         db.close();
+        return id;
+    }
+
+    // 按日期查询提醒（供主页使用）
+    public List<Reminder> getRemindersByDate(String date) {
+        List<Reminder> reminders = new ArrayList<>();
+        String query = "SELECT * FROM " + TABLE_REMINDERS + " WHERE "
+                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ?";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[]{date, date});
+
+        if (cursor.moveToFirst()) {
+            do {
+                Reminder reminder = new Reminder();
+                reminder.setId(cursor.getLong(0));
+                reminder.setName(cursor.getString(1));
+                reminder.setDescription(cursor.getString(2));
+                reminder.setDosage(cursor.getString(3));
+                reminder.setFrequency(cursor.getString(4));
+                reminder.setStartDate(cursor.getString(5));
+                reminder.setEndDate(cursor.getString(6));
+                reminder.setDisplayStartDate(cursor.getString(7));
+                reminder.setDisplayEndDate(cursor.getString(8));
+
+                // 解析JSON时间列表
+                Type type = new TypeToken<ArrayList<String>>(){}.getType();
+                reminder.setTimes(new Gson().fromJson(cursor.getString(9), type));
+
+                reminders.add(reminder);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return reminders;
     }
 }
