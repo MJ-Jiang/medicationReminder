@@ -222,7 +222,7 @@ public class CreateReminderActivity extends AppCompatActivity {
         reminder.setDisplayEndDate(displayEnd);
         reminder.setStartDate(convertToDatabaseDate(displayStart));
         reminder.setEndDate(convertToDatabaseDate(displayEnd));
-
+        reminder.setIsCompleted(false);
         // 收集所有有效时间
         ArrayList<String> times = new ArrayList<>();
         for (int i = 0; i < linearLayoutTimes.getChildCount(); i++) {

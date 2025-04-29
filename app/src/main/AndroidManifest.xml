@@ -24,6 +24,9 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
 
 </manifest>
 <!--AndroidManifest.xml 是每个 Android 应用程序的核心配置文件，它包含了应用程序的基本信息，如包名、组件声明

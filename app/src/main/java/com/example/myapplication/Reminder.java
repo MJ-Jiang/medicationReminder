@@ -16,9 +16,23 @@ public class Reminder implements Parcelable {
     private String displayStartDate; // 显示格式：dd/MM/yyyy
     private String displayEndDate;   // 显示格式：dd/MM/yyyy
     private ArrayList<String> times; // 格式：HH:mm
-
+    private boolean isCompleted;
     // 空构造器（数据库必需）
     public Reminder() {}
+    public Reminder(Reminder other){
+        this.id=other.id;
+        this.name=other.name;
+        this.description=other.description;
+        this.dosage=other.dosage;
+        this.frequency=other.frequency;
+        this.startDate=other.startDate;
+        this.endDate=other.endDate;
+        this.displayStartDate= other.displayStartDate;
+        this.displayEndDate= other.displayEndDate;
+        this.times = new ArrayList<>(other.times);
+        this.isCompleted=other.isCompleted;
+
+    }
 
     // Parcelable实现（用于Activity间传递）
     protected Reminder(Parcel in) {
@@ -34,6 +48,7 @@ public class Reminder implements Parcelable {
         displayStartDate = in.readString();
         displayEndDate = in.readString();
         times = in.createStringArrayList();
+        isCompleted = in.readByte() != 0;
     }
 
     public static final Creator<Reminder> CREATOR = new Creator<Reminder>() {
@@ -65,6 +80,7 @@ public class Reminder implements Parcelable {
         dest.writeString(endDate);
         dest.writeString(displayStartDate);
         dest.writeString(displayEndDate);
+        dest.writeByte((byte) (isCompleted ? 1 : 0));
         dest.writeStringList(times);
     }
 
@@ -82,22 +98,24 @@ public class Reminder implements Parcelable {
     public void setDosage(String dosage) { this.dosage = dosage; }
 
     public String getFrequency() { return frequency; }
-    public void setFrequency(String dosage) { this.frequency = frequency; }
+    public void setFrequency(String frequency) { this.frequency = frequency; }
 
     public String getDisplayStartDate() { return displayStartDate; }
-    public void setDisplayStartDate(String dosage) { this.displayStartDate = displayStartDate; }
+    public void setDisplayStartDate(String displayStartDate) { this.displayStartDate = displayStartDate; }
 
     public String getDisplayEndDate() { return displayEndDate; }
-    public void setDisplayEndDate(String dosage) { this.displayEndDate = displayEndDate; }
+    public void setDisplayEndDate(String displayEndDate) { this.displayEndDate = displayEndDate; }
 
     public String getStartDate() { return startDate; }
-    public void setStartDate(String dosage) { this.startDate = startDate; }
+    public void setStartDate(String startDate) { this.startDate = startDate; }
 
     public String getEndDate() { return endDate; }
-    public void setEndDate(String dosage) { this.endDate = endDate; }
+    public void setEndDate(String endDate) { this.endDate = endDate; }
 
 
 
     public ArrayList<String> getTimes() { return times; }
     public void setTimes(ArrayList<String> times) { this.times = times; }
+    public boolean getIsCompleted() { return isCompleted; }
+    public void setIsCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }
 }

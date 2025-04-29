@@ -1,10 +1,12 @@
 package com.example.myapplication;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +35,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_DISPLAY_START = "display_start_date";
     private static final String KEY_DISPLAY_END = "display_end_date";
     private static final String KEY_TIMES = "times";
+    private static final String KEY_IS_COMPLETED = "is_completed";
 
     public ReminderDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,6 +43,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d("DB_DEBUG", "onCreate: Creating database...");
         String CREATE_TABLE = "CREATE TABLE " + TABLE_REMINDERS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_NAME + " TEXT,"
@@ -50,7 +54,8 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
                 + KEY_END_DATE + " TEXT,"
                 + KEY_DISPLAY_START + " TEXT,"
                 + KEY_DISPLAY_END + " TEXT,"
-                + KEY_TIMES + " TEXT" + ")";
+                + KEY_TIMES + " TEXT,"
+                + KEY_IS_COMPLETED + " INTEGER DEFAULT 0" + ")";
         db.execSQL(CREATE_TABLE);
     }
 
@@ -63,6 +68,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
     // 添加新提醒
     public long addReminder(Reminder reminder) {
         SQLiteDatabase db = this.getWritableDatabase();
+        Log.d("DB_DEBUG", "Database path: " + db.getPath());
         ContentValues values = new ContentValues();//ContentValues ➔ 相当于一个小型字典（key-value表），用来装要存进数据库的数据。
 
         values.put(KEY_NAME, reminder.getName());
@@ -73,15 +79,18 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_END_DATE, reminder.getEndDate());
         values.put(KEY_DISPLAY_START, reminder.getDisplayStartDate());
         values.put(KEY_DISPLAY_END, reminder.getDisplayEndDate());
+        values.put(KEY_IS_COMPLETED, reminder.getIsCompleted() ? 1 : 0);
 
         // 将时间列表转为JSON存储
         Gson gson = new Gson();//Gson 是 Google 提供的一个超好用的库，用来把对象变成 JSON 字符串，或者反过来解析。
         values.put(KEY_TIMES, gson.toJson(reminder.getTimes()));//把提醒里的时间列表 times（是一个 ArrayList）变成 JSON 格式存起来
 
         long id = db.insert(TABLE_REMINDERS, null, values);//执行表的插入操作，插入所有value数据
+
         db.close();//用完数据库要关闭
         return id;//把新插入的id返回
     }
+    @SuppressLint("Range")
     private List<Reminder> getAllRemindersByDateRange(String date) {
         List<Reminder> reminders = new ArrayList<>();
         String query = "SELECT * FROM "  + TABLE_REMINDERS + " WHERE "
@@ -106,7 +115,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
                 // 解析JSON时间列表
                 Type type = new TypeToken<ArrayList<String>>(){}.getType();
                 reminder.setTimes(new Gson().fromJson(cursor.getString(9), type));
-
+                reminder.setIsCompleted(cursor.getInt(cursor.getColumnIndex(KEY_IS_COMPLETED)) == 1);
                 reminders.add(reminder);
             } while (cursor.moveToNext());
         }
@@ -166,6 +175,21 @@ public List<Reminder> getRemindersForDate(String targetDate) {
             default:
                 return false;
         }
+    }
+    public int updateReminderCompletion(long id, boolean isCompleted) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_IS_COMPLETED, isCompleted ? 1 : 0);
+
+        int rowsAffected = db.update(
+                TABLE_REMINDERS,
+                values,
+                KEY_ID + " = ?",
+                new String[]{String.valueOf(id)}//把 id 转换为字符串作为参数填入 ? 中，防止 SQL 注入。
+        );
+
+        db.close();
+        return rowsAffected;
     }
 
 
