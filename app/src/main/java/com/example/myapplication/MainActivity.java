@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +10,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
+    private static final int DATE_PICKER_REQUEST=1;
 
     private TextView textViewSelectedDate;
     private Button buttonCreateReminder;
@@ -28,21 +34,36 @@ public class MainActivity extends AppCompatActivity {
         textViewSelectedDate.setText(Utils.getTodayDate());
 
         // "Create Reminder" 按钮跳转到 CreateReminderActivity
-        buttonCreateReminder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CreateReminderActivity.class);
-                startActivity(intent);
-            }
+        buttonCreateReminder.setOnClickListener(v -> {
+            startActivity(new Intent(this, CreateReminderActivity.class));
         });
+        buttonSelectDate.setOnClickListener(v -> showDatePicker());
+    }
+    private void showDatePicker(){
+        String currentDate=textViewSelectedDate.getText().toString();
+        Calendar calendar=Calendar.getInstance();
+        try{
+            SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            calendar.setTime(sdf.parse(currentDate));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        DatePickerDialog datePicker = new DatePickerDialog(
+                this,
+                (view, year, month, dayOfMonth) -> {
+                    String selectedDate = String.format(Locale.getDefault(),
+                            "%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                    textViewSelectedDate.setText(selectedDate);
 
-        // 日历按钮（目前先放着，后面加日历选择）
-        buttonSelectDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 之后加日期选择器，现在可以先弹一个Toast测试
-                Utils.showToast(MainActivity.this, "Date Picker Coming Soon!");
-            }
-        });
+                    //
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        datePicker.show();
     }
 }
+
+
