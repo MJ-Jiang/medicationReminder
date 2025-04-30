@@ -103,6 +103,12 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
                 expandedReminders.add(singleTimeReminder);
             }
         }
+        //按时间排序
+        Collections.sort(expandedReminders,(r1,r2)->{
+            String time1=r1.getTimes().get(0);
+            String time2=r2.getTimes().get(0);
+            return time1.compareTo(time2);
+        });
 
         adapter.updateData(expandedReminders);
         ((TextView)findViewById(R.id.textViewSelectedDate)).setText(date);

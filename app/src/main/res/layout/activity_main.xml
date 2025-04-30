@@ -48,7 +48,9 @@
         android:layout_height="wrap_content"
         android:text="Create Reminder"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:padding="16dp"
+        android:textSize="18sp"/>
 
 </LinearLayout>
     <!-- LinearLayout 是一个线性布局，所有子视图默认是按顺序在一条直线上排列。通过设置 android:orientation="vertical"，它会沿着垂直方向（从上到下）排列子视图。

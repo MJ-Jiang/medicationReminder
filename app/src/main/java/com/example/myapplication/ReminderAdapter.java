@@ -47,6 +47,12 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
             holder.tvTime.setText(reminder.getTimes().get(0));
         }
         holder.tvDosage.setText(reminder.getDosage());
+        if(reminder.getIsCompleted()){
+            holder.itemView.setActivated(true);
+        }else{
+            holder.itemView.setActivated(false);
+        }
+        holder.cbCompleted.setChecked(reminder.getIsCompleted());
 
         holder.itemView.setOnClickListener(v -> {
             listener.onReminderClick(reminder);
@@ -54,6 +60,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         holder.cbCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
             listener.onCheckedChanged(reminder, isChecked);
+            if(isChecked){
+                holder.itemView.setActivated(true);
+            }else {
+                holder.itemView.setActivated(false);
+            }
         });
     }
 
