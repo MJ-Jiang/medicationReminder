@@ -11,7 +11,7 @@ public class Utils {
 
     // 返回今天日期，格式：dd/MM/yyyy
     public static String getTodayDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return sdf.format(new Date());
     }
 

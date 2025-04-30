@@ -68,7 +68,6 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
     // 添加新提醒
     public long addReminder(Reminder reminder) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Log.d("DB_DEBUG", "Database path: " + db.getPath());
         ContentValues values = new ContentValues();//ContentValues ➔ 相当于一个小型字典（key-value表），用来装要存进数据库的数据。
 
         values.put(KEY_NAME, reminder.getName());
