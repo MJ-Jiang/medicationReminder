@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -139,5 +138,12 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
                 "Frequency: " + reminder.getFrequency() + "\n\n" +
                 "Period: " + reminder.getDisplayStartDate() + " to " + reminder.getDisplayEndDate() + "\n\n" +
                 "All Times:\n" + TextUtils.join("\n", reminder.getTimes());
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 每次返回主页时刷新提醒
+        String currentDate = textViewSelectedDate.getText().toString();
+        loadRemindersForDate(currentDate);
     }
 }
