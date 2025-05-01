@@ -1,7 +1,10 @@
 package com.example.myapplication;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -29,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
     private RecyclerView recyclerView;
     private ReminderAdapter adapter;
     private ReminderDatabaseHelper dbHelper;
-    private Button buttonSettings;
     private final Handler handler = new Handler();
 
     private TextView textViewSelectedDate;
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
         datePicker.show();
     }
     private void loadRemindersForDate(String date) {
-        List<Reminder> reminders = dbHelper.getRemindersForDate(date);
+        List<Reminder> reminders = dbHelper.getRemindersForDate(this, date);
 
         // 展开多个时间的提醒（一个时间对应一个条目）
         List<Reminder> expandedReminders = new ArrayList<>();
@@ -139,17 +141,17 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
     private void showReminderDetailDialog(Reminder reminder) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(reminder.getName())
-                .setMessage(buildDetailMessage(reminder))
+                .setMessage(buildDetailMessage(this, reminder))
                 .setPositiveButton("OK", null)
                 .show();
     }
 
-    private String buildDetailMessage(Reminder reminder) {
-        return "Description: " + reminder.getDescription() + "\n\n" +
-                "Dosage: " + reminder.getDosage() + "\n\n" +
-                "Frequency: " + reminder.getFrequency() + "\n\n" +
-                "Period: " + reminder.getDisplayStartDate() + " to " + reminder.getDisplayEndDate() + "\n\n" +
-                "All Times:\n" + TextUtils.join("\n", reminder.getTimes());
+    private String buildDetailMessage(Context context, Reminder reminder) {
+        return context.getString(R.string.reminder_description) + ": " + reminder.getDescription() + "\n\n" +
+                context.getString(R.string.reminder_dosage) + ": " + reminder.getDosage() + "\n\n" +
+                context.getString(R.string.frequency) + ": " + reminder.getFrequency() + "\n\n" +
+                context.getString(R.string.description_period) + ": " + reminder.getDisplayStartDate() + " - " + reminder.getDisplayEndDate() + "\n\n" +
+                context.getString(R.string.description_alltimes) + ":\n" + TextUtils.join("\n", reminder.getTimes());
     }
 
     @Override
@@ -158,6 +160,17 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
         loadRemindersForDate(textViewSelectedDate.getText().toString());
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        SharedPreferences prefs = base.getSharedPreferences("settings", MODE_PRIVATE);
+        String lang = prefs.getString("language", "en");
+        Locale newLocale = new Locale(lang);
+        Locale.setDefault(newLocale);
 
+        Configuration config = base.getResources().getConfiguration();
+        config.setLocale(newLocale);
+
+        super.attachBaseContext(base.createConfigurationContext(config));
+    }
 
 }

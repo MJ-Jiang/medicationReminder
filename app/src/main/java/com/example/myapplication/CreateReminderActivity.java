@@ -61,7 +61,7 @@ public class CreateReminderActivity extends AppCompatActivity {
             // 启用 ActionBar，并显示左上角的回退按钮
             if (getSupportActionBar() != null) {//先检查一下，当前界面有没有 ActionBar（标题栏）
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);//在标题栏上，显示一个返回按钮（一般是左上角的 ← 小箭头）
-                getSupportActionBar().setTitle("Create Reminder");  // 设置标题
+                getSupportActionBar().setTitle(R.string.create_reminder);  // 设置标题
             }
         }
        private void setupFrequencySpinner(){
@@ -166,7 +166,8 @@ public class CreateReminderActivity extends AppCompatActivity {
             showSuccessDialog();
             clearFields();
         } else {
-            Toast.makeText(this, "Failed to save reminder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.fail_save_reminder), Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -175,20 +176,20 @@ public class CreateReminderActivity extends AppCompatActivity {
         if (editTextName.getText().toString().trim().isEmpty() ||
                 editTextDescription.getText().toString().trim().isEmpty() ||
                 editTextDosage.getText().toString().trim().isEmpty()) {
-            showToast("Please fill in all fields");
+            showToast(getString(R.string.fill_all_fields));
             return false;
         }
 
         // 检查日期
         if (textViewStartDateValue.getText().toString().equals("Select start date") ||
                 textViewEndDateValue.getText().toString().equals("Select end date")) {
-            showToast("Please select start/end date");
+            showToast(getString(R.string.select_dates));
             return false;
         }
 
         // 检查至少有一个有效时间
         if (!hasValidTimeSelected()) {
-            showToast("Please select at least one reminder time");
+            showToast(getString(R.string.select_time));
             return false;
         }
 
@@ -254,8 +255,8 @@ public class CreateReminderActivity extends AppCompatActivity {
         editTextName.setText("");
         editTextDescription.setText("");
         editTextDosage.setText("");
-        textViewStartDateValue.setText("Select start date");
-        textViewEndDateValue.setText("Select end date");
+        textViewStartDateValue.setText(getString(R.string.description_startdate));
+        textViewEndDateValue.setText(getString(R.string.description_enddate));
         spinnerFrequency.setSelection(0);
 
         // 重置时间行（保留首行）
@@ -263,11 +264,12 @@ public class CreateReminderActivity extends AppCompatActivity {
         initTimeRows();
     }
 
+
     private void showSuccessDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Success")
-                .setMessage("Reminder created successfully")
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .setTitle(getString(R.string.success))
+                .setMessage(getString(R.string.reminder_success))
+                .setPositiveButton(getString(R.string.ok), (dialog, which) -> dialog.dismiss())
                 .show();
     }
 

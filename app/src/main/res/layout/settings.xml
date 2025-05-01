@@ -9,15 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Settings"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:paddingBottom="24dp"
-            android:layout_gravity="center_horizontal"/>
+
 
         <!-- My Information -->
         <LinearLayout
@@ -40,7 +32,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="My Information"
+                android:text="@string/settings_account"
+                android:textColor="#515151"
                 android:textSize="16sp" />
 
             <ImageView
@@ -78,7 +71,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Language"
+                android:text="@string/settings_language"
+                android:textColor="#515151"
                 android:textSize="16sp" />
             <ImageView
                 android:layout_width="18dp"
@@ -116,7 +110,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Background Color"
+                android:text="@string/settings_color"
+                android:textColor="#515151"
                 android:textSize="16sp" />
             <ImageView
                 android:layout_width="18dp"
@@ -152,7 +147,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Chart"
+                android:text="@string/setting_chart"
+                android:textColor="#515151"
                 android:textSize="16sp" />
 
             <ImageView

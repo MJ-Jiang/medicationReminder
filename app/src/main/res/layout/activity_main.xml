@@ -32,7 +32,7 @@
                 android:id="@+id/textViewSelectedDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Today"
+                android:text="@string/today"
                 android:textSize="18sp"
                 android:paddingStart="16dp"
                 android:textColor="@android:color/black"/>
@@ -52,7 +52,7 @@
             android:id="@+id/buttonCreateReminder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Reminder"
+            android:text="@string/create_reminder"
             android:textColor="#FFFFFF"
             android:layout_marginTop="24dp"
             android:padding="16dp"

@@ -1,10 +1,51 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="today">Today</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+
     <string-array name="frequency_array">
-        <item>Daily</item>
-        <item>Weekly</item>
-        <item>Monthly</item>
-        <item>Yearly</item>
+        <item>@string/daily</item>
+        <item>@string/weekly</item>
+        <item>@string/monthly</item>
+        <item>@string/yearly</item>
     </string-array>
+
+
+    <string name="reminder_name">Reminder Name</string>
+    <string name="reminder_description">Description</string>
+    <string name="reminder_dosage">Dosage</string>
+    <string name="reminder_startdate">Start Date</string>
+    <string name="reminder_enddate">End Date</string>
+    <string name="frequency">Frequency</string>
+    <string name="reminder_time">Reminder Time</string>
+    <string name="description_period">Period</string>
+    <string name="description_alltimes">All Times</string>
+
+    <string name="app_settings">Settings</string>
+    <string name="create_reminder">Create Reminder</string>
+    <string name="settings_account">My Information</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_color">Background Color</string>
+    <string name="setting_chart">Chart</string>
+    <string name="select_date">Select date</string>
+    <string name="name_description">Enter reminder name</string>
+    <string name="description_description">Enter description</string>
+    <string name="description_dosage">Enter dosage</string>
+    <string name="description_startdate">Select start date</string>
+    <string name="description_enddate">Select end date</string>
+    <string name="description_time">Select Time</string>
+
+
+    <string name="fail_save_reminder">Failed to save reminder</string>
+    <string name="fill_all_fields">Please fill in all fields</string>
+    <string name="select_dates">Please select start/end date</string>
+    <string name="select_time">Please select at least one reminder time</string>
+    <string name="reminder_success">Reminder created successfully</string>
+    <string name="success">Success</string>
+    <string name="ok">OK</string>
+
 
 </resources>

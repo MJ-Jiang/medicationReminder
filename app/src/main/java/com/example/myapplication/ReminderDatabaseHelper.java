@@ -124,57 +124,80 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         return reminders;
     }
 
-public List<Reminder> getRemindersForDate(String targetDate) {
+    public List<Reminder> getRemindersForDate(Context context, String targetDate) {
+        List<Reminder> filteredReminders = new ArrayList<>();
 
-    List<Reminder> filteredReminders = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            Date queryDate = sdf.parse(targetDate);
+            List<Reminder> remindersInRange = getAllRemindersByDateRange(targetDate);
 
-    try {
-        Date queryDate = sdf.parse(targetDate);
-        List<Reminder> remindersInRange=getAllRemindersByDateRange(targetDate);
+            for (Reminder reminder : remindersInRange) {
+                Date startDate = sdf.parse(reminder.getStartDate());
 
-        for (Reminder reminder : remindersInRange) {
-            Date startDate = sdf.parse(reminder.getStartDate());
-
-            if (isDateMatchFrequency(queryDate, startDate, reminder.getFrequency())) {
-                filteredReminders.add(reminder);
+                // Compare using fixed codes (DAILY, WEEKLY, MONTHLY, YEARLY)
+                if (isDateMatchFrequency(context, queryDate, startDate, reminder.getFrequency())) {
+                    filteredReminders.add(reminder);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+
+        return filteredReminders;
     }
 
-    return filteredReminders;
-}
-
-    // 频率匹配逻辑
-    private boolean isDateMatchFrequency(Date queryDate, Date startDate, String frequency) {
+    private boolean isDateMatchFrequency(Context context, Date queryDate, Date startDate, String frequency) {
         long diffDays = (queryDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000);
 
-        switch (frequency.toLowerCase()) {
-            case "daily":
-                return true;
-            case "weekly":
-                return diffDays % 7 == 0;
-            case "monthly":
-                Calendar cal1 = Calendar.getInstance();
-                Calendar cal2 = Calendar.getInstance();
-                cal1.setTime(startDate);
-                cal2.setTime(queryDate);
-                return cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
-                //如果两天的“日”相同（比如都是5号），就表示同一个月日，返回 true。
-            case "yearly":
-                Calendar cal3 = Calendar.getInstance();
-                Calendar cal4 = Calendar.getInstance();
-                cal3.setTime(startDate);
-                cal4.setTime(queryDate);
-                return cal3.get(Calendar.DAY_OF_YEAR) == cal4.get(Calendar.DAY_OF_YEAR);
-                //如果两天的年内日数一样，比如都是第120天（4月30日左右），则返回 true。
-            default:
-                return false;
+        // Fixed frequency codes, do not translate here
+        String daily = "DAILY";
+        String weekly = "WEEKLY";
+        String monthly = "MONTHLY";
+        String yearly = "YEARLY";
+
+        if (frequency.equalsIgnoreCase(daily)) {
+            return true;
+        } else if (frequency.equalsIgnoreCase(weekly)) {
+            return diffDays % 7 == 0;
+        } else if (frequency.equalsIgnoreCase(monthly)) {
+            Calendar cal1 = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            cal1.setTime(startDate);
+            cal2.setTime(queryDate);
+            return cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+        } else if (frequency.equalsIgnoreCase(yearly)) {
+            Calendar cal3 = Calendar.getInstance();
+            Calendar cal4 = Calendar.getInstance();
+            cal3.setTime(startDate);
+            cal4.setTime(queryDate);
+            return cal3.get(Calendar.DAY_OF_YEAR) == cal4.get(Calendar.DAY_OF_YEAR);
+        } else {
+            return false;
         }
     }
+
+    public String getLocalizedFrequency(Context context, String frequencyKey) {
+        // Translate for UI display only
+        switch (frequencyKey) {
+            case "DAILY":
+                return context.getString(R.string.daily);
+            case "WEEKLY":
+                return context.getString(R.string.weekly);
+            case "MONTHLY":
+                return context.getString(R.string.monthly);
+            case "YEARLY":
+                return context.getString(R.string.yearly);
+            default:
+                return "";
+        }
+    }
+
+
+
+
+
     public int updateReminderCompletion(long id, boolean isCompleted) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

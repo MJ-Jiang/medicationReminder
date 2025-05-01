@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">Oma sovellukseni</string>
+    <string name="today">Tänään</string>
+    <string name="daily">Päivittäin</string>
+    <string name="weekly">Viikoittain</string>
+    <string name="monthly">Kuukausittain</string>
+    <string name="yearly">Vuosittain</string>
+
+    <string-array name="frequency_array">
+        <item>@string/daily</item>
+        <item>@string/weekly</item>
+        <item>@string/monthly</item>
+        <item>@string/yearly</item>
+    </string-array>
+
+
+    <string name="reminder_name">Muistutuksen nimi</string>
+    <string name="reminder_description">Kuvaus</string>
+    <string name="reminder_dosage">Annostus</string>
+    <string name="reminder_startdate">Alkamispäivämäärä</string>
+    <string name="reminder_enddate">Päättymispäivämäärä</string>
+    <string name="frequency">Tiheys</string>
+    <string name="reminder_time">Muistutuksen aika</string>
+    <string name="description_period">Piannos</string>
+    <string name="description_alltimes">Kaikki ajat</string>
+    <string name="app_settings">Asetukset</string>
+    <string name="create_reminder">Luo Muistutus</string>
+    <string name="settings_account">Omat tiedot</string>
+    <string name="settings_language">Kieli</string>
+    <string name="settings_color">Taustaväri</string>
+    <string name="setting_chart">Kaavio</string>
+    <string name="select_date">Valitse päivämäärä</string>
+    <string name="name_description">Anna muistutuksen nimi</string>
+    <string name="description_description">Anna kuvaus</string>
+    <string name="description_dosage">Anna annos</string>
+    <string name="description_startdate">Valitse aloituspäivämäärä</string>
+    <string name="description_enddate">Valitse päättymispäivämäärä</string>
+    <string name="description_time">Valitse aika</string>
+    <string name="fail_save_reminder">Muistutuksen tallentaminen epäonnistui</string>
+    <string name="fill_all_fields">Täytä kaikki kentät</string>
+    <string name="select_dates">Valitse aloitus-/päättymispäivä</string>
+    <string name="select_time">Valitse vähintään yksi muistutusajankohta</string>
+    <string name="reminder_success">Muistutus luotu onnistuneesti</string>
+    <string name="success">Onnistui</string>
+    <string name="ok">OK</string>
+
+
+</resources>

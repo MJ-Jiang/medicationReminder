@@ -16,6 +16,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle(R.string.app_settings);
         }
         LinearLayout settingLanguage = findViewById(R.id.settingLanguage);
         settingLanguage.setOnClickListener(v -> {
@@ -23,11 +24,7 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        LinearLayout settingColor = findViewById(R.id.settingColor);
-        settingColor.setOnClickListener(v -> {
-            Intent intent = new Intent(SettingsActivity.this, BackgroundColorSettingsActivity.class);
-            startActivity(intent);
-        });
+
     }
 
     @Override
