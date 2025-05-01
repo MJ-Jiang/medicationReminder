@@ -124,7 +124,7 @@ public class CreateReminderActivity extends AppCompatActivity {
                 if (linearLayoutTimes.getChildCount() > 1) {
                     // 从时间列表中移除对应时间
                     String timeToRemove = timeTextView.getText().toString();
-                    if (!timeToRemove.equals("Select Time")) {
+                    if (!timeToRemove.equals(getString(R.string.description_time))) {
                         reminderTimes.remove(timeToRemove);
                     }
                     linearLayoutTimes.removeView(timeRow);
@@ -157,6 +157,24 @@ public class CreateReminderActivity extends AppCompatActivity {
 
         // 2. 准备数据对象
         Reminder reminder = prepareReminderData();
+        String selectedFrequency = spinnerFrequency.getSelectedItem().toString();
+        String frequencyCode;
+
+// Convert localized label to fixed code
+        if (selectedFrequency.equals(getString(R.string.daily))) {
+            frequencyCode = "DAILY";
+        } else if (selectedFrequency.equals(getString(R.string.weekly))) {
+            frequencyCode = "WEEKLY";
+        } else if (selectedFrequency.equals(getString(R.string.monthly))) {
+            frequencyCode = "MONTHLY";
+        } else if (selectedFrequency.equals(getString(R.string.yearly))) {
+            frequencyCode = "YEARLY";
+        } else {
+            frequencyCode = "DAILY"; // fallback
+        }
+
+        reminder.setFrequency(frequencyCode);
+
 
         // 3. 存储到数据库
         long result = dbHelper.addReminder(reminder);
@@ -181,11 +199,12 @@ public class CreateReminderActivity extends AppCompatActivity {
         }
 
         // 检查日期
-        if (textViewStartDateValue.getText().toString().equals("Select start date") ||
-                textViewEndDateValue.getText().toString().equals("Select end date")) {
+        if (textViewStartDateValue.getText().toString().equals(getString(R.string.description_startdate)) ||
+                textViewEndDateValue.getText().toString().equals(getString(R.string.description_enddate))) {
             showToast(getString(R.string.select_dates));
             return false;
         }
+
 
         // 检查至少有一个有效时间
         if (!hasValidTimeSelected()) {
@@ -200,7 +219,7 @@ public class CreateReminderActivity extends AppCompatActivity {
         for (int i = 0; i < linearLayoutTimes.getChildCount(); i++) {
             View row = linearLayoutTimes.getChildAt(i);
             TextView timeText = row.findViewById(R.id.textViewTime);
-            if (!timeText.getText().toString().equals("Select Time")) {
+            if (!timeText.getText().toString().equals(getString(R.string.description_time))) {
                 return true;
             }
         }
@@ -230,7 +249,7 @@ public class CreateReminderActivity extends AppCompatActivity {
             View row = linearLayoutTimes.getChildAt(i);
             TextView timeText = row.findViewById(R.id.textViewTime);
             String time = timeText.getText().toString();
-            if (!time.equals("Select Time")) {
+            if (!time.equals(getString(R.string.description_time))) {
                 times.add(time);
             }
         }

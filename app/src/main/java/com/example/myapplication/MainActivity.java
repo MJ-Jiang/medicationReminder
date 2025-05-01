@@ -147,12 +147,17 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
     }
 
     private String buildDetailMessage(Context context, Reminder reminder) {
+        ReminderDatabaseHelper dbHelper = new ReminderDatabaseHelper(context);  // create instance
+        String localizedFrequency = dbHelper.getLocalizedFrequency(context, reminder.getFrequency());
+
         return context.getString(R.string.reminder_description) + ": " + reminder.getDescription() + "\n\n" +
                 context.getString(R.string.reminder_dosage) + ": " + reminder.getDosage() + "\n\n" +
-                context.getString(R.string.frequency) + ": " + reminder.getFrequency() + "\n\n" +
+                context.getString(R.string.frequency) + ": " + localizedFrequency + "\n\n" +
                 context.getString(R.string.description_period) + ": " + reminder.getDisplayStartDate() + " - " + reminder.getDisplayEndDate() + "\n\n" +
                 context.getString(R.string.description_alltimes) + ":\n" + TextUtils.join("\n", reminder.getTimes());
     }
+
+
 
     @Override
     protected void onResume() {

@@ -195,9 +195,6 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
-
-
     public int updateReminderCompletion(long id, boolean isCompleted) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
