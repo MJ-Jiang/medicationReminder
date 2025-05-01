@@ -1,18 +1,21 @@
 package com.example.myapplication;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,11 +24,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+
 public class MainActivity extends AppCompatActivity implements ReminderAdapter.OnReminderClickListener {
     private RecyclerView recyclerView;
     private ReminderAdapter adapter;
     private ReminderDatabaseHelper dbHelper;
-    private static final int DATE_PICKER_REQUEST=1;
+    private Button buttonSettings;
+    private final Handler handler = new Handler();
 
     private TextView textViewSelectedDate;
     private Button buttonCreateReminder;
@@ -61,6 +66,13 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
             startActivity(new Intent(this, CreateReminderActivity.class));
         });
         buttonSelectDate.setOnClickListener(v -> showDatePicker());
+
+        FloatingActionButton fabSettings = findViewById(R.id.fabSettings);
+        fabSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
     }
     private void showDatePicker(){
         String currentDate=textViewSelectedDate.getText().toString();
@@ -81,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
 
                     textViewSelectedDate.setText(selectedDate);
                     loadRemindersForDate(selectedDate);
-                    Log.d("DEBUG", "select date: " + selectedDate);
+
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -139,11 +151,13 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
                 "Period: " + reminder.getDisplayStartDate() + " to " + reminder.getDisplayEndDate() + "\n\n" +
                 "All Times:\n" + TextUtils.join("\n", reminder.getTimes());
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        // 每次返回主页时刷新提醒
-        String currentDate = textViewSelectedDate.getText().toString();
-        loadRemindersForDate(currentDate);
+        loadRemindersForDate(textViewSelectedDate.getText().toString());
     }
+
+
+
 }

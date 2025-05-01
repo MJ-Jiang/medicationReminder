@@ -1,58 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- 顶部：日期选择 -->
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingBottom="8dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ImageButton
-            android:id="@+id/buttonSelectDate"
-            android:layout_width="wrap_content"
+        <!-- 顶部：日期选择 -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_today"
-            android:contentDescription="Select Date"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/textViewSelectedDate"
-            android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/buttonSelectDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_today"
+                android:contentDescription="Select Date"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
+            <TextView
+                android:id="@+id/textViewSelectedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today"
+                android:textSize="18sp"
+                android:paddingStart="16dp"
+                android:textColor="@android:color/black"/>
+        </LinearLayout>
+
+        <!-- 这里之后会放提醒列表 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewReminders"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp"/>
+
+        <!-- 创建提醒按钮 -->
+        <Button
+            android:id="@+id/buttonCreateReminder"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Today"
-            android:textSize="18sp"
-            android:paddingStart="16dp"
-            android:textColor="@android:color/black"/>
+            android:text="Create Reminder"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="24dp"
+            android:padding="16dp"
+            android:textSize="18sp"/>
+
     </LinearLayout>
 
-    <!-- 这里之后会放提醒列表 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewReminders"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp"/>
-
-    <!-- 创建提醒按钮 -->
-    <Button
-        android:id="@+id/buttonCreateReminder"
-        android:layout_width="match_parent"
+    <!-- FloatingActionButton for Settings -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSettings"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Reminder"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="24dp"
-        android:padding="16dp"
-        android:textSize="18sp"/>
+        android:layout_gravity="end|top"
+        android:layout_margin="16dp"
+        android:layout_marginTop="48dp"
+        android:src="@drawable/ic_settings"
+    android:contentDescription="Settings"
+        app:fabSize="mini"
 
-</LinearLayout>
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <!-- LinearLayout 是一个线性布局，所有子视图默认是按顺序在一条直线上排列。通过设置 android:orientation="vertical"，它会沿着垂直方向（从上到下）排列子视图。
     如果设置 android:orientation="horizontal"，则会沿着水平方向（从左到右）排列子视图。
     android:gravity 用于控制控件内部内容（比如文本或图像）的对齐方式。center_vertical 意味着将控件的内容垂直居中。也就是说，在 LinearLayout 中，ImageButton 和 TextView 会垂直居中对齐。
