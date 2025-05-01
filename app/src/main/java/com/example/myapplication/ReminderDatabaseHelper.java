@@ -111,6 +111,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
                 reminder.setDisplayStartDate(cursor.getString(7));
                 reminder.setDisplayEndDate(cursor.getString(8));
 
+
                 // 解析JSON时间列表
                 Type type = new TypeToken<ArrayList<String>>(){}.getType();
                 reminder.setTimes(new Gson().fromJson(cursor.getString(9), type));

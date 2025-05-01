@@ -1,18 +1,15 @@
 package com.example.myapplication;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.TextUtils;
-import android.view.View;
+
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,10 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -32,11 +27,8 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
     private RecyclerView recyclerView;
     private ReminderAdapter adapter;
     private ReminderDatabaseHelper dbHelper;
-    private final Handler handler = new Handler();
-
     private TextView textViewSelectedDate;
-    private Button buttonCreateReminder;
-    private ImageButton buttonSelectDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,85 +43,30 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
         adapter = new ReminderAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
 
-        // 设置日期选择监听
-        findViewById(R.id.buttonSelectDate).setOnClickListener(v -> showDatePicker());
-
-        // 加载今日提醒
-        loadRemindersForDate(Utils.getTodayDate());
         textViewSelectedDate = findViewById(R.id.textViewSelectedDate);
-        buttonCreateReminder = findViewById(R.id.buttonCreateReminder);
-        buttonSelectDate = findViewById(R.id.buttonSelectDate);
-
-        // 设置默认日期为今天
-        textViewSelectedDate.setText(Utils.getTodayDate());
-
-        // "Create Reminder" 按钮跳转到 CreateReminderActivity
-        buttonCreateReminder.setOnClickListener(v -> {
-            startActivity(new Intent(this, CreateReminderActivity.class));
-        });
-        buttonSelectDate.setOnClickListener(v -> showDatePicker());
-
+        Button buttonCreateReminder = findViewById(R.id.buttonCreateReminder);
+        ImageButton buttonSelectDate = findViewById(R.id.buttonSelectDate);
         FloatingActionButton fabSettings = findViewById(R.id.fabSettings);
-        fabSettings.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        });
+
+
+        textViewSelectedDate.setText(Utils.getTodayDate());
+        updateReminderList(Utils.getTodayDate());
+        buttonCreateReminder.setOnClickListener(v -> startActivity(new Intent(this, CreateReminderActivity.class)));
+        buttonSelectDate.setOnClickListener(v ->
+                DatePickerHelper.show(this, textViewSelectedDate.getText().toString(), textViewSelectedDate, adapter, dbHelper));
+        fabSettings.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
+    }
+    private void updateReminderList(String date){
+        List<Reminder> reminders=ReminderLoader.loadRemindersForDate(this,dbHelper,date);
+        adapter.updateData(reminders);
 
     }
-    private void showDatePicker(){
-        String currentDate=textViewSelectedDate.getText().toString();
-        Calendar calendar=Calendar.getInstance();
-        try{
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            calendar.setTime(sdf.parse(currentDate));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        DatePickerDialog datePicker = new DatePickerDialog(
-                this,
-                (view, year, month, dayOfMonth) -> {
-                    Calendar selectedCalendar = Calendar.getInstance();
-                    selectedCalendar.set(year, month, dayOfMonth);
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    String selectedDate = sdf.format(selectedCalendar.getTime());
 
-                    textViewSelectedDate.setText(selectedDate);
-                    loadRemindersForDate(selectedDate);
-
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-        );
-
-        datePicker.show();
-    }
-    private void loadRemindersForDate(String date) {
-        List<Reminder> reminders = dbHelper.getRemindersForDate(this, date);
-
-        // 展开多个时间的提醒（一个时间对应一个条目）
-        List<Reminder> expandedReminders = new ArrayList<>();
-        for (Reminder reminder : reminders) {
-            for (String time : reminder.getTimes()) {
-                Reminder singleTimeReminder = new Reminder(reminder); // 需要实现拷贝构造方法
-                singleTimeReminder.setTimes(new ArrayList<>(Collections.singletonList(time)));
-                expandedReminders.add(singleTimeReminder);
-            }
-        }
-        //按时间排序
-        Collections.sort(expandedReminders,(r1,r2)->{
-            String time1=r1.getTimes().get(0);
-            String time2=r2.getTimes().get(0);
-            return time1.compareTo(time2);
-        });
-
-        adapter.updateData(expandedReminders);
-        ((TextView)findViewById(R.id.textViewSelectedDate)).setText(date);
-    }
 
     @Override
     public void onReminderClick(Reminder reminder) {
-        showReminderDetailDialog(reminder);
+        ReminderDetailDialog.show(this, reminder);
     }
 
     @Override
@@ -138,31 +75,12 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
         dbHelper.updateReminderCompletion(reminder.getId(), isChecked);
     }
 
-    private void showReminderDetailDialog(Reminder reminder) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(reminder.getName())
-                .setMessage(buildDetailMessage(this, reminder))
-                .setPositiveButton(getString(R.string.ok), null)
-                .show();
-    }
-
-    private String buildDetailMessage(Context context, Reminder reminder) {
-        ReminderDatabaseHelper dbHelper = new ReminderDatabaseHelper(context);  // create instance
-        String localizedFrequency = dbHelper.getLocalizedFrequency(context, reminder.getFrequency());
-
-        return context.getString(R.string.reminder_description) + ": " + reminder.getDescription() + "\n\n" +
-                context.getString(R.string.reminder_dosage) + ": " + reminder.getDosage() + "\n\n" +
-                context.getString(R.string.frequency) + ": " + localizedFrequency + "\n\n" +
-                context.getString(R.string.description_period) + ": " + reminder.getDisplayStartDate() + " - " + reminder.getDisplayEndDate() + "\n\n" +
-                context.getString(R.string.description_alltimes) + ":\n" + TextUtils.join("\n", reminder.getTimes());
-    }
-
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadRemindersForDate(textViewSelectedDate.getText().toString());
+        updateReminderList(textViewSelectedDate.getText().toString());
     }
 
     @Override
