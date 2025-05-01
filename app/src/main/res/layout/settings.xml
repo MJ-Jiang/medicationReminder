@@ -135,6 +135,8 @@
             android:padding="12dp"
             android:gravity="center_vertical"
             android:clickable="true"
+
+            android:focusable="true"
             android:foreground="?attr/selectableItemBackground">
 
             <ImageView

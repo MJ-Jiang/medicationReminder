@@ -24,6 +24,12 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        LinearLayout settingChart = findViewById(R.id.settingChart);
+        settingChart.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsActivity.this, ChartSettingsActivity.class);
+            startActivity(intent);
+        });
+
 
     }
 

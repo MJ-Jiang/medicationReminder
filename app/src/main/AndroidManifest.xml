@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".LanguageSettingsActivity" />
+        <activity android:name=".ChartSettingsActivity" />
 
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
