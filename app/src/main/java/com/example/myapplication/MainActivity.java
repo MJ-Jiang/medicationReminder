@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(reminder.getName())
                 .setMessage(buildDetailMessage(this, reminder))
-                .setPositiveButton("OK", null)
+                .setPositiveButton(getString(R.string.ok), null)
                 .show();
     }
 

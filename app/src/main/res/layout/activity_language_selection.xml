@@ -3,8 +3,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:padding="24dp">
+    android:gravity="center_horizontal|top"
+    android:paddingTop="80dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp">
 
     <Button
         android:id="@+id/buttonEnglish"

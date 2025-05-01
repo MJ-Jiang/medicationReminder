@@ -13,7 +13,7 @@
         android:clickable="true"
         android:focusable="false"
         android:padding="16dp"
-        android:text="Select Time"
+        android:text="@string/description_time"
         android:textColor="#000000"
         />
 
