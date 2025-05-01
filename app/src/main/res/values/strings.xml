@@ -47,5 +47,8 @@
     <string name="success">Success</string>
     <string name="ok">OK</string>
 
+    <string name="search_medicine">Search for Medicine</string>
+    <string name="search_button">Search</string>
+
 
 </resources>

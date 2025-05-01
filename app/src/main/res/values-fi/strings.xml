@@ -43,6 +43,7 @@
     <string name="reminder_success">Muistutus luotu onnistuneesti</string>
     <string name="success">Onnistui</string>
     <string name="ok">OK</string>
-
+    <string name="search_medicine">Hae lääkettä</string>
+    <string name="search_button">Hae</string>
 
 </resources>

@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
 
         textViewSelectedDate = findViewById(R.id.textViewSelectedDate);
         Button buttonCreateReminder = findViewById(R.id.buttonCreateReminder);
-        ImageButton buttonSelectDate = findViewById(R.id.buttonSelectDate);
+        ImageView buttonSelectDate = findViewById(R.id.buttonSelectDate);
         FloatingActionButton fabSettings = findViewById(R.id.fabSettings);
 
 
