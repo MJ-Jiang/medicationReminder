@@ -8,18 +8,17 @@ import java.util.List;
 
 public class ReminderLoader {
     public static List<Reminder> loadRemindersForDate(Context context, ReminderDatabaseHelper dbHelper, String date) {
+        // Get reminders from database (already expanded by time)
         List<Reminder> reminders = dbHelper.getRemindersForDate(context, date);
 
-        List<Reminder> expandedReminders = new ArrayList<>();
-        for (Reminder reminder : reminders) {
-            for (String time : reminder.getTimes()) {
-                Reminder singleTimeReminder = new Reminder(reminder);
-                singleTimeReminder.setTimes(new ArrayList<>(Collections.singletonList(time)));
-                expandedReminders.add(singleTimeReminder);
-            }
-        }
+        // Sort by time
+        Collections.sort(reminders, (r1, r2) -> {
+            // Handle potential null times
+            String time1 = r1.getTime() != null ? r1.getTime() : "";
+            String time2 = r2.getTime() != null ? r2.getTime() : "";
+            return time1.compareTo(time2);
+        });
 
-        Collections.sort(expandedReminders, (r1, r2) -> r1.getTimes().get(0).compareTo(r2.getTimes().get(0)));
-        return expandedReminders;
+        return reminders;
     }
 }

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class Reminder implements Parcelable {
     private long id;
+    private long groupId;
+    private String time;
     private String name;
     private String description;
     private String dosage;
@@ -15,12 +17,18 @@ public class Reminder implements Parcelable {
     private String endDate;         // 存储格式：yyyy-MM-dd
     private String displayStartDate; // 显示格式：dd/MM/yyyy
     private String displayEndDate;   // 显示格式：dd/MM/yyyy
-    private ArrayList<String> times; // 格式：HH:mm
     private boolean isCompleted;
+    private boolean isNotified;
+
     // 空构造器（数据库必需）
-    public Reminder() {}
+    public Reminder() {
+
+        groupId=System.currentTimeMillis();
+    }
     public Reminder(Reminder other){
         this.id=other.id;
+        this.groupId=other.groupId;
+        this.time=other.time;
         this.name=other.name;
         this.description=other.description;
         this.dosage=other.dosage;
@@ -29,9 +37,9 @@ public class Reminder implements Parcelable {
         this.endDate=other.endDate;
         this.displayStartDate= other.displayStartDate;
         this.displayEndDate= other.displayEndDate;
-        this.times = new ArrayList<>(other.times);
-        this.isCompleted=other.isCompleted;
 
+        this.isCompleted=other.isCompleted;
+        this.isNotified = other.isNotified;
     }
 
     // Parcelable实现（用于Activity间传递）
@@ -39,6 +47,8 @@ public class Reminder implements Parcelable {
         //一个超高效的存储箱，可以把各种数据（数字、字符串、对象等）打包起来，然后传到别的地方。通过Intent、Bundle传递。
         //Parcel in 里已经打包好了一份 Reminder 对象的数据。接下来是打开这个盒子（in），把里面的数据一个一个拿出来，恢复成一个新的 Reminder 对象。
         id = in.readLong();//从 Parcel 中读取一个 长整型（long） 值，赋给 id 这个字段
+        groupId=in.readLong();
+        time = in.readString();
         name = in.readString();
         description = in.readString();
         dosage = in.readString();
@@ -47,8 +57,10 @@ public class Reminder implements Parcelable {
         endDate = in.readString();
         displayStartDate = in.readString();
         displayEndDate = in.readString();
-        times = in.createStringArrayList();
+
         isCompleted = in.readByte() != 0;
+        isNotified = in.readByte() != 0; // ← Add this line at the end
+
     }
 
     public static final Creator<Reminder> CREATOR = new Creator<Reminder>() {
@@ -72,6 +84,8 @@ public class Reminder implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         //把 Reminder 里面的每一份数据，一份一份放进 dest 这个快递盒子里（Parcel）
         dest.writeLong(id);
+        dest.writeLong(groupId);
+        dest.writeString(time);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeString(dosage);
@@ -81,13 +95,16 @@ public class Reminder implements Parcelable {
         dest.writeString(displayStartDate);
         dest.writeString(displayEndDate);
         dest.writeByte((byte) (isCompleted ? 1 : 0));
-        dest.writeStringList(times);
+        dest.writeByte((byte) (isNotified ? 1 : 0));
     }
 
     // Getter & Setter
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
-
+    public long getGroupId() { return groupId; }
+    public void setGroupId(long groupId) { this.groupId = groupId; }
+    public String getTime() { return time; }
+    public void setTime(String time) { this.time = time; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
@@ -113,9 +130,13 @@ public class Reminder implements Parcelable {
     public void setEndDate(String endDate) { this.endDate = endDate; }
 
 
-
-    public ArrayList<String> getTimes() { return times; }
-    public void setTimes(ArrayList<String> times) { this.times = times; }
     public boolean getIsCompleted() { return isCompleted; }
     public void setIsCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }
+    public boolean getIsNotified() { return isNotified; }
+    public void setIsNotified(boolean isNotified) { this.isNotified = isNotified; }
+    public ArrayList<String> getTimes() {
+        ArrayList<String> singleTime = new ArrayList<>();
+        if (time != null) singleTime.add(time);
+        return singleTime;
+    }
 }

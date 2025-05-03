@@ -112,25 +112,24 @@ public class CreateReminderActivity extends AppCompatActivity {
         TextView timeTextView = timeRow.findViewById(R.id.textViewTime);
         Button buttonAdd = timeRow.findViewById(R.id.buttonAddTime);
         Button buttonRemove = timeRow.findViewById(R.id.buttonRemoveTime);
+        timeTextView.setText(getString(R.string.description_time));
+
         timeTextView.setOnClickListener(v -> showTimePickerDialog(timeTextView));
 
         // 加号按钮点击事件（继续新增一行）
         buttonAdd.setOnClickListener(v -> addTimeRow(false));
-        if(isFirstRow){
+
+        if (isFirstRow) {
             buttonRemove.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             buttonRemove.setVisibility(View.VISIBLE);
             buttonRemove.setOnClickListener(v -> {
                 if (linearLayoutTimes.getChildCount() > 1) {
-                    // 从时间列表中移除对应时间
-                    String timeToRemove = timeTextView.getText().toString();
-                    if (!timeToRemove.equals(getString(R.string.description_time))) {
-                        reminderTimes.remove(timeToRemove);
-                    }
                     linearLayoutTimes.removeView(timeRow);
                 }
             });
         }
+
         linearLayoutTimes.addView(timeRow);
     }
 
@@ -144,7 +143,7 @@ public class CreateReminderActivity extends AppCompatActivity {
                 (timePicker, hourOfDay, minute1) -> {
                     String formattedTime = String.format("%02d:%02d", hourOfDay, minute1);
                     newTimeTextView.setText(formattedTime);
-                    reminderTimes.add(formattedTime); // 保存该时间到列表中
+
                 },
                 hour, minute, true
         );
@@ -177,20 +176,43 @@ public class CreateReminderActivity extends AppCompatActivity {
 
 
         // 3. 存储到数据库
-        long result = dbHelper.addReminder(reminder);
+        long result = -1;
+        ArrayList<String> validTimes = new ArrayList<>();
+        // First validate and collect all times
+        for (int i = 0; i < linearLayoutTimes.getChildCount(); i++) {
+            View row = linearLayoutTimes.getChildAt(i);
+            TextView timeText = row.findViewById(R.id.textViewTime);
+            String time = timeText.getText().toString();
+            if (!time.equals(getString(R.string.description_time))) {
+                validTimes.add(time);
+            }
+        }
 
-        // 4. 处理结果
-        if (result != -1) {
+        // Save each time as separate reminder with same groupId
+        if (!validTimes.isEmpty()) {
+            long groupId = System.currentTimeMillis(); // Generate unique group ID
+
+            for (String time : validTimes) {
+                Reminder timeReminder = new Reminder(reminder); // Copy constructor
+                timeReminder.setGroupId(groupId);
+                timeReminder.setTime(time);
+                result = dbHelper.addReminder(timeReminder);
+
+                if (result == -1) {
+                    Toast.makeText(this, getString(R.string.fail_save_reminder), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
             showSuccessDialog();
             clearFields();
         } else {
-            Toast.makeText(this, getString(R.string.fail_save_reminder), Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(this, getString(R.string.select_time), Toast.LENGTH_SHORT).show();
         }
     }
 
+
     private boolean validateInput() {
-        // 检查基础字段
         if (editTextName.getText().toString().trim().isEmpty() ||
                 editTextDescription.getText().toString().trim().isEmpty() ||
                 editTextDosage.getText().toString().trim().isEmpty()) {
@@ -198,15 +220,12 @@ public class CreateReminderActivity extends AppCompatActivity {
             return false;
         }
 
-        // 检查日期
         if (textViewStartDateValue.getText().toString().equals(getString(R.string.description_startdate)) ||
                 textViewEndDateValue.getText().toString().equals(getString(R.string.description_enddate))) {
             showToast(getString(R.string.select_dates));
             return false;
         }
 
-
-        // 检查至少有一个有效时间
         if (!hasValidTimeSelected()) {
             showToast(getString(R.string.select_time));
             return false;
@@ -243,17 +262,7 @@ public class CreateReminderActivity extends AppCompatActivity {
         reminder.setStartDate(convertToDatabaseDate(displayStart));
         reminder.setEndDate(convertToDatabaseDate(displayEnd));
         reminder.setIsCompleted(false);
-        // 收集所有有效时间
-        ArrayList<String> times = new ArrayList<>();
-        for (int i = 0; i < linearLayoutTimes.getChildCount(); i++) {
-            View row = linearLayoutTimes.getChildAt(i);
-            TextView timeText = row.findViewById(R.id.textViewTime);
-            String time = timeText.getText().toString();
-            if (!time.equals(getString(R.string.description_time))) {
-                times.add(time);
-            }
-        }
-        reminder.setTimes(times);
+        reminder.setIsNotified(false);
 
         return reminder;
     }

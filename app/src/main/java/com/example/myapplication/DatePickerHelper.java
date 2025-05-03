@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class DatePickerHelper {
+
     public static void show(Context context, String currentDate, TextView dateTextView, ReminderAdapter adapter, ReminderDatabaseHelper dbHelper) {
         Calendar calendar = Calendar.getInstance();
         try {

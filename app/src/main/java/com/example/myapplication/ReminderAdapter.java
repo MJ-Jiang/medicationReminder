@@ -18,6 +18,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     public interface OnReminderClickListener {
         void onReminderClick(Reminder reminder);
         void onCheckedChanged(Reminder reminder, boolean isChecked);
+
     }
 
     public ReminderAdapter(List<Reminder> reminders, OnReminderClickListener listener) {
@@ -41,30 +42,23 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Reminder reminder = reminders.get(position);//获取对应位置的数据
         holder.tvName.setText(reminder.getName());//提醒名到 TextView
-
-        // 显示第一个时间（后续会展开多个）
-        if (!reminder.getTimes().isEmpty()) {
-            holder.tvTime.setText(reminder.getTimes().get(0));
-        }
+        holder.tvTime.setText(reminder.getTime() != null ? reminder.getTime() : "");
         holder.tvDosage.setText(reminder.getDosage());
+        boolean isCompleted = reminder.getIsCompleted();
+        holder.itemView.setActivated(isCompleted);
+        holder.cbCompleted.setChecked(isCompleted);
+
         if(reminder.getIsCompleted()){
             holder.itemView.setActivated(true);
         }else{
             holder.itemView.setActivated(false);
         }
         holder.cbCompleted.setChecked(reminder.getIsCompleted());
-
-        holder.itemView.setOnClickListener(v -> {
-            listener.onReminderClick(reminder);
-        });
+        holder.itemView.setOnClickListener(v -> listener.onReminderClick(reminder));
 
         holder.cbCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
             listener.onCheckedChanged(reminder, isChecked);
-            if(isChecked){
-                holder.itemView.setActivated(true);
-            }else {
-                holder.itemView.setActivated(false);
-            }
+            holder.itemView.setActivated(isChecked);
         });
     }
 

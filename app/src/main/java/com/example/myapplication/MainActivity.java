@@ -46,11 +46,14 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
 
         textViewSelectedDate.setText(Utils.getTodayDate());
         updateReminderList(Utils.getTodayDate());
+
         buttonCreateReminder.setOnClickListener(v -> startActivity(new Intent(this, CreateReminderActivity.class)));
+
         buttonSelectDate.setOnClickListener(v ->
                 DatePickerHelper.show(this, textViewSelectedDate.getText().toString(), textViewSelectedDate, adapter, dbHelper));
         fabSettings.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
+
     }
     private void updateReminderList(String date){
         List<Reminder> reminders=ReminderLoader.loadRemindersForDate(this,dbHelper,date);
@@ -61,7 +64,9 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
 
     @Override
     public void onReminderClick(Reminder reminder) {
-        ReminderDetailDialog.show(this, reminder);
+        // This now only loads the times, not full reminders
+        List<String> times = dbHelper.getGroupTimes(reminder.getGroupId());
+        ReminderDetailDialog.show(this, reminder, times);
     }
 
     @Override
