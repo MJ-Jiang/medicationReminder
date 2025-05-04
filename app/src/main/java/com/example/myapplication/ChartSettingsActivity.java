@@ -245,7 +245,11 @@ public class ChartSettingsActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.chart_search_choose)
                 .setItems(names.toArray(new String[0]), (dialog, which) -> {
+                    // 获取用户选择的reminder名称
                     selectedReminderName = names.get(which);
+                    // 更新搜索框文本
+                    searchBar.setText(selectedReminderName);
+                    // 重新加载图表数据
                     loadChartData();
                 })
                 .setNegativeButton(R.string.chart_cancel, null)
