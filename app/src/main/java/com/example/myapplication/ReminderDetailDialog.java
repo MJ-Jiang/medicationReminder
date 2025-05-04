@@ -18,7 +18,7 @@ public class ReminderDetailDialog {
     }
 
     private static String buildDetailMessage(Context context, Reminder reminder, List<String> times, ReminderDatabaseHelper dbHelper) {
-        String localizedFrequency = dbHelper.getLocalizedFrequency(context, reminder.getFrequency());
+        String localizedFrequency = ReminderFrequencyHelper.getLocalizedFrequency(context, reminder.getFrequency());
         String timesText = times.toString() // Shows as [2:00, 3:15]
                 .replace("[", "")
                 .replace("]", "");
