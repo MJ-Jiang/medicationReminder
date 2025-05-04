@@ -50,5 +50,6 @@
     <string name="search_medicine">Search for Medicine</string>
     <string name="search_button">Search</string>
 
-
+    <string name="chart_all">All Reminders</string>
+    <string name="chart_completed">Completed</string>
 </resources>

@@ -261,5 +261,32 @@ private List<Reminder> getAllRemindersByDateRange(String date) {
         return rowsAffected;
     }
 
+    public int getAllRemindersCountForDate(String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_REMINDERS + " WHERE "
+                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{date, date});
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+    public int getCompletedRemindersCountForDate(String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_REMINDERS + " WHERE "
+                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ? AND "
+                + KEY_IS_COMPLETED + " = 1";  // 只计算已完成的
+
+        Cursor cursor = db.rawQuery(query, new String[]{date, date});
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
 
 }

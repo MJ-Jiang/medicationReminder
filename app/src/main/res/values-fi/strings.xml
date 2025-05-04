@@ -45,5 +45,6 @@
     <string name="ok">OK</string>
     <string name="search_medicine">Hae lääkettä</string>
     <string name="search_button">Hae</string>
-
+    <string name="chart_all">Kaikki muistutukset</string>
+    <string name="chart_completed">Valmis</string>
 </resources>
