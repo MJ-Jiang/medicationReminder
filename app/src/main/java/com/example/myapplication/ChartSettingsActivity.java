@@ -1,7 +1,7 @@
 package com.example.myapplication;
-
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,7 +44,33 @@ public class ChartSettingsActivity extends AppCompatActivity {
         setDefaultDateRange();
         setupChart();
         loadChartData();
-    }
+        ImageView buttonSelectStartDate = findViewById(R.id.buttonSelectStartDate);
+        ImageView buttonSelectEndDate = findViewById(R.id.buttonSelectEndDate);
+
+        // 在 onCreate() 中替换原有的日期选择器逻辑
+
+        buttonSelectStartDate.setOnClickListener(v ->
+                DatePickerHelper.show(
+                        this,
+                        textViewSelectedStartDate.getText().toString(),
+                        textViewSelectedStartDate,
+
+                        dbHelper
+                )
+        );
+
+        buttonSelectEndDate.setOnClickListener(v ->
+                DatePickerHelper.show(
+                        this,
+                        textViewSelectedEndDate.getText().toString(),
+                        textViewSelectedEndDate,
+
+                        dbHelper
+                )
+        );
+
+
+}
     private void setDefaultDateRange(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
@@ -57,6 +83,8 @@ public class ChartSettingsActivity extends AppCompatActivity {
         calendar.add(Calendar.DAY_OF_YEAR, -7);
         String startDate = sdf.format(calendar.getTime());
         textViewSelectedStartDate.setText(startDate);
+
+
     }
 
 
@@ -83,7 +111,7 @@ public class ChartSettingsActivity extends AppCompatActivity {
         barChart.getLegend().setEnabled(true);
     }
 
-    private void loadChartData() {
+    public void loadChartData() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
 
@@ -151,4 +179,5 @@ public class ChartSettingsActivity extends AppCompatActivity {
         barChart.groupBars(0, 0.1f, 0.05f); // 调整柱状图分组
         barChart.invalidate(); // 刷新图表
     }
+
 }

@@ -14,7 +14,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     //泛型指定使用的是内部定义的 ViewHolder 类型，负责控制每一行视图
     private List<Reminder> reminders;
     private final OnReminderClickListener listener;//接口对象，用于监听每条提醒的点击和 checkbox 变化事件。
-//定义一个接口，用于监听提醒项的点击行为和勾选框变化。
+
+
+    //定义一个接口，用于监听提醒项的点击行为和勾选框变化。
     public interface OnReminderClickListener {
         void onReminderClick(Reminder reminder);
         void onCheckedChanged(Reminder reminder, boolean isChecked);
