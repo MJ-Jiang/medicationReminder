@@ -11,70 +11,46 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class ReminderDatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "ReminderDB";
-    private static final int DATABASE_VERSION = 1;
 
-    // 表结构
-    private static final String TABLE_REMINDERS = "reminders";
-    private static final String TABLE_GROUPS = "reminder_groups";
-
-
-    private static final String KEY_ID = "id";
-    private static final String KEY_GROUP_ID = "group_id";
-    private static final String KEY_NAME = "name";
-    private static final String KEY_TIME = "time";
-    private static final String KEY_DESCRIPTION = "description";
-    private static final String KEY_DOSAGE = "dosage";
-    private static final String KEY_FREQUENCY = "frequency";
-    private static final String KEY_START_DATE = "start_date";
-    private static final String KEY_END_DATE = "end_date";
-    private static final String KEY_DISPLAY_START = "display_start_date";
-    private static final String KEY_DISPLAY_END = "display_end_date";
-    private static final String KEY_TIMES = "times";
-    private static final String KEY_IS_COMPLETED = "is_completed";
-    private static final String KEY_IS_NOTIFIED = "is_notified";
 
     public ReminderDatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, ReminderQueryHelper.DATABASE_NAME, null, ReminderQueryHelper.DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_TABLE = "CREATE TABLE " + TABLE_REMINDERS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + KEY_GROUP_ID + " INTEGER,"
-                + KEY_NAME + " TEXT,"
-                + KEY_TIME + " TEXT,"
-                + KEY_DESCRIPTION + " TEXT,"
-                + KEY_DOSAGE + " TEXT,"
-                + KEY_FREQUENCY + " TEXT,"
-                + KEY_START_DATE + " TEXT,"
-                + KEY_END_DATE + " TEXT,"
-                + KEY_DISPLAY_START + " TEXT,"
-                + KEY_DISPLAY_END + " TEXT,"
-                + KEY_IS_COMPLETED + " INTEGER DEFAULT 0,"
-                + KEY_IS_NOTIFIED + " INTEGER DEFAULT 0" + ")";
+        String CREATE_TABLE = "CREATE TABLE " + ReminderQueryHelper.TABLE_REMINDERS + "("
+                + ReminderQueryHelper.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + ReminderQueryHelper.KEY_GROUP_ID + " INTEGER,"
+                + ReminderQueryHelper.KEY_NAME + " TEXT,"
+                + ReminderQueryHelper.KEY_TIME + " TEXT,"
+                + ReminderQueryHelper.KEY_DESCRIPTION + " TEXT,"
+                + ReminderQueryHelper.KEY_DOSAGE + " TEXT,"
+                + ReminderQueryHelper.KEY_FREQUENCY + " TEXT,"
+                + ReminderQueryHelper.KEY_START_DATE + " TEXT,"
+                + ReminderQueryHelper.KEY_END_DATE + " TEXT,"
+                + ReminderQueryHelper.KEY_DISPLAY_START + " TEXT,"
+                + ReminderQueryHelper.KEY_DISPLAY_END + " TEXT,"
+                + ReminderQueryHelper.KEY_IS_COMPLETED + " INTEGER DEFAULT 0,"
+                + ReminderQueryHelper.KEY_IS_NOTIFIED + " INTEGER DEFAULT 0" + ")";
         db.execSQL(CREATE_TABLE);
-        String CREATE_GROUPS_TABLE = "CREATE TABLE " + TABLE_GROUPS + "("
-                + KEY_GROUP_ID + " INTEGER PRIMARY KEY,"
-                + KEY_NAME + " TEXT,"
-                + KEY_TIMES + " TEXT)"; // Stores JSON array
+        String CREATE_GROUPS_TABLE = "CREATE TABLE " + ReminderQueryHelper.TABLE_GROUPS + "("
+                + ReminderQueryHelper.KEY_GROUP_ID + " INTEGER PRIMARY KEY,"
+                + ReminderQueryHelper.KEY_NAME + " TEXT,"
+                + ReminderQueryHelper.KEY_TIMES + " TEXT)"; // Stores JSON array
         db.execSQL(CREATE_GROUPS_TABLE);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDERS);//如果存在叫 TABLE_REMINDERS 的表，就把它删掉！
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUPS);
+        db.execSQL("DROP TABLE IF EXISTS " + ReminderQueryHelper.TABLE_REMINDERS);//如果存在叫 TABLE_REMINDERS 的表，就把它删掉！
+        db.execSQL("DROP TABLE IF EXISTS " + ReminderQueryHelper.TABLE_GROUPS);
         onCreate(db);
     }//删掉旧表，创建新表
 
@@ -86,31 +62,31 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         try{
             db.beginTransaction();
             ContentValues groupValues = new ContentValues();
-            groupValues.put(KEY_GROUP_ID, groupId);
-            groupValues.put(KEY_NAME, reminder.getName());
+            groupValues.put(ReminderQueryHelper.KEY_GROUP_ID, groupId);
+            groupValues.put(ReminderQueryHelper.KEY_NAME, reminder.getName());
             ArrayList<String> times = getGroupTimes(groupId);
             if (reminder.getTime() != null) {
                 times.add(reminder.getTime());
             }
-            groupValues.put(KEY_TIMES, new Gson().toJson(times));
+            groupValues.put(ReminderQueryHelper.KEY_TIMES, new Gson().toJson(times));
 
-            db.insertWithOnConflict(TABLE_GROUPS, null, groupValues,
+            db.insertWithOnConflict(ReminderQueryHelper.TABLE_GROUPS, null, groupValues,
                     SQLiteDatabase.CONFLICT_REPLACE);
             ContentValues values = new ContentValues();
-            values.put(KEY_GROUP_ID, groupId);
-            values.put(KEY_NAME, reminder.getName());
-            values.put(KEY_TIME, reminder.getTime());
-            values.put(KEY_DESCRIPTION, reminder.getDescription());
-            values.put(KEY_DOSAGE, reminder.getDosage());
-            values.put(KEY_FREQUENCY, reminder.getFrequency());
-            values.put(KEY_START_DATE, reminder.getStartDate());
-            values.put(KEY_END_DATE, reminder.getEndDate());
-            values.put(KEY_DISPLAY_START, reminder.getDisplayStartDate());
-            values.put(KEY_DISPLAY_END, reminder.getDisplayEndDate());
-            values.put(KEY_IS_COMPLETED, reminder.getIsCompleted() ? 1 : 0);
-            values.put(KEY_IS_NOTIFIED, reminder.getIsNotified() ? 1 : 0);
+            values.put(ReminderQueryHelper.KEY_GROUP_ID, groupId);
+            values.put(ReminderQueryHelper.KEY_NAME, reminder.getName());
+            values.put(ReminderQueryHelper.KEY_TIME, reminder.getTime());
+            values.put(ReminderQueryHelper.KEY_DESCRIPTION, reminder.getDescription());
+            values.put(ReminderQueryHelper.KEY_DOSAGE, reminder.getDosage());
+            values.put(ReminderQueryHelper.KEY_FREQUENCY, reminder.getFrequency());
+            values.put(ReminderQueryHelper.KEY_START_DATE, reminder.getStartDate());
+            values.put(ReminderQueryHelper.KEY_END_DATE, reminder.getEndDate());
+            values.put(ReminderQueryHelper.KEY_DISPLAY_START, reminder.getDisplayStartDate());
+            values.put(ReminderQueryHelper.KEY_DISPLAY_END, reminder.getDisplayEndDate());
+            values.put(ReminderQueryHelper.KEY_IS_COMPLETED, reminder.getIsCompleted() ? 1 : 0);
+            values.put(ReminderQueryHelper.KEY_IS_NOTIFIED, reminder.getIsNotified() ? 1 : 0);
 
-            newId = db.insert(TABLE_REMINDERS, null, values);
+            newId = db.insert(ReminderQueryHelper.TABLE_REMINDERS, null, values);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -122,9 +98,9 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<String> times = new ArrayList<>();
 
-        Cursor cursor = db.query(TABLE_GROUPS,
-                new String[]{KEY_TIMES},
-                KEY_GROUP_ID + " = ?",
+        Cursor cursor = db.query(ReminderQueryHelper.TABLE_GROUPS,
+                new String[]{ReminderQueryHelper.KEY_TIMES},
+                ReminderQueryHelper.KEY_GROUP_ID + " = ?",
                 new String[]{String.valueOf(groupId)},
                 null, null, null);
 
@@ -138,155 +114,51 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return times;
     }
-
-@SuppressLint("Range")
-private List<Reminder> getAllRemindersByDateRange(String date) {
-    List<Reminder> reminders = new ArrayList<>();
-    String query = "SELECT * FROM " + TABLE_REMINDERS + " WHERE "
-            + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ?";
-
-    SQLiteDatabase db = this.getReadableDatabase();
-    Cursor cursor = db.rawQuery(query, new String[]{date, date});
-
-    if (cursor.moveToFirst()) {
-        do {
-            Reminder reminder = new Reminder();
-            reminder.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
-            reminder.setGroupId(cursor.getLong(cursor.getColumnIndex(KEY_GROUP_ID)));
-            reminder.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
-            reminder.setTime(cursor.getString(cursor.getColumnIndex(KEY_TIME)));
-            reminder.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
-            reminder.setDosage(cursor.getString(cursor.getColumnIndex(KEY_DOSAGE)));
-            reminder.setFrequency(cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY)));
-            reminder.setStartDate(cursor.getString(cursor.getColumnIndex(KEY_START_DATE)));
-            reminder.setEndDate(cursor.getString(cursor.getColumnIndex(KEY_END_DATE)));
-            reminder.setDisplayStartDate(cursor.getString(cursor.getColumnIndex(KEY_DISPLAY_START)));
-            reminder.setDisplayEndDate(cursor.getString(cursor.getColumnIndex(KEY_DISPLAY_END)));
-            reminder.setIsCompleted(cursor.getInt(cursor.getColumnIndex(KEY_IS_COMPLETED)) == 1);
-            reminder.setIsNotified(cursor.getInt(cursor.getColumnIndex(KEY_IS_NOTIFIED)) == 1);
-
-            reminders.add(reminder);
-        } while (cursor.moveToNext());
-    }
-    cursor.close();
-    db.close();
-    return reminders;
-}
-
-    public List<Reminder> getRemindersForDate(Context context, String targetDate) {
-        List<Reminder> filteredReminders = new ArrayList<>();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
-        try {
-            Date queryDate = sdf.parse(targetDate);
-            List<Reminder> remindersInRange = getAllRemindersByDateRange(targetDate);
-
-            for (Reminder reminder : remindersInRange) {
-                Date startDate = sdf.parse(reminder.getStartDate());
-
-                // Compare using fixed codes (DAILY, WEEKLY, MONTHLY, YEARLY)
-                if (ReminderFrequencyHelper.isDateMatchFrequency(context, queryDate, startDate, reminder.getFrequency())) {
-                    filteredReminders.add(reminder);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return filteredReminders;
-    }
-
-
     public int updateReminderCompletion(long id, boolean isCompleted) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_IS_COMPLETED, isCompleted ? 1 : 0);
+        values.put(ReminderQueryHelper.KEY_IS_COMPLETED, isCompleted ? 1 : 0);
 
         int rowsAffected = db.update(
-                TABLE_REMINDERS,
+                ReminderQueryHelper.TABLE_REMINDERS,
                 values,
-                KEY_ID + " = ?",
+                ReminderQueryHelper.KEY_ID + " = ?",
                 new String[]{String.valueOf(id)}//把 id 转换为字符串作为参数填入 ? 中，防止 SQL 注入。
         );
 
         db.close();
         return rowsAffected;
     }
+    @SuppressLint("Range")
+    public List<Reminder> getAllRemindersByDateRange(String date) {
+        return ReminderQueryHelper.getAllRemindersByDateRange(this, date);
+    }
+
+    public List<Reminder> getRemindersForDate(Context context, String targetDate) {
+        return ReminderQueryHelper.getRemindersForDate(this, context, targetDate);
+    }
+
+
+
 
     public int getAllRemindersCountForDate(String date) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT COUNT(*) FROM " + TABLE_REMINDERS + " WHERE "
-                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ?";
-
-        Cursor cursor = db.rawQuery(query, new String[]{date, date});
-        int count = 0;
-        if (cursor.moveToFirst()) {
-            count = cursor.getInt(0);
-        }
-        cursor.close();
-        return count;
+        return ReminderQueryHelper.getAllRemindersCountForDate(this, date);
     }
+
     public int getCompletedRemindersCountForDate(String date) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT COUNT(*) FROM " + TABLE_REMINDERS + " WHERE "
-                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ? AND "
-                + KEY_IS_COMPLETED + " = 1";  // 只计算已完成的
-
-        Cursor cursor = db.rawQuery(query, new String[]{date, date});
-        int count = 0;
-        if (cursor.moveToFirst()) {
-            count = cursor.getInt(0);
-        }
-        cursor.close();
-        return count;
+        return ReminderQueryHelper.getCompletedRemindersCountForDate(this, date);
     }
+
     public List<String> getAllReminderNames() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<String> names = new ArrayList<>();
-
-        Cursor cursor = db.query(true, TABLE_REMINDERS,
-                new String[]{KEY_NAME},
-                null, null,
-                KEY_NAME, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                names.add(cursor.getString(0));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return names;
+        return ReminderQueryHelper.getAllReminderNames(this);
     }
-    public int getRemindersCountForDateAndName(String date, String name) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT COUNT(*) FROM " + TABLE_REMINDERS + " WHERE "
-                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ? AND "
-                + KEY_NAME + " = ?";
 
-        Cursor cursor = db.rawQuery(query, new String[]{date, date, name});
-        int count = 0;
-        if (cursor.moveToFirst()) {
-            count = cursor.getInt(0);
-        }
-        cursor.close();
-        return count;
+    public int getRemindersCountForDateAndName(String date, String name) {
+        return ReminderQueryHelper.getRemindersCountForDateAndName(this, date, name);
     }
 
     public int getCompletedRemindersCountForDateAndName(String date, String name) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT COUNT(*) FROM " + TABLE_REMINDERS + " WHERE "
-                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ? AND "
-                + KEY_NAME + " = ? AND "
-                + KEY_IS_COMPLETED + " = 1";
-
-        Cursor cursor = db.rawQuery(query, new String[]{date, date, name});
-        int count = 0;
-        if (cursor.moveToFirst()) {
-            count = cursor.getInt(0);
-        }
-        cursor.close();
-        return count;
+        return ReminderQueryHelper.getCompletedRemindersCountForDateAndName(this, date, name);
     }
 
 }
