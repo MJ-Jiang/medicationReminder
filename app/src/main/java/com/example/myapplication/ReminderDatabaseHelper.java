@@ -288,5 +288,52 @@ private List<Reminder> getAllRemindersByDateRange(String date) {
         cursor.close();
         return count;
     }
+    public List<String> getAllReminderNames() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> names = new ArrayList<>();
+
+        Cursor cursor = db.query(true, TABLE_REMINDERS,
+                new String[]{KEY_NAME},
+                null, null,
+                KEY_NAME, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                names.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return names;
+    }
+    public int getRemindersCountForDateAndName(String date, String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_REMINDERS + " WHERE "
+                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ? AND "
+                + KEY_NAME + " = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{date, date, name});
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
+    public int getCompletedRemindersCountForDateAndName(String date, String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_REMINDERS + " WHERE "
+                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ? AND "
+                + KEY_NAME + " = ? AND "
+                + KEY_IS_COMPLETED + " = 1";
+
+        Cursor cursor = db.rawQuery(query, new String[]{date, date, name});
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
 
 }

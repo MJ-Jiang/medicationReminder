@@ -47,4 +47,9 @@
     <string name="search_button">Hae</string>
     <string name="chart_all">Kaikki muistutukset</string>
     <string name="chart_completed">Valmis</string>
+    <string name="chart_search_choose">Valitse yksi muistutus</string>
+    <string name="chart_cancel">Peruuta</string>
+    <string name="chart_cantfind">En löydä sitä</string>
+    <string name="chart_cantfinddes">Ei löytynyt vastaavia muistutuksia</string>
+    <string name="yes">Kyllä</string>
 </resources>

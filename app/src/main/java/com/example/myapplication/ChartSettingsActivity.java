@@ -1,6 +1,9 @@
 package com.example.myapplication;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +16,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,7 +31,8 @@ public class ChartSettingsActivity extends AppCompatActivity {
     private TextView textViewSelectedEndDate;
     private BarChart barChart;
     private ReminderDatabaseHelper dbHelper;
-
+    private TextInputEditText searchBar;
+    private String selectedReminderName = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +73,18 @@ public class ChartSettingsActivity extends AppCompatActivity {
                         dbHelper
                 )
         );
+        searchBar = findViewById(R.id.searchBar);
+        searchBar.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                performSearch();
+                return true;
+            }
+            return false;
+        });
 
 
-}
+    }
+
     private void setDefaultDateRange(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
@@ -136,6 +150,7 @@ public class ChartSettingsActivity extends AppCompatActivity {
             return;
         }
 
+
         // 准备X轴标签（日期）
         List<String> dates = new ArrayList<>();
         Calendar tempCal = Calendar.getInstance();
@@ -152,8 +167,13 @@ public class ChartSettingsActivity extends AppCompatActivity {
 
         for (int i = 0; i < dates.size(); i++) {
             String date = dates.get(i);
-            int allCount = dbHelper.getAllRemindersCountForDate(date);
-            int completedCount = dbHelper.getCompletedRemindersCountForDate(date);
+            int allCount = selectedReminderName == null ?
+                    dbHelper.getAllRemindersCountForDate(date) :
+                    dbHelper.getRemindersCountForDateAndName(date, selectedReminderName);
+
+            int completedCount = selectedReminderName == null ?
+                    dbHelper.getCompletedRemindersCountForDate(date) :
+                    dbHelper.getCompletedRemindersCountForDateAndName(date, selectedReminderName);
 
             allReminderEntries.add(new BarEntry(i, allCount));
             completedEntries.add(new BarEntry(i, completedCount));
@@ -178,6 +198,58 @@ public class ChartSettingsActivity extends AppCompatActivity {
         barChart.setData(barData);
         barChart.groupBars(0, 0.1f, 0.05f); // 调整柱状图分组
         barChart.invalidate(); // 刷新图表
+    }
+    public void onSearchClicked(View view) {
+        performSearch();
+    }
+    private void performSearch() {
+        String searchText = searchBar.getText().toString().trim();
+        if (searchText.isEmpty()) {
+            // 如果搜索为空，显示全部数据
+            selectedReminderName = null;
+            loadChartData();
+            return;
+        }
+
+        // 检查是否存在匹配的提醒事项
+        List<String> reminderNames = dbHelper.getAllReminderNames();
+        List<String> matchedNames = new ArrayList<>();
+
+        // 简单模糊匹配（不区分大小写）
+        for (String name : reminderNames) {
+            if (name.toLowerCase().contains(searchText.toLowerCase())) {
+                matchedNames.add(name);
+            }
+        }
+
+        if (matchedNames.isEmpty()) {
+            // 没有找到匹配项
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.chart_cantfind)
+                    .setMessage(R.string.chart_cantfinddes)
+                    .setPositiveButton(R.string.yes, null)
+                    .show();
+            return;
+        }
+
+        if (matchedNames.size() == 1) {
+            // 唯一匹配
+            selectedReminderName = matchedNames.get(0);
+            loadChartData();
+        } else {
+            // 多个匹配，显示选择对话框
+            showReminderSelectionDialog(matchedNames);
+        }
+    }
+    private void showReminderSelectionDialog(List<String> names) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.chart_search_choose)
+                .setItems(names.toArray(new String[0]), (dialog, which) -> {
+                    selectedReminderName = names.get(which);
+                    loadChartData();
+                })
+                .setNegativeButton(R.string.chart_cancel, null)
+                .show();
     }
 
 }

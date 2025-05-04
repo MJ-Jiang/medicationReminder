@@ -52,4 +52,9 @@
 
     <string name="chart_all">All Reminders</string>
     <string name="chart_completed">Completed</string>
+    <string name="chart_search_choose">Choose one Reminder</string>
+    <string name="chart_cancel">Cancel</string>
+    <string name="chart_cantfind">Can\'t find it</string>
+    <string name="chart_cantfinddes">No matching reminders found</string>
+    <string name="yes">Yes</string>
 </resources>
