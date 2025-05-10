@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -167,4 +169,20 @@ public class ReminderQueryHelper {
         cursor.close();
         return count;
     }
+    // ReminderQueryHelper.java
+    public static int updateReminderNotified(ReminderDatabaseHelper dbHelper, long id, boolean isNotified) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_IS_NOTIFIED, isNotified ? 1 : 0);
+
+        int rowsAffected = db.update(
+                TABLE_REMINDERS,
+                values,
+                KEY_ID + " = ?",
+                new String[]{String.valueOf(id)}
+        );
+        db.close();
+        return rowsAffected;
+    }
+
 }

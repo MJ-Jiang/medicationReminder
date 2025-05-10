@@ -129,6 +129,12 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return rowsAffected;
     }
+
+    public int updateReminderNotified(long id, boolean isNotified) {
+        return ReminderQueryHelper.updateReminderNotified(this, id, isNotified);
+    }
+
+
     @SuppressLint("Range")
     public List<Reminder> getAllRemindersByDateRange(String date) {
         return ReminderQueryHelper.getAllRemindersByDateRange(this, date);

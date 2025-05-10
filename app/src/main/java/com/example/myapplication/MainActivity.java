@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
     private ReminderAdapter adapter;
     private ReminderDatabaseHelper dbHelper;
     private TextView textViewSelectedDate;
+    private ReminderNotifier notifier;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,17 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
         fabSettings.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
 
+        dbHelper = new ReminderDatabaseHelper(this);
+        notifier = new ReminderNotifier(this, dbHelper);
+        Runnable reminderCheckRunnable = new Runnable() {
+            @Override
+            public void run() {
+                notifier.checkAndNotifyReminders();
+                handler.postDelayed(this, 60000); // 每分钟执行一次
+            }
+        };
+        handler.post(reminderCheckRunnable);
+
     }
     private void updateReminderList(String date){
         List<Reminder> reminders=ReminderLoader.loadRemindersForDate(this,dbHelper,date);
@@ -74,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
         // 更新数据库中的完成状态
         dbHelper.updateReminderCompletion(reminder.getId(), isChecked);
     }
-
 
 
     @Override
