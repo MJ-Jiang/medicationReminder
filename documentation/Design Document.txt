@@ -4,22 +4,27 @@ The Medicine Reminder App is a mobile application developed using Android Studio
 users manage their medication schedules efficiently by providing reminders, tracking progress, and
 allowing customization through user settings.
 
-While completing the Medicine Reminder App, my main focus will be on mastering Android
-development with Java in the Android Studio for the frontend, as outlined in the course exercises.
+While designing the Medicine Reminder App, my main focus is to strengthen my skills in Android development
+using Java and Android Studio, as emphasized in the course exercises. I aim to learn how to design
+a functional and user-friendly application that serves a real-world purpose.
+Specifically, I want to improve my understanding of how to:
+• Structure an Android app with clear separation of concerns between different classes (such as UI, database access, and logic),
+• Design intuitive and accessible user interfaces,
+• Integrate and manage a local SQLite database to store and query reminder data efficiently,
+• Implement background tasks such as time-based notifications reliably.
 
 When I designed my project, I thought my timetable would be:
-24.2-2.3: UI design
-3.3-30.3 Frontend pages
-31.3-20.4 Backend and deployment
-21.4-30.4 Documentation
+• 24.2-2.3: UI design
+• 3.3-30.3 Frontend pages
+• 31.3-20.4 Backend and deployment
+• 21.4-30.4 Documentation
 However, due to academic pressures, my actual timetable was:
-25.2:      Design project
-25.4-10.5: Research and programming
-23.5-30.5: Documentation
+• 25.2:      Design project
+• 25.4-10.5: Research and programming
+• 23.5-30.5: Documentation
 I also gave up the idea of including a backend in this project.
 
 2. Features
-
 2.2 Pill Reminders
 • Create New Reminder:
     o Users can set reminders with a start date and end date.
