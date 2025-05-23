@@ -7,26 +7,30 @@ allowing customization through user settings.
 While completing the Medicine Reminder App, my main focus will be on mastering Android
 development with Java in the Android Studio for the frontend, as outlined in the course exercises.
 
-My timetable would be:
+When I designed my project, I thought my timetable would be:
 24.2-2.3: UI design
 3.3-30.3 Frontend pages
 31.3-20.4 Backend and deployment
 21.4-30.4 Documentation
+However, due to academic pressures, my actual timetable was:
+25.2:      Design project
+25.4-10.5: Research and programming
+23.5-30.5: Documentation
+I also gave up the idea of including a backend in this project.
 
 2. Features
 
 2.2 Pill Reminders
 • Create New Reminder:
-o Users can set reminders with a start date and end date.
-o Frequency options: Daily, Weekly, Multiple times a day.
-o Validation checks:
-▪ Prevent duplicating reminders with the same name.
-▪ Ensure the end date is not earlier than the start date.▪ Ensure all required fields are filled before adding a reminder.
+    o Users can set reminders with a start date and end date.
+    o Frequency options: Daily, Weekly, Monthly and Yearly, and Multiple times a day.
+    o Validation checks: Ensure all required fields are filled before adding a reminder.
 • View and Manage Reminders:
-o Reminders are sorted in chronological order.
-o Users can mark a reminder as "done."
+    o Reminders are sorted in chronological order.
+    o Users can select different dates, and the interface will display reminders for the corresponding dates.
+    o Users can mark a reminder as "done."
 • Notifications:
-o Timed alerts when a medication needs to be taken.
+    o Timed alerts when a medication needs to be taken.
 
 2.3 Progress Tracking
 • Users can generate records of completed reminders.
@@ -34,8 +38,5 @@ o Timed alerts when a medication needs to be taken.
 • Displays visual representations of medication adherence.
 
 2.4 Settings Menu
-• Users can update their:
-o Nickname
-o Avatar
-o Age
 o Preferred language (Localization support for at least two languages)
+o Progress Chart
