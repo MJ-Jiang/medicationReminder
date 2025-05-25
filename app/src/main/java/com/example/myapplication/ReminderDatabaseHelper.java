@@ -147,9 +147,15 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
 
 
 
-    public int getAllRemindersCountForDate(String date) {
-        return ReminderQueryHelper.getAllRemindersCountForDate(this, date);
+    public int getAllRemindersCountForDate(Context context,String date) {
+        return ReminderQueryHelper.getAllRemindersCountForDate(this, context, date);
     }
+
+//    public int getAllRemindersCountForDate(Context context,String date) {
+//        return ReminderQueryHelper.getAllRemindersCountForDate(this, context, date);
+//    }
+
+
 
     public int getCompletedRemindersCountForDate(String date) {
         return ReminderQueryHelper.getCompletedRemindersCountForDate(this, date);

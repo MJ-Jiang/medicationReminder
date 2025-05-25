@@ -168,7 +168,7 @@ public class ChartSettingsActivity extends AppCompatActivity {
         for (int i = 0; i < dates.size(); i++) {
             String date = dates.get(i);
             int allCount = selectedReminderName == null ?
-                    dbHelper.getAllRemindersCountForDate(date) :
+                    dbHelper.getAllRemindersCountForDate(this,date) :
                     dbHelper.getRemindersCountForDateAndName(date, selectedReminderName);
 
             int completedCount = selectedReminderName == null ?

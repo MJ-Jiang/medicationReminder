@@ -1,9 +1,11 @@
 package com.example.myapplication;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
+/**
+ * Represents a reminder item for tasks such as medication schedules.
+ * Implements {@link Parcelable} to allow easy passing between Android components.
+ */
 
 public class Reminder implements Parcelable {
     private long id;
@@ -13,18 +15,26 @@ public class Reminder implements Parcelable {
     private String description;
     private String dosage;
     private String frequency;
-    private String startDate;       // 存储格式：yyyy-MM-dd
-    private String endDate;         // 存储格式：yyyy-MM-dd
-    private String displayStartDate; // 显示格式：dd/MM/yyyy
-    private String displayEndDate;   // 显示格式：dd/MM/yyyy
+    private String startDate;
+    private String endDate;
+    private String displayStartDate;
+    private String displayEndDate;
     private boolean isCompleted;
     private boolean isNotified;
 
-    // 空构造器（数据库必需）
+    /**
+     * Default constructor. Initializes the groupId using the current system time.
+     */
     public Reminder() {
 
         groupId=System.currentTimeMillis();
     }
+
+    /**
+     * Copy constructor.
+     *
+     * @param other The Reminder object to copy.
+     */
     public Reminder(Reminder other){
         this.id=other.id;
         this.groupId=other.groupId;
@@ -42,47 +52,66 @@ public class Reminder implements Parcelable {
         this.isNotified = other.isNotified;
     }
 
-    // Parcelable实现（用于Activity间传递）
+    /**
+     * Constructor to recreate a Reminder from a {@link Parcel}.
+     *
+     * @param in Parcel containing the Reminder data.
+     */
     protected Reminder(Parcel in) {
-        //一个超高效的存储箱，可以把各种数据（数字、字符串、对象等）打包起来，然后传到别的地方。通过Intent、Bundle传递。
-        //Parcel in 里已经打包好了一份 Reminder 对象的数据。接下来是打开这个盒子（in），把里面的数据一个一个拿出来，恢复成一个新的 Reminder 对象。
-        id = in.readLong();//从 Parcel 中读取一个 长整型（long） 值，赋给 id 这个字段
+        //A super efficient storage box that can package various data (numbers, strings, objects, etc.) and then pass them to other places. Pass them through Intent and Bundle.
+        //Parcel in has packed a Reminder object's data. Next, open the box (in), take out the data one by one, and restore it into a new Reminder object.
+        //This constructor reads back the data from the Parcel:
+        id = in.readLong();//Read a long value from Parcel and assign it to the id field
         groupId=in.readLong();
         time = in.readString();
-        name = in.readString();
+        name =in.readString();
         description = in.readString();
         dosage = in.readString();
-        frequency = in.readString();
+        frequency =in.readString();
         startDate = in.readString();
-        endDate = in.readString();
+        endDate =in.readString();
         displayStartDate = in.readString();
         displayEndDate = in.readString();
-
-        isCompleted = in.readByte() != 0;
-        isNotified = in.readByte() != 0; // ← Add this line at the end
+        isCompleted =in.readByte() !=0;
+        isNotified =in.readByte() !=0;
 
     }
 
-    public static final Creator<Reminder> CREATOR = new Creator<Reminder>() {
+    /**
+     * Parcelable creator to generate instances of Reminder from a Parcel.
+     */
+    public static final Creator<Reminder> CREATOR =new Creator<Reminder>(){
         @Override
-        public Reminder createFromParcel(Parcel in) {
+        public Reminder createFromParcel(Parcel in){
             return new Reminder(in);
-        }//Creator 是 Android 官方定义的一个接口类，在 android.os.Parcelable 里面。告诉 Android，怎么根据一个 Parcel 快递盒子，创建出一个新的 Reminder
+        }//Creator is an interface class officially defined by Android, in android.os.Parcelable. It tells Android how to create a new Reminder based on a Parcel box.
 
         @Override
-        public Reminder[] newArray(int size) {
+        public Reminder[] newArray(int size){
             return new Reminder[size];
-        }//创建一个 Reminder 数组，长度是 size。
+        }
     };
 
+    /**
+     * Describes the kinds of special objects contained in this Parcelable instance.
+     *
+     * @return an integer bitmask indicating special object types. Returns 0 if none.
+     */
     @Override
     public int describeContents() {
         return 0;
-    }//是 Parcelable 必须实现的方法之一。通常返回 0，告诉系统没特殊情况
+    }
 
+    /**
+     * Writes the Reminder object's data to the given Parcel.
+     *
+     * @param dest  The Parcel in which the data should be written.
+     * @param flags Additional flags about how the object should be written.
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        //把 Reminder 里面的每一份数据，一份一份放进 dest 这个快递盒子里（Parcel）
+        //Put each piece of data in Reminder into the courier box dest (Parcel) one by one
+        //To put Reminder into the Intent, Android serializes it into a Parcel
         dest.writeLong(id);
         dest.writeLong(groupId);
         dest.writeString(time);
@@ -99,44 +128,82 @@ public class Reminder implements Parcelable {
     }
 
     // Getter & Setter
+    /** @return the unique ID of the reminder */
     public long getId() { return id; }
+
+    /** @return the unique ID of the reminder */
     public void setId(long id) { this.id = id; }
+
+    /** @return the group ID used to group related reminders */
     public long getGroupId() { return groupId; }
+
+    /** @param groupId the group ID to set */
     public void setGroupId(long groupId) { this.groupId = groupId; }
+
+    /** @return the time of the reminder */
     public String getTime() { return time; }
+
+    /** @param time the time to set */
     public void setTime(String time) { this.time = time; }
+
+    /** @return the name/title of the reminder */
     public String getName() { return name; }
+
+    /** @param name the name/title to set */
     public void setName(String name) { this.name = name; }
 
+    /** @return the description of the reminder */
     public String getDescription() { return description; }
+
+    /** @param description the description to set */
     public void setDescription(String description) { this.description = description; }
 
+    /** @return the dosage information */
     public String getDosage() { return dosage; }
+
+    /** @param dosage the dosage to set */
     public void setDosage(String dosage) { this.dosage = dosage; }
 
+    /** @return the frequency of the reminder */
     public String getFrequency() { return frequency; }
+
+    /** @param frequency the frequency to set */
     public void setFrequency(String frequency) { this.frequency = frequency; }
 
+    /** @return the formatted display start date */
     public String getDisplayStartDate() { return displayStartDate; }
+
+    /** @param displayStartDate the display start date to set */
     public void setDisplayStartDate(String displayStartDate) { this.displayStartDate = displayStartDate; }
 
+    /** @return the formatted display end date */
     public String getDisplayEndDate() { return displayEndDate; }
+
+    /** @param displayEndDate the display end date to set */
     public void setDisplayEndDate(String displayEndDate) { this.displayEndDate = displayEndDate; }
 
+    /** @return the internal start date */
     public String getStartDate() { return startDate; }
+
+    /** @param startDate the internal start date to set */
     public void setStartDate(String startDate) { this.startDate = startDate; }
 
+    /** @return the internal end date */
     public String getEndDate() { return endDate; }
+
+    /** @param endDate the internal end date to set */
     public void setEndDate(String endDate) { this.endDate = endDate; }
 
-
+    /** @return true if the reminder is marked as completed */
     public boolean getIsCompleted() { return isCompleted; }
+
+    /** @param isCompleted sets whether the reminder is completed */
     public void setIsCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }
+
+    /** @return true if the reminder has been notified */
     public boolean getIsNotified() { return isNotified; }
+
+    /** @param isNotified sets whether the reminder has been notified */
     public void setIsNotified(boolean isNotified) { this.isNotified = isNotified; }
-    public ArrayList<String> getTimes() {
-        ArrayList<String> singleTime = new ArrayList<>();
-        if (time != null) singleTime.add(time);
-        return singleTime;
-    }
+
 }
