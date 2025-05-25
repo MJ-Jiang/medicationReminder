@@ -79,7 +79,7 @@ public class DatePickerHelper {
 
                     // If adapter is provided, update the reminder list
             if (adapter != null) {
-                List<Reminder> reminders = ReminderLoader.loadRemindersForDate(context, dbHelper, selectedDate);
+                List<Reminder> reminders = ReminderLoader.loadRemindersForDate( dbHelper, selectedDate);
                 adapter.updateData(reminders);
             }
                     // If in ChartSettingsActivity, trigger chart data update

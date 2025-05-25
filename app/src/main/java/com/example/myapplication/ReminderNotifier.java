@@ -4,8 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
-import android.widget.Toast;
+
 
 import java.util.Calendar;
 
@@ -29,7 +28,8 @@ public class ReminderNotifier {
     // 检查并提醒
     public void checkAndNotifyReminders() {
         String today = Utils.getTodayDate(); // 获取今天的日期
-        List<Reminder> todayReminders = ReminderQueryHelper.getAllRemindersByDateRange(dbHelper, today);  // 获取今天的提醒
+        List<Reminder> todayReminders = ReminderQueryHelper.getRemindersForDate(dbHelper, today);
+        // 获取今天的提醒
         for (Reminder reminder : todayReminders) {
 
             if (reminder.getIsCompleted()) {

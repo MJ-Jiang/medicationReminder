@@ -17,14 +17,13 @@ public class ReminderLoader {
      * value (as a string). If any reminder has a null time, it is treated as an empty string
      * during sorting to avoid errors.</p>
      *
-     * @param context  the context used to access the database
      * @param dbHelper the database helper used to query reminders
      * @param date     the date for which to load reminders (formatted as yyyy-MM-dd)
      * @return a list of reminders for the specified date, sorted by time
      */
-    public static List<Reminder> loadRemindersForDate(Context context, ReminderDatabaseHelper dbHelper, String date) {
+    public static List<Reminder> loadRemindersForDate( ReminderDatabaseHelper dbHelper, String date) {
         // Get reminders from database (already expanded by time)
-        List<Reminder> reminders = dbHelper.getRemindersForDate(context, date);
+        List<Reminder> reminders = dbHelper.getRemindersForDate( date);
 
         // Sort by time
         Collections.sort(reminders, (r1, r2) -> {

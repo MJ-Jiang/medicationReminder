@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
 
     }
     private void updateReminderList(String date){
-        List<Reminder> reminders=ReminderLoader.loadRemindersForDate(this,dbHelper,date);
+        List<Reminder> reminders=ReminderLoader.loadRemindersForDate(dbHelper,date);
         adapter.updateData(reminders);
 
     }

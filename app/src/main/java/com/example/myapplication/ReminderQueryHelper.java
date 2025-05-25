@@ -36,125 +36,86 @@ public class ReminderQueryHelper {
     public static final String KEY_FREQUENCY = "frequency";
     public static final String KEY_START_DATE = "start_date";
     public static final String KEY_END_DATE = "end_date";
+    public static final String KEY_DATE="date";
     public static final String KEY_DISPLAY_START = "display_start_date";
     public static final String KEY_DISPLAY_END = "display_end_date";
     public static final String KEY_TIMES= "times";
     public static final String KEY_IS_COMPLETED ="is_completed";
     public static final String KEY_IS_NOTIFIED = "is_notified";
 
-    /**
-     * Retrieves reminders active on a specific date, filtered by their frequency settings.
-     *
-     * @param reminderDatabaseHelper helper instance to access the database
-     * @param context the context used for frequency matching (localization)
-     * @param targetDate the date (formatted as "yyyy-MM-dd") for which reminders should be fetched
-     * @return a list of reminders that are scheduled for the given date
-     */
-    public static List<Reminder> getRemindersForDate(ReminderDatabaseHelper reminderDatabaseHelper, Context context, String targetDate) {
-        List<Reminder> filteredReminders =new ArrayList<>();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
-//Find all reminders with startDate <= targetDate <= endDate, and further determine whether the targetDate
-// should really be reminded based on the repetition frequency of each reminder (such as DAILY, WEEKLY, etc.).
-        try {
-            Date queryDate = sdf.parse(targetDate);
-            List<Reminder> remindersInRange = reminderDatabaseHelper.getAllRemindersByDateRange(targetDate);
-
-            for (Reminder reminder : remindersInRange) {
-                Date startDate = sdf.parse(reminder.getStartDate());
-
-                // Compare using fixed codes (DAILY, WEEKLY, MONTHLY, YEARLY)
-                if (ReminderFrequencyHelper.isDateMatchFrequency(context, queryDate, startDate, reminder.getFrequency())) {
-                    filteredReminders.add(reminder);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return filteredReminders;
-    }
 
     /**
-     * Retrieves all reminders that are active within the date range including the specified date.
+     * Retrieves all reminder records from the database that match the given date.
      *
-     * @param reminderDatabaseHelper helper instance to access the database
-     * @param date the date to check (formatted as "yyyy-MM-dd")
-     * @return list of reminders active on the given date range
+     *
+     * @param reminderDatabaseHelper The database helper used to access the reminders database.
+     * @param targetDate The target date in the format "yyyy-MM-dd" to retrieve reminders for.
+     * @return A list of Reminder objects scheduled for the specified date.
      */
+
     @SuppressLint("Range")
-    static List<Reminder> getAllRemindersByDateRange(ReminderDatabaseHelper reminderDatabaseHelper,  String date) {
+    public static List<Reminder> getRemindersForDate(ReminderDatabaseHelper reminderDatabaseHelper, String targetDate) {
         List<Reminder> reminders = new ArrayList<>();
 
-        String query = "SELECT * FROM " + TABLE_REMINDERS + " WHERE "
-                + KEY_START_DATE + " <= ? AND " + KEY_END_DATE + " >= ?";//startDate <= targetDate <= endDate
+        String query = "SELECT * FROM " + ReminderQueryHelper.TABLE_REMINDERS + " WHERE " +
+                ReminderQueryHelper.KEY_DATE + " = ?";
 
-        SQLiteDatabase db = reminderDatabaseHelper.getReadableDatabase();//Get a "readable" database instance
-        Cursor cursor = db.rawQuery(query, new String[]{date, date});//Execute a raw SQL query
-        //Cursor is an object similar to a "result set" that represents all the data we have found in the database.
-        // Use it to traverse all rows and get the data of each row.
+        SQLiteDatabase db = reminderDatabaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[]{targetDate});
 
         if (cursor.moveToFirst()) {
             do {
-                //getLong: Get a long value from the cursor
-                // cursor.getColumnIndex: gets the index (position) of the column named...
                 Reminder reminder = new Reminder();
-                reminder.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
-                reminder.setGroupId(cursor.getLong(cursor.getColumnIndex(KEY_GROUP_ID)));
-                reminder.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
-                reminder.setTime(cursor.getString(cursor.getColumnIndex(KEY_TIME)));
-                reminder.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
-                reminder.setDosage(cursor.getString(cursor.getColumnIndex(KEY_DOSAGE)));
-                reminder.setFrequency(cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY)));
-                reminder.setStartDate(cursor.getString(cursor.getColumnIndex(KEY_START_DATE)));
-                reminder.setEndDate(cursor.getString(cursor.getColumnIndex(KEY_END_DATE)));
-                reminder.setDisplayStartDate(cursor.getString(cursor.getColumnIndex(KEY_DISPLAY_START)));
-                reminder.setDisplayEndDate(cursor.getString(cursor.getColumnIndex(KEY_DISPLAY_END)));
-                reminder.setIsCompleted(cursor.getInt(cursor.getColumnIndex(KEY_IS_COMPLETED)) == 1);
-                reminder.setIsNotified(cursor.getInt(cursor.getColumnIndex(KEY_IS_NOTIFIED)) == 1);
+                reminder.setId(cursor.getLong(cursor.getColumnIndex(ReminderQueryHelper.KEY_ID)));
+                reminder.setGroupId(cursor.getLong(cursor.getColumnIndex(ReminderQueryHelper.KEY_GROUP_ID)));
+                reminder.setName(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_NAME)));
+                reminder.setDate(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_DATE)));
+                reminder.setTime(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_TIME)));
+                reminder.setDescription(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_DESCRIPTION)));
+                reminder.setDosage(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_DOSAGE)));
+                reminder.setFrequency(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_FREQUENCY)));
+                reminder.setStartDate(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_START_DATE)));
+                reminder.setEndDate(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_END_DATE)));
+                reminder.setDisplayStartDate(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_DISPLAY_START)));
+                reminder.setDisplayEndDate(cursor.getString(cursor.getColumnIndex(ReminderQueryHelper.KEY_DISPLAY_END)));
+                reminder.setIsCompleted(cursor.getInt(cursor.getColumnIndex(ReminderQueryHelper.KEY_IS_COMPLETED)) == 1);
+                reminder.setIsNotified(cursor.getInt(cursor.getColumnIndex(ReminderQueryHelper.KEY_IS_NOTIFIED)) == 1);
 
                 reminders.add(reminder);
             } while (cursor.moveToNext());
         }
+
         cursor.close();
         db.close();
 
         return reminders;
     }
 
+
+
+
     /**
-     * Returns the count of reminders that should be active on the specified date,
-     * considering both the reminder's active date range and its repetition frequency.
-     *
-     * This method calls {@link #getRemindersForDate(ReminderDatabaseHelper, Context, String)}
-     * to get the list of reminders matching the date and frequency, then returns the list size.
+     * Returns the count of reminders scheduled for the specified date.
      *
      * @param reminderDatabaseHelper The database helper to query reminders.
-     * @param context The context used for frequency matching.
      * @param targetDate The target date in "yyyy-MM-dd" format to check reminders for.
-     * @return The number of reminders active on the target date.
+     * @return The number of reminders scheduled on the target date.
      */
-
-    public static int getAllRemindersCountForDate(ReminderDatabaseHelper reminderDatabaseHelper, Context context, String targetDate) {
-        List<Reminder> reminders = getRemindersForDate(reminderDatabaseHelper, context, targetDate);
+    public static int getAllRemindersCountForDate(ReminderDatabaseHelper reminderDatabaseHelper, String targetDate) {
+        List<Reminder> reminders = getRemindersForDate(reminderDatabaseHelper, targetDate);
         return reminders.size();
     }
 
+
     /**
-     * Counts the number of reminders that are completed on the specified date.
-     * <p>
-     * This method first retrieves all reminders that are active on the given date
-     * considering their start date, end date, and repetition frequency.
-     * Then it counts how many of these reminders are marked as completed.
-     *
+     * Counts the number of reminders marked as completed on the specified date.
+
      * @param reminderDatabaseHelper the helper instance to access the reminders database
-     * @param context the context used for frequency matching and localization
      * @param targetDate the date (in "yyyy-MM-dd" format) for which to count completed reminders
-     * @return the count of completed reminders active on the specified date
+     * @return the count of completed reminders on the specified date
      */
-    public static int getCompletedRemindersCountForDate(ReminderDatabaseHelper reminderDatabaseHelper, Context context, String targetDate) {
-        List<Reminder> reminders = getRemindersForDate(reminderDatabaseHelper, context, targetDate);
+    public static int getCompletedRemindersCountForDate(ReminderDatabaseHelper reminderDatabaseHelper, String targetDate) {
+        List<Reminder> reminders = getRemindersForDate(reminderDatabaseHelper, targetDate);
         int count = 0;
         for (Reminder reminder : reminders) {
             if (reminder.getIsCompleted()) {
@@ -163,6 +124,7 @@ public class ReminderQueryHelper {
         }
         return count;
     }
+
 
 
 
@@ -192,42 +154,36 @@ public class ReminderQueryHelper {
 
     /**
      * Retrieves a list of reminders that occur on the specified date and match the given name.
-     * <p>
-     * This method first filters reminders by date and frequency using {@link #getRemindersForDate},
-     * then further filters the results by the specified reminder name.
      *
      * @param dbHelper    the ReminderDatabaseHelper instance for database access
-     * @param context     the Android context, used for frequency matching
      * @param targetDate  the date to filter reminders on, formatted as "yyyy-MM-dd"
      * @param targetName  the exact name of the reminder to filter by
      * @return a list of reminders active on the target date and matching the specified name
      */
 
-    public static List<Reminder> getRemindersForDateAndName(ReminderDatabaseHelper dbHelper, Context context, String targetDate, String targetName) {
-        List<Reminder> remindersForDate = getRemindersForDate(dbHelper, context, targetDate);
+    public static List<Reminder> getRemindersForDateAndName(ReminderDatabaseHelper dbHelper, String targetDate, String targetName) {
+        List<Reminder> remindersForDate = getRemindersForDate(dbHelper,  targetDate);
         List<Reminder> filteredReminders = new ArrayList<>();
 
-        for (Reminder reminder : remindersForDate) {
-            if (reminder.getName().equals(targetName)) {
-                filteredReminders.add(reminder);
+        for (Reminder r : remindersForDate) {
+            if (r.getName().equals(targetName)) {
+                filteredReminders.add(r);
             }
         }
-
         return filteredReminders;
+
     }
 
     /**
      * Returns the count of reminders active on the given date and matching the specified name.
-     * The reminders are filtered by date range, name, and frequency pattern.
-     *
      * @param dbHelper the ReminderDatabaseHelper instance for database access
-     * @param context the Context used for frequency matching logic
+
      * @param date the date string ("yyyy-MM-dd") to filter reminders by
      * @param name the exact reminder name to filter by
      * @return the number of reminders matching the given date and name criteria
      */
-    public static int getRemindersCountForDateAndName(ReminderDatabaseHelper dbHelper, Context context, String date, String name) {
-        List<Reminder> reminders = getRemindersForDateAndName(dbHelper, context, date, name);
+    public static int getRemindersCountForDateAndName(ReminderDatabaseHelper dbHelper,  String date, String name) {
+        List<Reminder> reminders = getRemindersForDateAndName(dbHelper, date, name);
         return reminders.size();
     }
     /**
@@ -235,13 +191,12 @@ public class ReminderQueryHelper {
      * the specified name. Completion status is determined by the isCompleted flag.
      *
      * @param dbHelper the ReminderDatabaseHelper instance for database access
-     * @param context the Context used for frequency matching logic
      * @param date the date string ("yyyy-MM-dd") to filter reminders by
      * @param name the exact reminder name to filter by
      * @return the number of completed reminders matching the given date and name criteria
      */
-    public static int getCompletedRemindersCountForDateAndName(ReminderDatabaseHelper dbHelper, Context context, String date, String name) {
-        List<Reminder> reminders = getRemindersForDateAndName(dbHelper, context, date, name);
+    public static int getCompletedRemindersCountForDateAndName(ReminderDatabaseHelper dbHelper,  String date, String name) {
+        List<Reminder> reminders = getRemindersForDateAndName(dbHelper,  date, name);
         int count = 0;
         for (Reminder r : reminders) {
             if (r.getIsCompleted()) {
@@ -266,12 +221,9 @@ public class ReminderQueryHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_IS_NOTIFIED, isNotified ? 1 : 0);
 
-        int rowsAffected = db.update(
-                TABLE_REMINDERS,
-                values,
-                KEY_ID + " = ?",
-                new String[]{String.valueOf(id)}
-        );
+        int rowsAffected = db.update(TABLE_REMINDERS, values, KEY_ID + " = ?", new String[]{String.valueOf(id)});
+       //Updates the records in the TABLE_REMINDERS table where KEY_ID is equal to id. The updated content is the fields specified in values. Returns the number of rows updated.
+
         db.close();
         return rowsAffected;
     }

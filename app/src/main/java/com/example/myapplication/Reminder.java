@@ -17,6 +17,7 @@ public class Reminder implements Parcelable {
     private String frequency;
     private String startDate;
     private String endDate;
+    private String date;
     private String displayStartDate;
     private String displayEndDate;
     private boolean isCompleted;
@@ -47,7 +48,7 @@ public class Reminder implements Parcelable {
         this.endDate=other.endDate;
         this.displayStartDate= other.displayStartDate;
         this.displayEndDate= other.displayEndDate;
-
+        this.date=other.date;
         this.isCompleted=other.isCompleted;
         this.isNotified = other.isNotified;
     }
@@ -70,6 +71,7 @@ public class Reminder implements Parcelable {
         frequency =in.readString();
         startDate = in.readString();
         endDate =in.readString();
+        date=in.readString();
         displayStartDate = in.readString();
         displayEndDate = in.readString();
         isCompleted =in.readByte() !=0;
@@ -121,6 +123,7 @@ public class Reminder implements Parcelable {
         dest.writeString(frequency);
         dest.writeString(startDate);
         dest.writeString(endDate);
+        dest.writeString(date);
         dest.writeString(displayStartDate);
         dest.writeString(displayEndDate);
         dest.writeByte((byte) (isCompleted ? 1 : 0));
@@ -170,6 +173,10 @@ public class Reminder implements Parcelable {
     /** @param frequency the frequency to set */
     public void setFrequency(String frequency) { this.frequency = frequency; }
 
+    /** @return the date of the reminder */
+    public String getDate() {return date;}
+    /** @param date the frequency to set */
+    public void setDate(String date) {this.date = date;}
     /** @return the formatted display start date */
     public String getDisplayStartDate() { return displayStartDate; }
 
