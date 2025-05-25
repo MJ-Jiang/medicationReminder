@@ -13,10 +13,19 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * ReminderDatabaseHelper is a SQLiteOpenHelper subclass used to manage database creation and version management
+ * for the reminder application. It provides methods for inserting, updating, and querying reminders and reminder groups.
+ *
+ * <p>It relies on {@link ReminderQueryHelper} for most database constants and helper queries.</p>
+ */
 public class ReminderDatabaseHelper extends SQLiteOpenHelper {
 
-
+    /**
+     * Constructs a new ReminderDatabaseHelper.
+     *
+     * @param context the application context
+     */
     public ReminderDatabaseHelper(Context context) {
         super(context, ReminderQueryHelper.DATABASE_NAME, null, ReminderQueryHelper.DATABASE_VERSION);
     }
@@ -151,26 +160,23 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         return ReminderQueryHelper.getAllRemindersCountForDate(this, context, date);
     }
 
-//    public int getAllRemindersCountForDate(Context context,String date) {
-//        return ReminderQueryHelper.getAllRemindersCountForDate(this, context, date);
-//    }
 
 
 
-    public int getCompletedRemindersCountForDate(String date) {
-        return ReminderQueryHelper.getCompletedRemindersCountForDate(this, date);
+    public int getCompletedRemindersCountForDate(Context context,String date) {
+        return ReminderQueryHelper.getCompletedRemindersCountForDate(this,context, date);
     }
 
     public List<String> getAllReminderNames() {
         return ReminderQueryHelper.getAllReminderNames(this);
     }
 
-    public int getRemindersCountForDateAndName(String date, String name) {
-        return ReminderQueryHelper.getRemindersCountForDateAndName(this, date, name);
+    public int getRemindersCountForDateAndName(Context context,String date, String name) {
+        return ReminderQueryHelper.getRemindersCountForDateAndName(this, context,date, name);
     }
 
-    public int getCompletedRemindersCountForDateAndName(String date, String name) {
-        return ReminderQueryHelper.getCompletedRemindersCountForDateAndName(this, date, name);
+    public int getCompletedRemindersCountForDateAndName(Context context, String date, String name) {
+        return ReminderQueryHelper.getCompletedRemindersCountForDateAndName(this, context,date, name);
     }
 
 }

@@ -169,11 +169,11 @@ public class ChartSettingsActivity extends AppCompatActivity {
             String date = dates.get(i);
             int allCount = selectedReminderName == null ?
                     dbHelper.getAllRemindersCountForDate(this,date) :
-                    dbHelper.getRemindersCountForDateAndName(date, selectedReminderName);
+                    dbHelper.getRemindersCountForDateAndName(this,date, selectedReminderName);
 
             int completedCount = selectedReminderName == null ?
-                    dbHelper.getCompletedRemindersCountForDate(date) :
-                    dbHelper.getCompletedRemindersCountForDateAndName(date, selectedReminderName);
+                    dbHelper.getCompletedRemindersCountForDate(this,date) :
+                    dbHelper.getCompletedRemindersCountForDateAndName(this,date, selectedReminderName);
 
             allReminderEntries.add(new BarEntry(i, allCount));
             completedEntries.add(new BarEntry(i, completedCount));
