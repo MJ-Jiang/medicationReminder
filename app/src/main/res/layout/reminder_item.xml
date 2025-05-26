@@ -15,7 +15,7 @@
         android:padding="16dp"
         android:background="@drawable/reminder_item_bg">
 
-        <!-- 左侧文字信息（占满剩余空间） -->
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 右侧复选框（固定宽度，垂直居中） -->
+
         <CheckBox
             android:id="@+id/cbCompleted"
             android:layout_width="wrap_content"

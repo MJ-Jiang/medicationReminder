@@ -172,5 +172,5 @@
     </LinearLayout>
 </ScrollView>
 
-    <!--android:fillViewport="true" 用于 ScrollView 或 NestedScrollView，它的作用是让 ScrollView 内部的内容填满可见区域（即填满视口）。
-    如果内容不足以填充整个视口，ScrollView 会自动拉伸内容，以确保填满屏幕。-->
+    <!--android:fillViewport="true" is used for ScrollView or NestedScrollView. Its function is to make the content inside ScrollView fill the visible area (that is, fill the viewport).
+    If the content is not enough to fill the entire viewport, ScrollView will automatically stretch the content to ensure that it fills the screen. -->

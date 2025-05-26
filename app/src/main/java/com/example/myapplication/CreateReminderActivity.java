@@ -22,93 +22,106 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
+/**
+ * {@code CreateReminderActivity} allows the user to create a new reminder with
+ * details such as name, description, dosage, start/end dates, frequency, and multiple times.
+ *
+ * <p>The activity provides input validation, date and time pickers, and dynamically
+ * manages multiple reminder times.</p>
+ *
+ * <p>Once the reminder data is validated, it is saved into the database with each time
+ * saved as a separate reminder linked by a common group ID.</p>
+ */
 public class CreateReminderActivity extends AppCompatActivity {
 
     private EditText editTextName, editTextDescription, editTextDosage;
     private TextView textViewStartDateValue, textViewEndDateValue;
     private Spinner spinnerFrequency;
-    private LinearLayout linearLayoutTimes; // 存放时间列表
-    private ReminderDatabaseHelper dbHelper; // Database helper to store reminders
-
-    // 用于保存选择的所有时间
-    private ArrayList<String> reminderTimes = new ArrayList<>();
-
+    private LinearLayout linearLayoutTimes; //
+    private ReminderDatabaseHelper dbHelper; //
+    /**
+     * Initializes the UI components, database helper, action bar, spinners, date pickers,
+     * and event listeners.
+     *
+     * @param savedInstanceState saved state bundle
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) { //保存之前 Activity 的数据。
-        super.onCreate(savedInstanceState);//不调用 super.onCreate，系统很多内建机制（比如 UI 加载、生命周期管理）就不会正确运作
-        setContentView(R.layout.create_reminder);// 把界面画面加载出来
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.create_reminder);
 
         initViews();
 
-        dbHelper = new ReminderDatabaseHelper(this);//this 就是指当前界面的环境，让 ReminderDatabaseHelper 知道该怎么正确地打开数据库。
+        dbHelper = new ReminderDatabaseHelper(this);
         setupActionBar();
         setupFrequencySpinner();
         setupDatePickers();
         initTimeRows();
         setupCreateButton();
     }
+    /**
+     * Finds and assigns all views from the layout.
+     */
     private void initViews(){
-        editTextName = findViewById(R.id.editTextName);//在当前界面(layout)里，找到这个具体的小组件(view)
-        editTextDescription = findViewById(R.id.editTextDescription);
-        editTextDosage = findViewById(R.id.editTextDosage);
-        textViewStartDateValue = findViewById(R.id.textViewStartDateValue);
-        textViewEndDateValue = findViewById(R.id.textViewEndDateValue);
-        spinnerFrequency = findViewById(R.id.spinnerFrequency);
-        linearLayoutTimes = findViewById(R.id.linearLayoutTimes); // 用于放置所有选定的时间
+        editTextName =findViewById(R.id.editTextName);
+        editTextDescription =findViewById(R.id.editTextDescription);
+        editTextDosage =findViewById(R.id.editTextDosage);
+        textViewStartDateValue =findViewById(R.id.textViewStartDateValue);
+        textViewEndDateValue =findViewById(R.id.textViewEndDateValue);
+        spinnerFrequency =findViewById(R.id.spinnerFrequency);
+        linearLayoutTimes =findViewById(R.id.linearLayoutTimes);
     }
+    /**
+     * Sets up the action bar with back navigation and title.
+     */
         private void setupActionBar(){
-            // 启用 ActionBar，并显示左上角的回退按钮
-            if (getSupportActionBar() != null) {//先检查一下，当前界面有没有 ActionBar（标题栏）
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);//在标题栏上，显示一个返回按钮（一般是左上角的 ← 小箭头）
-                getSupportActionBar().setTitle(R.string.create_reminder);  // 设置标题
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setTitle(R.string.create_reminder);
             }
         }
+    /**
+     * Initializes the frequency spinner with frequency options.
+     */
        private void setupFrequencySpinner(){
-           // Setup frequency Spinner选项
+
            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                   this, R.array.frequency_array, android.R.layout.simple_spinner_item);
-           //ArrayAdapter<CharSequence> 是一个适配器，把数组的数据（比如频率选项）放到 Spinner（下拉框）里。
-           //createFromResource() 是一个工厂方法，直接从 XML 文件中创建一个 ArrayAdapter。
-           //android.R.layout.simple_spinner_item：系统自带的简单布局样式，表示每一项的长相。
-           adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);//设置下拉列表打开时每个选项的布局样式
-           spinnerFrequency.setAdapter(adapter);//把准备好的数据和 Spinner 连接起来。
+                   this, R.array.frequency_array, android.R.layout.simple_spinner_item);//Use ArrayAdapter.createFromResource() to load data from a resource file
+//<CharSequence> is a Java generic syntax, indicating that this adapter is used to manage a set of character sequences (characters or strings).
+           adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+           spinnerFrequency.setAdapter(adapter);//Set the adapter just created and configured to spinnerFrequency to display these frequency options
        }
+    /**
+     * Sets click listeners on start and end date TextViews to show date picker dialogs.
+     */
        private void setupDatePickers(){
-           // Set up Start Date Picker
-           textViewStartDateValue.setOnClickListener(v -> showDatePickerDialog(textViewStartDateValue));
-           // Set up End Date Picker
-           textViewEndDateValue.setOnClickListener(v -> showDatePickerDialog(textViewEndDateValue));
+           textViewStartDateValue.setOnClickListener(v -> DatePickerHelper.showDatePickerDialog(this, textViewStartDateValue));
+           textViewEndDateValue.setOnClickListener(v ->  DatePickerHelper.showDatePickerDialog(this, textViewEndDateValue));
        }
+    /**
+     * Initializes the first time row for picking reminder times.
+     */
        private void initTimeRows(){
         addTimeRow(true);
        }
+    /**
+     * Sets up the create button to validate input and create a reminder on click.
+     */
        private void setupCreateButton(){
            Button buttonCreateReminder = findViewById(R.id.buttonCreateReminder);
           buttonCreateReminder.setOnClickListener(v->createReminder());
 
        }
-    private void showDatePickerDialog(TextView textView) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                CreateReminderActivity.this,
-                (view, year1, monthOfYear, dayOfMonth) ->
-                        textView.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1),////当用户选完日期后要执行的逻辑
-                year, month, day////默认初始选中的日期
-        );////month要+1，因为 Java 的月份从0开始计数。
-        datePickerDialog.show();
-    }
-
-
+    /**
+     * Adds a new time picker row to allow the user to select multiple reminder times.
+     *
+     * @param isFirstRow whether this is the first time row (controls remove button visibility)
+     */
     private void addTimeRow(boolean isFirstRow){
-        LayoutInflater inflater = LayoutInflater.from(this);//用当前 Activity 的上下文（this）来创建一个 LayoutInflater。
-        //LayoutInflater 是一个 Android 类，可以把 XML 布局文件变成 Java 中的 View 对象。
+        LayoutInflater inflater = LayoutInflater.from(this);
         View timeRow = inflater.inflate(R.layout.time_picker_item, linearLayoutTimes, false);
-//timeRow 未来是要放到 linearLayoutTimes 里的（但现在还没加进去，因为第三个参数是 false）
+
         TextView timeTextView = timeRow.findViewById(R.id.textViewTime);
         Button buttonAdd = timeRow.findViewById(R.id.buttonAddTime);
         Button buttonRemove = timeRow.findViewById(R.id.buttonRemoveTime);
@@ -116,7 +129,7 @@ public class CreateReminderActivity extends AppCompatActivity {
 
         timeTextView.setOnClickListener(v -> showTimePickerDialog(timeTextView));
 
-        // 加号按钮点击事件（继续新增一行）
+
         buttonAdd.setOnClickListener(v -> addTimeRow(false));
 
         if (isFirstRow) {
@@ -132,14 +145,17 @@ public class CreateReminderActivity extends AppCompatActivity {
 
         linearLayoutTimes.addView(timeRow);
     }
-
+    /**
+     * Shows a time picker dialog and updates the given TextView with the selected time.
+     *
+     * @param newTimeTextView the TextView to update with the selected time
+     */
     private void showTimePickerDialog(TextView newTimeTextView) {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(
-                CreateReminderActivity.this,
+        TimePickerDialog timePickerDialog = new TimePickerDialog(CreateReminderActivity.this,
                 (timePicker, hourOfDay, minute1) -> {
                     String formattedTime = String.format("%02d:%02d", hourOfDay, minute1);
                     newTimeTextView.setText(formattedTime);
@@ -149,12 +165,14 @@ public class CreateReminderActivity extends AppCompatActivity {
         );
         timePickerDialog.show();
     }
-
+    /**
+     * Validates inputs and creates reminders in the database with selected times.
+     * Shows success dialog or error messages accordingly.
+     */
     private void createReminder() {
-        // 1. 验证输入
+
         if (!validateInput()) return;
 
-        // 2. 准备数据对象
         Reminder reminder = prepareReminderData();
         String selectedFrequency = spinnerFrequency.getSelectedItem().toString();
         String frequencyCode;
@@ -169,13 +187,13 @@ public class CreateReminderActivity extends AppCompatActivity {
         } else if (selectedFrequency.equals(getString(R.string.yearly))) {
             frequencyCode = "YEARLY";
         } else {
-            frequencyCode = "DAILY"; // fallback
+            frequencyCode = "DAILY";
         }
 
         reminder.setFrequency(frequencyCode);
 
 
-        // 3. 存储到数据库
+
         long result = -1;
         ArrayList<String> validTimes = new ArrayList<>();
         // First validate and collect all times
@@ -210,7 +228,11 @@ public class CreateReminderActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.select_time), Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Validates that all required fields have been filled and dates and times are selected.
+     *
+     * @return true if all inputs are valid, false otherwise
+     */
 
     private boolean validateInput() {
         if (editTextName.getText().toString().trim().isEmpty() ||
@@ -233,7 +255,11 @@ public class CreateReminderActivity extends AppCompatActivity {
 
         return true;
     }
-
+    /**
+     * Checks if at least one valid time has been selected.
+     *
+     * @return true if a valid time is selected, false otherwise
+     */
     private boolean hasValidTimeSelected() {
         for (int i = 0; i < linearLayoutTimes.getChildCount(); i++) {
             View row = linearLayoutTimes.getChildAt(i);
@@ -244,17 +270,18 @@ public class CreateReminderActivity extends AppCompatActivity {
         }
         return false;
     }
-
+    /**
+     * Prepares a Reminder object from the current UI input values.
+     *
+     * @return the prepared Reminder object
+     */
     private Reminder prepareReminderData() {
         Reminder reminder = new Reminder();
 
-        // 基础信息
         reminder.setName(editTextName.getText().toString().trim());
         reminder.setDescription(editTextDescription.getText().toString().trim());
         reminder.setDosage(editTextDosage.getText().toString().trim());
         reminder.setFrequency(spinnerFrequency.getSelectedItem().toString());
-
-        // 日期处理
         String displayStart = textViewStartDateValue.getText().toString();
         String displayEnd = textViewEndDateValue.getText().toString();
         reminder.setDisplayStartDate(displayStart);
@@ -263,10 +290,14 @@ public class CreateReminderActivity extends AppCompatActivity {
         reminder.setEndDate(convertToDatabaseDate(displayEnd));
         reminder.setIsCompleted(false);
         reminder.setIsNotified(false);
-
         return reminder;
     }
-
+    /**
+     * Converts a date string from display format "dd/MM/yyyy" to database format "yyyy-MM-dd".
+     *
+     * @param displayDate date string in "dd/MM/yyyy" format
+     * @return date string in "yyyy-MM-dd" format or original if parsing fails
+     */
     private String convertToDatabaseDate(String displayDate) {
         try {
             SimpleDateFormat inFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -274,12 +305,14 @@ public class CreateReminderActivity extends AppCompatActivity {
             Date date = inFormat.parse(displayDate);
             return outFormat.format(date);
         } catch (Exception e) {
-            return displayDate; // 转换失败返回原值
+            return displayDate;
         }
     }
-
+    /**
+     * Clears all input fields and resets the UI to its initial state.
+     */
     private void clearFields() {
-        // 清空输入字段
+
         editTextName.setText("");
         editTextDescription.setText("");
         editTextDosage.setText("");
@@ -287,11 +320,12 @@ public class CreateReminderActivity extends AppCompatActivity {
         textViewEndDateValue.setText(getString(R.string.description_enddate));
         spinnerFrequency.setSelection(0);
 
-        // 重置时间行（保留首行）
         linearLayoutTimes.removeAllViews();
         initTimeRows();
     }
-
+    /**
+     * Shows a success dialog after a reminder is successfully saved.
+     */
 
     private void showSuccessDialog() {
         new AlertDialog.Builder(this)
@@ -300,11 +334,19 @@ public class CreateReminderActivity extends AppCompatActivity {
                 .setPositiveButton(getString(R.string.ok), (dialog, which) -> dialog.dismiss())
                 .show();
     }
-
+    /**
+     * Shows a short Toast message.
+     *
+     * @param message the message to display
+     */
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
+    /**
+     * Handles the action bar's back button click.
+     *
+     * @return true to indicate the event was handled
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

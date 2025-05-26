@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ import java.util.Locale;
  * Helper class for displaying a date picker dialog and handling date selection logic.
  *
  * <p>This class provides two overloads of the {@code show} method for use in different
- * parts of the application, including {@code MainActivity} and {@code ChartSettingsActivity}.
+ * parts of the application, including {@code MainActivity},{@code ChartSettingsActivity} and {@code CreateReminderActivity}  .
  * It handles updating the selected date in the UI and optionally refreshing reminders or chart data.</p>
  */
 public class DatePickerHelper {
@@ -61,9 +62,9 @@ public class DatePickerHelper {
     private static void showDatePicker(Context context, String currentDate, TextView dateTextView, ReminderAdapter adapter, ReminderDatabaseHelper dbHelper) {
         Calendar calendar = Calendar.getInstance();
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//Creates a date formatter,Turn a Date → String
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//Creates a date formatter,Turn a Date into String
             //Locale.getDefault(): Use the phone’s current language/region setting
-            calendar.setTime(sdf.parse(currentDate));//parse the input currentDate and update the calendar to that date. Turn a String → Date
+            calendar.setTime(sdf.parse(currentDate));//parse the input currentDate and update the calendar to that date. Turn a String into Date
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,4 +99,27 @@ public class DatePickerHelper {
     // the user selects a date, the callback function creates a new Calendar object 'selected' with the
     // selected year, month, and day, formats selected into a string (for easy display and database query),
     // and updates the reminder list according to the selected date.
+    /**
+     * Displays a date picker dialog and sets the selected date to the given TextView.
+     * <p>
+     * The selected date will be shown in the format "day/month/year".
+     *
+     * @param context  the context used to display the DatePickerDialog, usually an Activity
+     * @param textView the TextView to update with the selected date
+     */
+    public static void showDatePickerDialog(Context context, TextView textView) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                context,
+                (view, year1, monthOfYear, dayOfMonth) ->
+                        textView.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1),
+                year, month, day
+        );
+        datePickerDialog.show();
+    }
+
 }

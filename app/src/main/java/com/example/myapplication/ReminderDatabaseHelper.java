@@ -216,7 +216,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
                 ReminderQueryHelper.TABLE_REMINDERS,
                 values,
                 ReminderQueryHelper.KEY_ID + " = ?",
-                new String[]{String.valueOf(id)}//把 id 转换为字符串作为参数填入 ? 中，防止 SQL 注入。
+                new String[]{String.valueOf(id)}
         );
 
         db.close();
