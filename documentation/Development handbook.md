@@ -89,6 +89,8 @@
 5. **Notification and Background Processing**
 
     **`ReminderNotifier`** is responsible for periodically checking if there are reminders due at the current time and displaying notification dialogs to alert users. It interacts with the database to query today’s reminders and updates their notification status to prevent repeated alerts. This class runs on the main thread but is invoked regularly via a handler in `MainActivity`, ensuring timely and responsive notifications.
+
+
 ![Relationships.png](Relationships.png)
 
 ## Known Issues, Challenges, and Ideas for the Future
