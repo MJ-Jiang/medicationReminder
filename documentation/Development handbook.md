@@ -54,26 +54,29 @@
 
 13. **MainActivity**  
     The central activity that displays the user’s medication reminders for a selected date in a `RecyclerView`. Key responsibilities include:
-- Initializing the UI components, database helper, and adapter to display reminders.
-- Allowing date selection via a date picker and updating the displayed reminder list accordingly.
-- Handling user interactions such as creating new reminders, opening settings, and clicking on reminder items to show detailed dialogs.
-- Managing reminder completion status changes and updating the database.
-- Periodically checking for due reminders and showing notification dialogs using `ReminderNotifier` on the main thread every minute.
-- Applying the user’s language preference by overriding `attachBaseContext` to update the app locale dynamically.
-- Refreshing the reminder list when the activity resumes to keep data up to date.
+    - Initializing the UI components, database helper, and adapter to display reminders.
+    - Allowing date selection via a date picker and updating the displayed reminder list accordingly.
+    - Handling user interactions such as creating new reminders, opening settings, and clicking on reminder items to show detailed dialogs.
+    - Managing reminder completion status changes and updating the database.
+    - Periodically checking for due reminders and showing notification dialogs using `ReminderNotifier` on the main thread every minute.
+    - Applying the user’s language preference by overriding `attachBaseContext` to update the app locale dynamically.
+    - Refreshing the reminder list when the activity resumes to keep data up to date.
 
 
 ## Overview of the Program Structure and Relations Between Components
 
 1. **Data Model Layer**
+
     At the foundation lies the `Reminder` class, which encapsulates all relevant data for a medication reminder. It acts as the main data carrier between different components. All other classes depend on this model to represent reminders consistently.
 
 2. **Database Layer**
+
     The app’s persistence is handled primarily by `ReminderDatabaseHelper`, a subclass of `SQLiteOpenHelper`, which manages local SQLite database creation, updates, and data manipulation. It works closely with `ReminderQueryHelper`, a utility class abstracting complex query operations such as filtering reminders by date or completion status. This layered database approach isolates raw database interactions from other parts of the app, improving maintainability.
 
     The `ReminderLoader` serves as an intermediary utility that fetches reminders from the database and returns them sorted by time, simplifying the retrieval process for the UI layer.
 
 3. **User Interface Layer**
+    
     The UI is composed of several activities and adapters:
    - **`MainActivity`** acts as the central screen where users view reminders for a selected date. It initializes UI components, manages interactions, and delegates data loading to `ReminderLoader`.
    - The **`ReminderAdapter`** bridges the `Reminder` data model to the `RecyclerView` UI component, efficiently rendering reminder items and handling user interactions such as marking reminders as completed.
@@ -81,11 +84,38 @@
    - Activities like **`CreateReminderActivity`**, **`SettingsActivity`**, **`LanguageSettingsActivity`**, and **`ChartSettingsActivity`** provide additional UI functionalities including creating new reminders, app settings management, language selection, and visualization of reminder statistics.
 
 4. **Helper Utilities**
+
     Supporting the UI and background processes are helper classes like **`DatePickerHelper`**, which standardizes date selection dialogs across multiple activities, ensuring consistent date input handling.
 
 5. **Notification and Background Processing**
+
     **`ReminderNotifier`** is responsible for periodically checking if there are reminders due at the current time and displaying notification dialogs to alert users. It interacts with the database to query today’s reminders and updates their notification status to prevent repeated alerts. This class runs on the main thread but is invoked regularly via a handler in `MainActivity`, ensuring timely and responsive notifications.
 
 
 ## Known Issues, Challenges, and Ideas for the Future
 
+#### Known Issues:
+
+- The division of responsibilities between ReminderDatabaseHelper and its auxiliary class ReminderQueryHelper is not yet fully clear-cut. Since the refactoring to extract query-related methods into ReminderQueryHelper was done mid-development, ReminderDatabaseHelper still retains some query method calls to maintain compatibility with other parts of the code that depend on it. This overlapping responsibility may lead to confusion and maintenance difficulties.
+- The database schema design has undergone several revisions (three major changes so far) and might not yet be optimal or fully normalized. There is room for improvement in structuring tables and relationships to better support future features.
+- Currently, when creating reminders, there are insufficient constraints — for example, the app does not enforce that the end date should not be earlier than the start date. This can lead to invalid reminder data.
+-It is still undecided whether reminder names should allow duplicates. This question requires more consideration based on the app’s real-world use cases and user expectations.
+- The notification system relies on a main-thread polling mechanism to check reminders at regular intervals. This approach may impact app performance and responsiveness, especially as the number of reminders grows larger.
+
+#### Challenges:
+
+- Clarifying and refactoring the database helper classes to achieve clear separation of concerns without breaking existing dependencies.
+- Designing a more flexible and robust database schema that can efficiently handle complex reminder recurrence patterns and future extensions.
+- Improving input validation and business logic to prevent inconsistent or invalid reminder data entry.
+- Defining rules for reminder name uniqueness that balance user flexibility and data integrity.
+- Enhancing the notification mechanism to reduce main-thread load and improve energy efficiency on devices.
+
+#### Ideas for the Future:
+
+- Transitioning from local SQLite storage to a backend server-based database to handle larger data volumes, provide better data integrity, and support multi-user scenarios.
+- Implementing improved reminder management features, such as automatically hiding reminders marked as completed from the main UI, while providing user controls to toggle the visibility of hidden reminders.
+- Expanding reminder content to support rich media, including images, clickable links (e.g., to FDA resources or medication info), and other multimedia elements.
+- Refining the UI to be more intuitive and user-friendly, with better accessibility and design polish.
+- Adding enhanced analytics and statistics, including weekly or custom date-range summaries, and enabling users to export or download their medication data.
+- Introducing background services and more efficient scheduled tasks (e.g., using WorkManager or AlarmManager) to replace main-thread polling for notifications, thus improving app performance and battery consumption.
+- Supporting cloud synchronization to enable users to share and sync their reminders across multiple devices seamlessly.
