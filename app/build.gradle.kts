@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("org.jetbrains.dokka") version "1.9.10"
 }
 
 android {
@@ -49,3 +50,17 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.chart)
 }
+tasks.named<org.jetbrains.dokka.gradle.DokkaTask>("dokkaHtml") {
+    outputDirectory.set(buildDir.resolve("dokka"))
+    dokkaSourceSets {
+        create("main") {
+            noAndroidSdkLink.set(true)
+            sourceRoots.from(file("src/main/java"))
+        }
+    }
+}
+
+
+
+
+
