@@ -3,7 +3,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Represents a reminder item for tasks such as medication schedules.
+ * Represents a reminder item for medication schedules.
  * Implements {@link Parcelable} to allow easy passing between Android components.
  */
 

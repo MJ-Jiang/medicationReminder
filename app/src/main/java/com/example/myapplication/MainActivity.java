@@ -15,7 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,8 +66,10 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.O
         FloatingActionButton fabSettings = findViewById(R.id.fabSettings);
 
 
-        textViewSelectedDate.setText(Utils.getTodayDate());
-        updateReminderList(Utils.getTodayDate());
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        textViewSelectedDate.setText(today);
+        updateReminderList(today);
+
 
         buttonCreateReminder.setOnClickListener(v -> startActivity(new Intent(this, CreateReminderActivity.class)));
 

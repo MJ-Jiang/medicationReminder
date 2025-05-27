@@ -1,7 +1,7 @@
 package com.example.myapplication;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
+
 import android.content.Context;
 import android.widget.TextView;
 
@@ -11,11 +11,14 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Helper class for displaying a date picker dialog and handling date selection logic.
+ * Utility class for displaying a date picker dialog and handling date selection logic across multiple activities.
  *
- * <p>This class provides two overloads of the {@code show} method for use in different
- * parts of the application, including {@code MainActivity},{@code ChartSettingsActivity} and {@code CreateReminderActivity}  .
- * It handles updating the selected date in the UI and optionally refreshing reminders or chart data.</p>
+ * <p>This class provides overloaded {@code show} methods tailored for different use cases, including:
+ * <ul>
+ *   <li>Updating reminders in {@code MainActivity} and {@code CreateReminderActivity}</li>
+ *   <li>Refreshing chart data in {@code ChartSettingsActivity}</li>
+ * </ul>
+ * It updates the selected date in a {@code TextView} and optionally refreshes reminder lists or charts.</p>
  */
 public class DatePickerHelper {
 

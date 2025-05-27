@@ -6,10 +6,13 @@ import android.os.Handler;
 import android.os.Looper;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import java.util.Date;
 import java.util.List;
 
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -43,7 +46,8 @@ public class ReminderNotifier {
      */
 
     public void checkAndNotifyReminders() {
-        String today =Utils.getTodayDate();
+
+        String today=new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         List<Reminder> todayReminders =ReminderQueryHelper.getRemindersForDate(dbHelper, today);
 
         for (Reminder reminder : todayReminders) {

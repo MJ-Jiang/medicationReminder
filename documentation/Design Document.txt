@@ -21,7 +21,7 @@ When I designed my project, I thought my timetable would be:
 However, due to academic pressures, my actual timetable was:
 • 25.2:      Design project
 • 25.4-10.5: Research and programming
-• 23.5-30.5: Documentation
+• 23.5-30.5: Debugging and Documentation
 I also gave up the idea of including a backend in this project.
 
 2. Features
