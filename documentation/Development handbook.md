@@ -62,32 +62,30 @@
 - Applying the user’s language preference by overriding `attachBaseContext` to update the app locale dynamically.
 - Refreshing the reminder list when the activity resumes to keep data up to date.
 
----
 
-### Overview of the Program Structure and Relations Between Components
+## Overview of the Program Structure and Relations Between Components
 
-#### 1. Data Model Layer
-At the foundation lies the `Reminder` class, which encapsulates all relevant data for a medication reminder. It acts as the main data carrier between different components. All other classes depend on this model to represent reminders consistently.
+1. **Data Model Layer**
+    At the foundation lies the `Reminder` class, which encapsulates all relevant data for a medication reminder. It acts as the main data carrier between different components. All other classes depend on this model to represent reminders consistently.
 
-#### 2. Database Layer
-The app’s persistence is handled primarily by `ReminderDatabaseHelper`, a subclass of `SQLiteOpenHelper`, which manages local SQLite database creation, updates, and data manipulation. It works closely with `ReminderQueryHelper`, a utility class abstracting complex query operations such as filtering reminders by date or completion status. This layered database approach isolates raw database interactions from other parts of the app, improving maintainability.
+2. **Database Layer**
+    The app’s persistence is handled primarily by `ReminderDatabaseHelper`, a subclass of `SQLiteOpenHelper`, which manages local SQLite database creation, updates, and data manipulation. It works closely with `ReminderQueryHelper`, a utility class abstracting complex query operations such as filtering reminders by date or completion status. This layered database approach isolates raw database interactions from other parts of the app, improving maintainability.
 
-The `ReminderLoader` serves as an intermediary utility that fetches reminders from the database and returns them sorted by time, simplifying the retrieval process for the UI layer.
+    The `ReminderLoader` serves as an intermediary utility that fetches reminders from the database and returns them sorted by time, simplifying the retrieval process for the UI layer.
 
-#### 3. User Interface Layer
-The UI is composed of several activities and adapters:
-- **`MainActivity`** acts as the central screen where users view reminders for a selected date. It initializes UI components, manages interactions, and delegates data loading to `ReminderLoader`.
-- The **`ReminderAdapter`** bridges the `Reminder` data model to the `RecyclerView` UI component, efficiently rendering reminder items and handling user interactions such as marking reminders as completed.
-- **`ReminderDetailDialog`** complements this by providing a detailed popup view of reminder specifics when requested by the user.
-- Activities like **`CreateReminderActivity`**, **`SettingsActivity`**, **`LanguageSettingsActivity`**, and **`ChartSettingsActivity`** provide additional UI functionalities including creating new reminders, app settings management, language selection, and visualization of reminder statistics.
+3. **User Interface Layer**
+    The UI is composed of several activities and adapters:
+   - **`MainActivity`** acts as the central screen where users view reminders for a selected date. It initializes UI components, manages interactions, and delegates data loading to `ReminderLoader`.
+   - The **`ReminderAdapter`** bridges the `Reminder` data model to the `RecyclerView` UI component, efficiently rendering reminder items and handling user interactions such as marking reminders as completed.
+   - **`ReminderDetailDialog`** complements this by providing a detailed popup view of reminder specifics when requested by the user.
+   - Activities like **`CreateReminderActivity`**, **`SettingsActivity`**, **`LanguageSettingsActivity`**, and **`ChartSettingsActivity`** provide additional UI functionalities including creating new reminders, app settings management, language selection, and visualization of reminder statistics.
 
-#### 4. Helper Utilities
-Supporting the UI and background processes are helper classes like **`DatePickerHelper`**, which standardizes date selection dialogs across multiple activities, ensuring consistent date input handling.
+4. **Helper Utilities**
+    Supporting the UI and background processes are helper classes like **`DatePickerHelper`**, which standardizes date selection dialogs across multiple activities, ensuring consistent date input handling.
 
-#### 5. Notification and Background Processing
-**`ReminderNotifier`** is responsible for periodically checking if there are reminders due at the current time and displaying notification dialogs to alert users. It interacts with the database to query today’s reminders and updates their notification status to prevent repeated alerts. This class runs on the main thread but is invoked regularly via a handler in `MainActivity`, ensuring timely and responsive notifications.
+5. **Notification and Background Processing**
+    **`ReminderNotifier`** is responsible for periodically checking if there are reminders due at the current time and displaying notification dialogs to alert users. It interacts with the database to query today’s reminders and updates their notification status to prevent repeated alerts. This class runs on the main thread but is invoked regularly via a handler in `MainActivity`, ensuring timely and responsive notifications.
 
----
 
 ## Known Issues, Challenges, and Ideas for the Future
 
