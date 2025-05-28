@@ -56,9 +56,15 @@ tasks.named<org.jetbrains.dokka.gradle.DokkaTask>("dokkaHtml") {
         create("main") {
             noAndroidSdkLink.set(true)
             sourceRoots.from(file("src/main/java"))
+            documentedVisibilities.set(
+                org.jetbrains.dokka.DokkaConfiguration.Visibility.values().toSet()
+            )
         }
     }
 }
+
+
+
 
 
 
