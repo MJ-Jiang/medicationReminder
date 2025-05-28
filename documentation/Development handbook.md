@@ -100,7 +100,8 @@
 - The division of responsibilities between `ReminderDatabaseHelper` and its auxiliary class `ReminderQueryHelper` is not yet fully clear-cut. Since the refactoring to extract query-related methods into `ReminderQueryHelper` was done mid-development, `ReminderDatabaseHelper` still retains some query method calls to maintain compatibility with other parts of the code that depend on it. This overlapping responsibility may lead to confusion and maintenance difficulties.
 - The database schema design has undergone several revisions (three major changes so far) and might not yet be optimal or fully normalized. There is room for improvement in structuring tables and relationships to better support future features.
 - Currently, when creating reminders, there are insufficient constraints — for example, the app does not enforce that the end date should not be earlier than the start date. This can lead to invalid reminder data. It is still undecided whether reminder names should allow duplicates. This question requires more consideration based on the app’s real-world use cases and user expectations.
-- The notification system relies on a main-thread polling mechanism to check reminders at regular intervals. This approach may impact app performance and responsiveness, especially as the number of reminders grows larger.
+- The notification system relies on a main-thread polling mechanism to check reminders at regular intervals, which may impact app performance as reminders grow.
+  Additionally, reminder dialogs currently only show reliably when the app is in the foreground. If the user leaves the main screen, dialogs may fail to appear and cause crashes due to Android restrictions.
 
 #### Challenges:
 

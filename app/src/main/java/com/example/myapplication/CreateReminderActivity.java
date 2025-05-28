@@ -74,44 +74,44 @@ public class CreateReminderActivity extends AppCompatActivity {
     /**
      * Sets up the action bar with back navigation and title.
      */
-        private void setupActionBar(){
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setTitle(R.string.create_reminder);
-            }
+    private void setupActionBar(){
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.create_reminder);
         }
+    }
     /**
      * Initializes the frequency spinner with frequency options.
      */
-       private void setupFrequencySpinner(){
+    private void setupFrequencySpinner(){
 
-           ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                   this, R.array.frequency_array, android.R.layout.simple_spinner_item);//Use ArrayAdapter.createFromResource() to load data from a resource file
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.frequency_array, android.R.layout.simple_spinner_item);//Use ArrayAdapter.createFromResource() to load data from a resource file
 //<CharSequence> is a Java generic syntax, indicating that this adapter is used to manage a set of character sequences (characters or strings).
-           adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-           spinnerFrequency.setAdapter(adapter);//Set the adapter just created and configured to spinnerFrequency to display these frequency options
-       }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFrequency.setAdapter(adapter);//Set the adapter just created and configured to spinnerFrequency to display these frequency options
+    }
     /**
      * Sets click listeners on start and end date TextViews to show date picker dialogs.
      */
-       private void setupDatePickers(){
-           textViewStartDateValue.setOnClickListener(v -> DatePickerHelper.showDatePickerDialog(this, textViewStartDateValue));
-           textViewEndDateValue.setOnClickListener(v ->  DatePickerHelper.showDatePickerDialog(this, textViewEndDateValue));
-       }
+    private void setupDatePickers(){
+        textViewStartDateValue.setOnClickListener(v -> DatePickerHelper.showDatePickerDialog(this, textViewStartDateValue));
+        textViewEndDateValue.setOnClickListener(v ->  DatePickerHelper.showDatePickerDialog(this, textViewEndDateValue));
+    }
     /**
      * Initializes the first time row for picking reminder times.
      */
-       private void initTimeRows(){
+    private void initTimeRows(){
         addTimeRow(true);
-       }
+    }
     /**
      * Sets up the create button to validate input and create a reminder on click.
      */
-       private void setupCreateButton(){
-           Button buttonCreateReminder = findViewById(R.id.buttonCreateReminder);
-          buttonCreateReminder.setOnClickListener(v->createReminder());
+    private void setupCreateButton(){
+        Button buttonCreateReminder = findViewById(R.id.buttonCreateReminder);
+        buttonCreateReminder.setOnClickListener(v->createReminder());
 
-       }
+    }
 
     /**
      * Adds a new time picker row to allow the user to select multiple reminder times.
