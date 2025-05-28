@@ -28,7 +28,7 @@ I also gave up the idea of including a backend in this project.
 
 ## 2. Features
 
-### 2.2 Pill Reminders
+### 2.1 Pill Reminders
 
 - **Create New Reminder:**
     - Users can set reminders with a start date and end date.
@@ -41,13 +41,13 @@ I also gave up the idea of including a backend in this project.
 - **Notifications:**
     - Timed alerts when a medication needs to be taken.
 
-### 2.3 Progress Tracking
+### 2.2 Progress Tracking
 
-- Users can generate records of completed reminders.
+- Users can generate records (charts) of completed reminders.
 - Provides daily, weekly, and monthly completion rate tracking.
 - Displays visual representations of medication adherence.
 
-### 2.4 Settings Menu
+### 2.3 Settings Menu
 
 - Preferred language (Localization support for at least two languages)
 - Progress Chart  
